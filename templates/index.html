@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ profile.name }} – Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <h1 class="site-title">{{ profile.name }}</h1>
+      <p class="site-tagline">{{ profile.tagline }}</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="about" class="section">
+      <h2>About</h2>
+      <p class="location">{{ profile.location }}</p>
+      <p>{{ profile.short_bio }}</p>
+    </section>
+
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      {% if projects %}
+      <div class="projects-grid">
+        {% for p in projects %}
+        <article class="project-card">
+          <h3>{{ p.title }}</h3>
+          {% if p.subtitle %}
+          <p class="project-subtitle">{{ p.subtitle }}</p>
+          {% endif %}
+          <p>{{ p.description }}</p>
+          {% if p.tech %}
+          <p class="project-tech">
+            <strong>Tech:</strong> {{ p.tech | join(', ') }}
+          </p>
+          {% endif %}
+          {% if p.link %}
+          <p><a href="{{ p.link }}" target="_blank" rel="noopener">View project</a></p>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No projects listed yet.</p>
+      {% endif %}
+    </section>
+
+    <section id="resume" class="section">
+      <h2>Resume</h2>
+      {% if resume_url %}
+      <p>You can view or download my resume here:</p>
+      <p>
+        <a class="btn" href="{{ resume_url }}" target="_blank" rel="noopener">
+          Open Resume (PDF)
+        </a>
+      </p>
+      {% else %}
+      <p>Resume link coming soon.</p>
+      {% endif %}
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Contact/Info</h2>
+      <ul class="contact-list">
+        {% if social.email %}
+        <li>
+          <strong>Email:</strong>
+          <a href="mailto:{{ social.email }}">{{ social.email }}</a>
+        </li>
+        {% endif %}
+        {% if social.kagglehub %}
+        <li>
+          <strong>KaggleHub:</strong>
+          <a href="{{ social.kagglehub }}" target="_blank" rel="noopener">
+            {{ social.kagglehub }}
+          </a>
+        </li>
+        {% endif %}
+        {% if social.linkedin %}
+        <li>
+          <strong>LinkedIn:</strong>
+          <a href="{{ social.linkedin }}" target="_blank" rel="noopener">
+            {{ social.linkedin }}
+          </a>
+        </li>
+        {% endif %}
+        {% if social.sistershope %}
+        <li>
+          <strong>Sisters Hope:</strong>
+          <a href="{{ social.sistershope }}" target="_blank" rel="noopener">
+            {{ social.sistershope }}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; {{ profile.name }}</p>
+  </footer>
+</body>
+</html>
