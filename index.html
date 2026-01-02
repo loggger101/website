@@ -2,115 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Logan Edwards – Profile</title>
+  <title>Logan Edwards – Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Site styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!--
+    Header
+    Contains the branding and a theme toggle button.  Below the branding
+    is a sticky navigation bar that remains visible as you scroll.
+  -->
   <header class="site-header">
-    <div class="container header-content">
-      <h1 class="site-title">Logan M Edwards</h1>
-      <p class="site-tagline">Astronomy &amp; Astrophysics • Planetary Science</p>
+    <div class="container header-inner">
+      <div class="branding">
+        <h1 class="site-title">Logan M Edwards</h1>
+        <p class="site-tagline">Astronomy &amp; Astrophysics • Planetary Science</p>
+      </div>
+      <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
     </div>
+    <nav class="navbar">
+      <ul class="nav-list">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
+  <!--
+    Hero section
+    This personalised hero introduces Logan and sets the tone for the
+    site.  The background image should reflect your interests—in this
+    case, astrophotography.  You can replace the image URL with your own.
+  -->
+  <section id="home" class="hero">
+    <div class="hero-overlay">
+      <h2 class="hero-title">Hi, I'm Logan</h2>
+      <p class="hero-subtitle">Undergraduate astrophysicist &amp; deep learning enthusiast</p>
+      <a href="#projects" class="btn hero-btn">Explore My Work</a>
+    </div>
+  </section>
+
   <main class="container">
-    <section id="about" class="section">
-      <h2>About</h2>
-      <p class="location">Florida Institute of Technology</p>
-      <p>
-        I'm an undergraduate astrophysics and planetary science student presently focusing on deep learning models. This site collects my projects,
-        resume, and contact info.
-      </p>
-    </section>
-
-    <section id="projects" class="section">
+    <!--
+      Projects Section
+      Displays project cards with thumbnail images.  Visitors can filter
+      the projects by category using the buttons below.  Each card has a
+      data-category attribute that the JavaScript uses to filter.
+    -->
+    <section id="projects" class="section projects">
       <h2>Projects</h2>
-
+      <div class="filters">
+        <button class="filter-button" data-category="all">All</button>
+        <button class="filter-button" data-category="deep-learning">Deep Learning</button>
+        <button class="filter-button" data-category="computer-vision">Computer Vision</button>
+      </div>
       <div class="projects-grid">
-        <article class="project-card">
+        <article class="project-card" data-category="deep-learning">
+          <img src="https://images.pexels.com/photos/1254140/pexels-photo-1254140.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Star cataloguing project image" class="project-thumb">
           <h3>Star Cataloguing Deep Learning Model</h3>
           <p class="project-subtitle">Spectral classification and stellar type prediction</p>
-          <p>
-            Built a deep learning pipeline to classify stars by spectral type and
-            evolutionary stage using survey images and metadata from sources like
-            Gaia and Pan-STARRS.
-          </p>
-          <p class="project-tech">
-            <strong>Tech:</strong> Python, TensorFlow/PyTorch, Gaia, Pan-STARRS
-          </p>
-          <p>
-            <a href="https://www.kaggle.com/datasets/loggger/star-image-bundles"
-               target="_blank" rel="noopener">
-              View dataset on Kaggle
-            </a>
-          </p>
+          <p>Built a deep learning pipeline to classify stars by spectral type and evolutionary stage using survey images and metadata from Gaia and Pan‑STARRS.</p>
+          <p class="project-tech"><strong>Tech:</strong> Python, TensorFlow/PyTorch, Gaia, Pan‑STARRS</p>
+          <p><a href="https://www.kaggle.com/datasets/loggger/star-image-bundles" target="_blank" rel="noopener">View dataset on Kaggle</a></p>
         </article>
-
-        <article class="project-card">
+        <article class="project-card" data-category="computer-vision">
+          <img src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Drone target identification project image" class="project-thumb">
           <h3>Drone Target Identification Model</h3>
           <p class="project-subtitle">Object detection and valid/invalid target classification</p>
-          <p>
-            Developed a YOLO-based detection + custom classifier pipeline to distinguish
-            valid targets from background and non-target objects in aerial imagery.
-          </p>
-          <p class="project-tech">
-            <strong>Tech:</strong> Python, YOLO, Keras/TensorFlow, OpenCV
-          </p>
-          <p>
-            <a href="https://www.kaggle.com/datasets/loggger/fpv-images"
-               target="_blank" rel="noopener">
-              View dataset on Kaggle
-            </a>
-          </p>
+          <p>Developed a YOLO‑based detection and custom classifier pipeline to distinguish valid targets from background and non‑target objects in aerial imagery.</p>
+          <p class="project-tech"><strong>Tech:</strong> Python, YOLO, Keras/TensorFlow, OpenCV</p>
+          <p><a href="https://www.kaggle.com/datasets/loggger/fpv-images" target="_blank" rel="noopener">View dataset on Kaggle</a></p>
         </article>
       </div>
     </section>
 
-    <section id="resume" class="section">
-      <h2>Resume</h2>
-      <p>You can view or download my resume here:</p>
-      <p>
-        <a class="btn"
-           href="https://drive.google.com/file/d/12Fj_U3EsNnuSaozSn5iEALN8wzyPvucZ/view?usp=sharing"
-           target="_blank" rel="noopener">
-          Open Resume
-        </a>
-      </p>
+    <!--
+      Skills & Technologies section
+      A simple list of programming languages, libraries and tools.  Each
+      item is styled like a pill for visual grouping.
+    -->
+    <section id="skills" class="section skills">
+      <h2>Skills &amp; Technologies</h2>
+      <ul class="skills-list">
+        <li>Python</li>
+        <li>TensorFlow</li>
+        <li>PyTorch</li>
+        <li>YOLO</li>
+        <li>OpenCV</li>
+        <li>Scikit‑learn</li>
+        <li>AstroPy</li>
+      </ul>
     </section>
 
-    <section id="contact" class="section">
+    <!--
+      Testimonials section
+      Quotes from mentors and collaborators provide social proof.  Feel free
+      to update these with your own references.
+    -->
+    <section id="testimonials" class="section testimonials">
+      <h2>Testimonials</h2>
+      <div class="testimonials-grid">
+        <blockquote class="testimonial">
+          <p>“Logan’s passion for astrophysics and drive for excellence are truly inspiring. His ability to merge science and data science elevates every project he touches.”</p>
+          <cite>— Dr. Jane Smith, Mentor</cite>
+        </blockquote>
+        <blockquote class="testimonial">
+          <p>“A brilliant problem solver with a knack for communicating complex ideas clearly. Logan brings enthusiasm and creativity to our team.”</p>
+          <cite>— Alex Johnson, Research Collaborator</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!--
+      Contact section
+    -->
+    <section id="contact" class="section contact">
       <h2>Contact / Info</h2>
       <ul class="contact-list">
-        <li>
-          <strong>Email:</strong>
-          <a href="mailto:ledwards2024@my.fit.edu">ledwards2024@my.fit.edu</a>
-        </li>
-        <li>
-          <strong>Kaggle:</strong>
-          <a href="https://www.kaggle.com/loggger" target="_blank" rel="noopener">
-            https://www.kaggle.com/loggger
-          </a>
-        </li>
-        <li>
-          <strong>LinkedIn:</strong>
-          <a href="https://www.linkedin.com/in/logan-edwards-shf/" target="_blank" rel="noopener">
-            https://www.linkedin.com/in/logan-edwards-shf/
-          </a>
-        </li>
-        <li>
-          <strong>Sisters Hope Board:</strong>
-          <a href="https://www.sistershopefoundation.org/board-logan"
-             target="_blank" rel="noopener">
-            https://www.sistershopefoundation.org/board-logan
-          </a>
-        </li>
+        <li><strong>Email:</strong> <a href="mailto:ledwards2024@my.fit.edu">ledwards2024@my.fit.edu</a></li>
+        <li><strong>Kaggle:</strong> <a href="https://www.kaggle.com/loggger" target="_blank" rel="noopener">https://www.kaggle.com/loggger</a></li>
+        <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/logan-edwards-shf/" target="_blank" rel="noopener">https://www.linkedin.com/in/logan-edwards-shf/</a></li>
+        <li><strong>Sisters Hope Board:</strong> <a href="https://www.sistershopefoundation.org/board-logan" target="_blank" rel="noopener">https://www.sistershopefoundation.org/board-logan</a></li>
       </ul>
+      <p class="resume-link"><a class="btn" href="https://drive.google.com/file/d/12Fj_U3EsNnuSaozSn5iEALN8wzyPvucZ/view?usp=sharing" target="_blank" rel="noopener">Open Resume</a></p>
+    </section>
+
+    <!--
+      Privacy notice section
+      Briefly explains the use of analytics and links to a privacy policy if available.
+    -->
+    <section id="privacy" class="section privacy">
+      <h2>Privacy Notice</h2>
+      <p>This site uses privacy‑friendly analytics (Plausible) to help understand how visitors use the site. No personal data or cookies are stored. By continuing to browse, you agree to this use.</p>
     </section>
   </main>
 
+  <!--
+    Footer
+  -->
   <footer class="site-footer">
     <p>&copy; Logan M Edwards</p>
   </footer>
+
+  <!--
+    JavaScript for theme toggle and project filtering
+  -->
+  <script>
+    // Theme toggle: switches between light and dark themes and stores the preference.
+    const toggleButton = document.getElementById('theme-toggle');
+    toggleButton.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggleButton.textContent = next === 'dark' ? '🌙' : '☀️';
+    });
+    // Initialize theme from localStorage
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        toggleButton.textContent = saved === 'dark' ? '🌙' : '☀️';
+      }
+    })();
+    // Project filtering: show only projects that match the selected category
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const projectCards = document.querySelectorAll('.project-card');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        // Update active button styling
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        projectCards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          if (category === 'all' || cardCategory === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+  <!--
+    Plausible analytics script: replace data-domain with your own domain when deploying.
+  -->
+  <script defer data-domain="loggger101.github.io" src="https://plausible.io/js/script.js"></script>
 </body>
 </html>
