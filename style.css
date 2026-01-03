@@ -120,12 +120,12 @@ body {
 /* ===========================
    Upgrade #5: Enhanced project cards
    - Featured header band + tags
-   - Hover/focus overlay with CTAs
+   - Hover/focus overlay (BOTTOM CONTENT ONLY)
+   - When overlay appears: bottom text fades away (no overlap)
    (overall page format unchanged)
    =========================== */
 
 .project-card--enhanced {
-  /* overrides the base .project-card padding so we can add a header band */
   padding: 0;
   position: relative;
   overflow: hidden;
@@ -151,7 +151,7 @@ body {
   outline-offset: 3px;
 }
 
-/* Top “featured” band */
+/* Top featured band (stays unobstructed ALWAYS) */
 .project-card__media {
   padding: 1rem 1rem 0.9rem 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.10);
@@ -200,9 +200,21 @@ body {
   color: #dbe7ff;
 }
 
-/* Body content */
+/* Content area (this is the ONLY part that will fade away) */
 .project-card__content {
+  position: relative;   /* anchor the overlay to the content area */
   padding: 1rem;
+}
+
+/* We mark base text with .project-body so we can fade it cleanly */
+.project-body {
+  transition: opacity 140ms ease;
+}
+
+/* Fade base content when overlay is up (prevents overlap) */
+.project-card--enhanced:hover .project-body,
+.project-card--enhanced:focus-within .project-body {
+  opacity: 0;
 }
 
 .project-links a {
@@ -215,26 +227,25 @@ body {
   text-decoration: underline;
 }
 
-/* Overlay */
+/* Overlay (ONLY covers content area now) */
 .project-card__overlay {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;         /* center within content area */
   padding: 1rem;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.86),
-    rgba(0,0,0,0.35) 60%,
-    rgba(0,0,0,0.12)
-  );
+
+  /* solid-ish background so nothing “bleeds” */
+  background: rgba(10, 12, 18, 0.92);
+  backdrop-filter: blur(6px);
 
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(8px);
   pointer-events: none;
   transition: opacity 170ms ease, transform 170ms ease;
 }
 
+/* show overlay on hover/focus */
 .project-card--enhanced:hover .project-card__overlay,
 .project-card--enhanced:focus-within .project-card__overlay {
   opacity: 1;
