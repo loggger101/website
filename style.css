@@ -32,12 +32,13 @@ body {
 
 /* =========================================================
    PARALLAX STAR LAYERS (3 depths)
-   IMPORTANT FIX:
-   - Lowered opacity + brightness so it doesn't look like "snow"
-   - Keeps overall density similar to before (not additive-feeling)
+   Update:
+   - More stars per tile (but still controlled opacity)
+   - Size variety
+   - Subtle star hues (cool blue / warm yellow / faint red)
    ========================================================= */
 
-/* Far stars: smallest + slowest */
+/* Far stars: lots of tiny dim points */
 html::before {
   content: "";
   position: fixed;
@@ -45,15 +46,15 @@ html::before {
   pointer-events: none;
   z-index: 0;
 
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%20fill='white'%20fill-opacity='0.55'%3E%3Ccircle%20cx='70'%20cy='80'%20r='0.65'/%3E%3Ccircle%20cx='220'%20cy='170'%20r='0.55'/%3E%3Ccircle%20cx='390'%20cy='90'%20r='0.65'/%3E%3Ccircle%20cx='520'%20cy='260'%20r='0.55'/%3E%3Ccircle%20cx='690'%20cy='140'%20r='0.65'/%3E%3Ccircle%20cx='820'%20cy='210'%20r='0.55'/%3E%3Ccircle%20cx='980'%20cy='70'%20r='0.65'/%3E%3Ccircle%20cx='1180'%20cy='260'%20r='0.55'/%3E%3Ccircle%20cx='1320'%20cy='120'%20r='0.65'/%3E%3Ccircle%20cx='160'%20cy='520'%20r='0.55'/%3E%3Ccircle%20cx='340'%20cy='640'%20r='0.65'/%3E%3Ccircle%20cx='560'%20cy='560'%20r='0.55'/%3E%3Ccircle%20cx='760'%20cy='690'%20r='0.65'/%3E%3Ccircle%20cx='980'%20cy='600'%20r='0.55'/%3E%3Ccircle%20cx='1200'%20cy='720'%20r='0.65'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%3E%3Ccircle%20cx='70'%20cy='80'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.35'/%3E%3Ccircle%20cx='220'%20cy='170'%20r='0.5'%20fill='%23cfe8ff'%20fill-opacity='0.28'/%3E%3Ccircle%20cx='390'%20cy='90'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.32'/%3E%3Ccircle%20cx='520'%20cy='260'%20r='0.5'%20fill='%23ffe7a3'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='690'%20cy='140'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.30'/%3E%3Ccircle%20cx='820'%20cy='210'%20r='0.5'%20fill='%23cfe8ff'%20fill-opacity='0.24'/%3E%3Ccircle%20cx='980'%20cy='70'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.32'/%3E%3Ccircle%20cx='1180'%20cy='260'%20r='0.5'%20fill='%23ffffff'%20fill-opacity='0.28'/%3E%3Ccircle%20cx='1320'%20cy='120'%20r='0.6'%20fill='%23ffe7a3'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='160'%20cy='520'%20r='0.5'%20fill='%23ffffff'%20fill-opacity='0.28'/%3E%3Ccircle%20cx='340'%20cy='640'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.30'/%3E%3Ccircle%20cx='560'%20cy='560'%20r='0.5'%20fill='%23cfe8ff'%20fill-opacity='0.23'/%3E%3Ccircle%20cx='760'%20cy='690'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.30'/%3E%3Ccircle%20cx='980'%20cy='600'%20r='0.5'%20fill='%23ffd1c0'%20fill-opacity='0.16'/%3E%3Ccircle%20cx='1200'%20cy='720'%20r='0.6'%20fill='%23ffffff'%20fill-opacity='0.30'/%3E%3Ccircle%20cx='1260'%20cy='460'%20r='0.45'%20fill='%23ffffff'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='1080'%20cy='430'%20r='0.55'%20fill='%23cfe8ff'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='880'%20cy='510'%20r='0.5'%20fill='%23ffffff'%20fill-opacity='0.24'/%3E%3Ccircle%20cx='640'%20cy='420'%20r='0.45'%20fill='%23ffe7a3'%20fill-opacity='0.16'/%3E%3Ccircle%20cx='420'%20cy='410'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.25'/%3E%3Ccircle%20cx='240'%20cy='360'%20r='0.45'%20fill='%23ffffff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='90'%20cy='320'%20r='0.55'%20fill='%23cfe8ff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='1150'%20cy='90'%20r='0.45'%20fill='%23ffffff'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='1040'%20cy='310'%20r='0.5'%20fill='%23ffffff'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='910'%20cy='300'%20r='0.45'%20fill='%23ffd1c0'%20fill-opacity='0.14'/%3E%3Ccircle%20cx='780'%20cy='120'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.26'/%3E%3Ccircle%20cx='600'%20cy='170'%20r='0.45'%20fill='%23cfe8ff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='450'%20cy='210'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.24'/%3E%3Ccircle%20cx='310'%20cy='110'%20r='0.45'%20fill='%23ffffff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='1040'%20cy='760'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.24'/%3E%3Ccircle%20cx='860'%20cy='790'%20r='0.45'%20fill='%23ffe7a3'%20fill-opacity='0.16'/%3E%3Ccircle%20cx='700'%20cy='820'%20r='0.55'%20fill='%23cfe8ff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='520'%20cy='780'%20r='0.45'%20fill='%23ffffff'%20fill-opacity='0.20'/%3E%3Ccircle%20cx='360'%20cy='820'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.22'/%3E%3Ccircle%20cx='190'%20cy='790'%20r='0.45'%20fill='%23ffd1c0'%20fill-opacity='0.14'/%3E%3Ccircle%20cx='80'%20cy='740'%20r='0.55'%20fill='%23ffffff'%20fill-opacity='0.22'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 1400px 900px;
 
-  opacity: 0.09;
+  opacity: 0.12;
   mix-blend-mode: screen;
 }
 
-/* Mid stars */
+/* Mid stars: fewer, slightly larger */
 html::after {
   content: "";
   position: fixed;
@@ -61,15 +62,15 @@ html::after {
   pointer-events: none;
   z-index: 1;
 
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%20fill='white'%20fill-opacity='0.62'%3E%3Ccircle%20cx='120'%20cy='140'%20r='0.85'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='0.75'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='0.80'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='0.85'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='0.75'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='0.80'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='0.85'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='0.75'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='0.80'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%3E%3Ccircle%20cx='120'%20cy='140'%20r='0.9'%20fill='%23ffffff'%20fill-opacity='0.55'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='0.8'%20fill='%23cfe8ff'%20fill-opacity='0.48'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='0.85'%20fill='%23ffffff'%20fill-opacity='0.52'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='0.95'%20fill='%23ffe7a3'%20fill-opacity='0.38'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='0.85'%20fill='%23ffffff'%20fill-opacity='0.50'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='0.9'%20fill='%23cfe8ff'%20fill-opacity='0.45'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='0.95'%20fill='%23ffffff'%20fill-opacity='0.50'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='0.85'%20fill='%23ffffff'%20fill-opacity='0.46'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='0.9'%20fill='%23ffffff'%20fill-opacity='0.48'/%3E%3Ccircle%20cx='540'%20cy='110'%20r='0.8'%20fill='%23ffd1c0'%20fill-opacity='0.30'/%3E%3Ccircle%20cx='920'%20cy='210'%20r='0.85'%20fill='%23ffe7a3'%20fill-opacity='0.34'/%3E%3Ccircle%20cx='1080'%20cy='430'%20r='0.8'%20fill='%23ffffff'%20fill-opacity='0.42'/%3E%3Ccircle%20cx='360'%20cy='380'%20r='0.9'%20fill='%23ffffff'%20fill-opacity='0.44'/%3E%3Ccircle%20cx='620'%20cy='420'%20r='0.85'%20fill='%23cfe8ff'%20fill-opacity='0.40'/%3E%3Ccircle%20cx='110'%20cy='310'%20r='0.8'%20fill='%23ffffff'%20fill-opacity='0.40'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 1200px 800px;
 
-  opacity: 0.10;
+  opacity: 0.12;
   mix-blend-mode: screen;
 }
 
-/* Near stars + Milky Way + nebula glows */
+/* Near stars + Milky Way + nebula glows: a few brighter “hero” stars */
 body::after {
   content: "";
   position: fixed;
@@ -82,14 +83,14 @@ body::after {
     linear-gradient(115deg,
       rgba(0,0,0,0) 0%,
       rgba(0,0,0,0) 34%,
-      rgba(120, 190, 255, 0.10) 44%,
+      rgba(120, 190, 255, 0.11) 44%,
       rgba(140, 220, 255, 0.05) 49%,
-      rgba(120, 180, 255, 0.08) 54%,
+      rgba(120, 180, 255, 0.09) 54%,
       rgba(0,0,0,0) 64%,
       rgba(0,0,0,0) 100%),
 
     /* Near stars */
-    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Cg%20fill='white'%20fill-opacity='0.72'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.0'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.9'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.8'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.0'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.85'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.8'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.05'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.9'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.8'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.0'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.85'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='0.95'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.05'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='0.95'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.0'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.05'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.0'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Cg%3E%3Ccircle%20cx='60'%20cy='70'%20r='1.25'%20fill='%23ffffff'%20fill-opacity='0.75'/%3E%3Ccircle%20cx='150'%20cy='110'%20r='1.0'%20fill='%23cfe8ff'%20fill-opacity='0.70'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.1'%20fill='%23ffe7a3'%20fill-opacity='0.60'/%3E%3Ccircle%20cx='360'%20cy='90'%20r='0.95'%20fill='%23ffffff'%20fill-opacity='0.65'/%3E%3Ccircle%20cx='510'%20cy='65'%20r='1.35'%20fill='%23ffffff'%20fill-opacity='0.78'/%3E%3Ccircle%20cx='620'%20cy='120'%20r='1.0'%20fill='%23cfe8ff'%20fill-opacity='0.68'/%3E%3Ccircle%20cx='780'%20cy='140'%20r='1.15'%20fill='%23ffffff'%20fill-opacity='0.70'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='1.0'%20fill='%23ffd1c0'%20fill-opacity='0.45'/%3E%3Ccircle%20cx='120'%20cy='260'%20r='0.95'%20fill='%23ffffff'%20fill-opacity='0.58'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.4'%20fill='%23ffffff'%20fill-opacity='0.80'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='1.05'%20fill='%23ffe7a3'%20fill-opacity='0.55'/%3E%3Ccircle%20cx='90'%20cy='420'%20r='1.1'%20fill='%23cfe8ff'%20fill-opacity='0.62'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.55'%20fill='%23ffffff'%20fill-opacity='0.85'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.15'%20fill='%23ffffff'%20fill-opacity='0.66'/%3E%3Ccircle%20cx='250'%20cy='520'%20r='0.95'%20fill='%23ffd1c0'%20fill-opacity='0.36'/%3E%3Ccircle%20cx='560'%20cy='520'%20r='1.05'%20fill='%23cfe8ff'%20fill-opacity='0.54'/%3E%3C/g%3E%3C/svg%3E"),
 
     /* Nebula glows */
     radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.08), transparent 64%),
@@ -98,15 +99,12 @@ body::after {
   background-repeat: no-repeat, repeat, no-repeat, no-repeat;
   background-size: auto, 900px 600px, auto, auto;
 
-  opacity: 0.13;
+  opacity: 0.17;
   mix-blend-mode: screen;
 }
 
 /* =========================================================
-   AURORA + (FIXED) NOISE
-   IMPORTANT FIX:
-   - Noise is now MUCH weaker and slightly blurred so it doesn't look like stars.
-   - Meteor removed entirely.
+   AURORA + VERY SUBTLE NOISE (kept low so it isn't "snow")
    ========================================================= */
 body::before {
   content: "";
@@ -116,7 +114,6 @@ body::before {
   z-index: 3;
 
   background-image:
-    /* Aurora (subtle) */
     radial-gradient(1200px 520px at 20% 0%,
       rgba(60, 200, 255, 0.10),
       rgba(80, 140, 255, 0.05),
@@ -126,20 +123,14 @@ body::before {
       rgba(80, 180, 255, 0.04),
       rgba(0,0,0,0) 68%),
 
-    /* Noise texture (reduced so it no longer reads as "star density") */
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.75%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.16%27/%3E%0A%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.75%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.14%27/%3E%0A%3C/svg%3E");
 
   background-repeat: no-repeat, no-repeat, repeat;
   background-size: auto, auto, 200px 200px;
   background-position: 0% 0%, 0% 0%, 0% 0%;
 
-  /* Overall strength: keep subtle */
-  opacity: 0.12;
-
-  /* Slight blur prevents "static snow" look */
+  opacity: 0.11;
   filter: blur(0.2px);
-
-  /* Normal blend avoids whitening everything */
   mix-blend-mode: normal;
 }
 
@@ -193,7 +184,6 @@ body > * {
   border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
-/* Header “glow horizon” */
 .site-header::before {
   content: "";
   position: absolute;
@@ -223,7 +213,6 @@ body > * {
 .site-tagline { color: #a0aec0; font-size: 0.95rem; }
 .open-to { color: #a0aec0; font-size: 0.9rem; margin-top: 0.2rem; }
 
-/* Section separators as “starlight” */
 .section {
   position: relative;
   margin-top: 2rem;
