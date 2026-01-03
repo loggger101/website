@@ -37,7 +37,14 @@
         <article class="project-card project-card--enhanced" tabindex="0" style="--accent:#63b3ed; --accent-rgb: 99,179,237;">
           <div class="project-card__media">
             <div class="project-card__mediaTop">
-              <span class="project-icon" aria-hidden="true">✦</span>
+              <!-- ICON IS A LINK -->
+              <a class="project-icon-link"
+                 href="star-catalog.html"
+                 data-project="star"
+                 aria-label="Open Star Cataloguing Deep Learning Model page">
+                ✦
+              </a>
+
               <div class="project-badges" aria-label="Project tags">
                 <span class="tag">Deep Learning</span>
                 <span class="tag">Astronomy</span>
@@ -84,7 +91,14 @@
         <article class="project-card project-card--enhanced" tabindex="0" style="--accent:#4fd1c5; --accent-rgb: 79,209,197;">
           <div class="project-card__media">
             <div class="project-card__mediaTop">
-              <span class="project-icon" aria-hidden="true">▣</span>
+              <!-- ICON IS A LINK -->
+              <a class="project-icon-link"
+                 href="drone-target.html"
+                 data-project="drone"
+                 aria-label="Open Drone Target Identification Model page">
+                ▣
+              </a>
+
               <div class="project-badges" aria-label="Project tags">
                 <span class="tag">Computer Vision</span>
                 <span class="tag">YOLO</span>
@@ -173,5 +187,31 @@
   <footer class="site-footer">
     <p>&copy; Logan M Edwards</p>
   </footer>
+
+  <!-- Marks icon links as "used" after first interaction -->
+  <script>
+    (function () {
+      function applyVisitedState(link) {
+        const id = link.dataset.project || "unknown";
+        const key = "projectIconUsed:" + id;
+        const used = localStorage.getItem(key) === "1";
+        link.classList.toggle("is-unvisited", !used);
+        link.classList.toggle("is-visited", used);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".project-icon-link");
+        links.forEach(function (link) {
+          applyVisitedState(link);
+
+          link.addEventListener("click", function () {
+            const id = link.dataset.project || "unknown";
+            localStorage.setItem("projectIconUsed:" + id, "1");
+            applyVisitedState(link);
+          }, { passive: true });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
