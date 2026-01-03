@@ -120,9 +120,8 @@ body {
 /* ===========================
    Upgrade #5: Enhanced project cards
    - Featured header band + tags
-   - Hover/focus overlay (BOTTOM CONTENT ONLY)
-   - When overlay appears: bottom text fades away (no overlap)
-   (overall page format unchanged)
+   - Hover/focus overlay (CONTENT AREA ONLY)
+   - When overlay appears: content text is FULLY hidden
    =========================== */
 
 .project-card--enhanced {
@@ -145,13 +144,12 @@ body {
     0 0 26px rgba(var(--accent-rgb), 0.22);
 }
 
-/* keyboard focus ring */
 .project-card--enhanced:focus {
   outline: 2px solid rgba(var(--accent-rgb), 0.95);
   outline-offset: 3px;
 }
 
-/* Top featured band (stays unobstructed ALWAYS) */
+/* Top band stays unobstructed */
 .project-card__media {
   padding: 1rem 1rem 0.9rem 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.10);
@@ -200,23 +198,27 @@ body {
   color: #dbe7ff;
 }
 
-/* Content area (this is the ONLY part that will fade away) */
+/* Content (overlay anchors here) */
 .project-card__content {
-  position: relative;   /* anchor the overlay to the content area */
+  position: relative;
   padding: 1rem;
 }
 
-/* We mark base text with .project-body so we can fade it cleanly */
+/* Base content elements that must disappear */
 .project-body {
-  transition: opacity 140ms ease;
+  transition: opacity 120ms ease;
+  opacity: 1;
+  visibility: visible;
 }
 
-/* Fade base content when overlay is up (prevents overlap) */
+/* HARD hide on hover/focus: no bleed-through possible */
 .project-card--enhanced:hover .project-body,
 .project-card--enhanced:focus-within .project-body {
   opacity: 0;
+  visibility: hidden;
 }
 
+/* Link styling */
 .project-links a {
   color: #63b3ed;
   text-decoration: none;
@@ -227,17 +229,16 @@ body {
   text-decoration: underline;
 }
 
-/* Overlay (ONLY covers content area now) */
+/* Overlay (CONTENT AREA ONLY) — fully opaque background */
 .project-card__overlay {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;         /* center within content area */
+  align-items: center;
   padding: 1rem;
 
-  /* solid-ish background so nothing “bleeds” */
-  background: rgba(10, 12, 18, 0.92);
-  backdrop-filter: blur(6px);
+  /* fully opaque, no underlying text can show */
+  background: #0b0c10;
 
   opacity: 0;
   transform: translateY(8px);
@@ -245,7 +246,6 @@ body {
   transition: opacity 170ms ease, transform 170ms ease;
 }
 
-/* show overlay on hover/focus */
 .project-card--enhanced:hover .project-card__overlay,
 .project-card--enhanced:focus-within .project-card__overlay {
   opacity: 1;
@@ -278,7 +278,7 @@ body {
   flex-wrap: wrap;
 }
 
-/* Smaller & ghost buttons without affecting your existing .btn usage */
+/* Button variants */
 .btn.btn-sm {
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
