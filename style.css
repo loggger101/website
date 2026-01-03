@@ -8,15 +8,20 @@ html, body {
   min-height: 100%;
 }
 
+html {
+  background: #0b0c10;
+  overflow-x: hidden;
+}
+
 body {
   position: relative;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Space-like deep-blue backdrop */
+  /* Base deep-blue space backdrop */
   background:
-    radial-gradient(1200px 700px at 15% -10%, rgba(49, 130, 206, 0.22), transparent 60%),
-    radial-gradient(900px 600px at 85% 10%, rgba(0, 80, 160, 0.18), transparent 55%),
-    radial-gradient(800px 520px at 70% 85%, rgba(120, 80, 255, 0.10), transparent 60%),
+    radial-gradient(1200px 700px at 15% -10%, rgba(49, 130, 206, 0.20), transparent 60%),
+    radial-gradient(900px 600px at 85% 10%, rgba(0, 80, 160, 0.16), transparent 55%),
+    radial-gradient(900px 620px at 70% 90%, rgba(120, 80, 255, 0.08), transparent 62%),
     linear-gradient(180deg, #061027 0%, #0b0c10 55%, #060913 100%);
   background-color: #0b0c10;
 
@@ -25,134 +30,205 @@ body {
   min-height: 100vh;
 }
 
-/* ===========================
-   RARE TWINKLING STARS (2 layers)
-   - fixed, pointer-events none
-   - very subtle, occasional “pulses”
-   =========================== */
+/* =========================================================
+   PARALLAX STAR LAYERS (3 depths)
+   - Total perceived density stays about the same:
+     stars are distributed across layers rather than stacked.
+   - All are pointer-events: none so cards stay interactive.
+   ========================================================= */
 
-html::before,
-html::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1; /* above main starfield, below noise + content */
-  mix-blend-mode: screen;
-  opacity: 0.08;
-  filter: blur(0.25px);
-  background-repeat: repeat;
-}
-
-/* Twinkle layer A: sparse brighter points */
+/* Far stars: smallest + slowest */
 html::before {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%20fill='white'%20fill-opacity='0.9'%3E%3Ccircle%20cx='120'%20cy='140'%20r='1.9'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='1.6'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='1.5'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='1.8'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='1.7'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='1.6'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='1.9'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='1.5'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='1.4'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 1200px 800px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html::before {
-    animation: twinkleA 9s ease-in-out infinite;
-  }
-}
-
-/* Rare pulse (mostly steady, brief brightening) */
-@keyframes twinkleA {
-  0%, 86%, 100% { opacity: 0.06; }
-  89% { opacity: 0.14; }
-  91% { opacity: 0.07; }
-  95% { opacity: 0.11; }
-  97% { opacity: 0.06; }
-}
-
-/* Twinkle layer B: even rarer, slightly different distribution */
-html::after {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%20fill='white'%20fill-opacity='0.85'%3E%3Ccircle%20cx='90'%20cy='300'%20r='1.4'/%3E%3Ccircle%20cx='360'%20cy='110'%20r='1.6'/%3E%3Ccircle%20cx='520'%20cy='780'%20r='1.5'/%3E%3Ccircle%20cx='740'%20cy='420'%20r='1.7'/%3E%3Ccircle%20cx='920'%20cy='240'%20r='1.4'/%3E%3Ccircle%20cx='1160'%20cy='560'%20r='1.6'/%3E%3Ccircle%20cx='1320'%20cy='160'%20r='1.5'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 1400px 900px;
-  opacity: 0.06;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html::after {
-    animation: twinkleB 13s ease-in-out infinite;
-  }
-}
-
-@keyframes twinkleB {
-  0%, 90%, 100% { opacity: 0.05; }
-  92% { opacity: 0.12; }
-  93% { opacity: 0.06; }
-  96% { opacity: 0.10; }
-  98% { opacity: 0.05; }
-}
-
-/* ===========================
-   STARFIELD + MILKY WAY BAND
-   =========================== */
-
-/* Starfield layer (BEHIND content, cannot block hover/click) */
-body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
 
-  background-image:
-    /* Milky Way band (diagonal, subtle but noticeable) */
-    linear-gradient(115deg,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 34%,
-      rgba(120, 190, 255, 0.14) 44%,
-      rgba(140, 220, 255, 0.07) 49%,
-      rgba(120, 180, 255, 0.10) 54%,
-      rgba(0,0,0,0) 64%,
-      rgba(0,0,0,0) 100%),
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%20fill='white'%20fill-opacity='0.60'%3E%3Ccircle%20cx='70'%20cy='80'%20r='0.7'/%3E%3Ccircle%20cx='220'%20cy='170'%20r='0.6'/%3E%3Ccircle%20cx='390'%20cy='90'%20r='0.7'/%3E%3Ccircle%20cx='520'%20cy='260'%20r='0.6'/%3E%3Ccircle%20cx='690'%20cy='140'%20r='0.7'/%3E%3Ccircle%20cx='820'%20cy='210'%20r='0.6'/%3E%3Ccircle%20cx='980'%20cy='70'%20r='0.7'/%3E%3Ccircle%20cx='1180'%20cy='260'%20r='0.6'/%3E%3Ccircle%20cx='1320'%20cy='120'%20r='0.7'/%3E%3Ccircle%20cx='160'%20cy='520'%20r='0.6'/%3E%3Ccircle%20cx='340'%20cy='640'%20r='0.7'/%3E%3Ccircle%20cx='560'%20cy='560'%20r='0.6'/%3E%3Ccircle%20cx='760'%20cy='690'%20r='0.7'/%3E%3Ccircle%20cx='980'%20cy='600'%20r='0.6'/%3E%3Ccircle%20cx='1200'%20cy='720'%20r='0.7'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 1400px 900px;
 
-    /* Stars */
-    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Crect%20width='900'%20height='600'%20fill='black'%20fill-opacity='0'/%3E%3Cg%20fill='white'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.2'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.9'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.7'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.1'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.8'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.7'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.3'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.9'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.7'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.1'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.8'/%3E%3Ccircle%20cx='70'%20cy='210'%20r='0.7'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='1.0'/%3E%3Ccircle%20cx='240'%20cy='230'%20r='0.8'/%3E%3Ccircle%20cx='330'%20cy='300'%20r='0.7'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.2'/%3E%3Ccircle%20cx='520'%20cy='310'%20r='0.8'/%3E%3Ccircle%20cx='610'%20cy='240'%20r='0.7'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='1.0'/%3E%3Ccircle%20cx='820'%20cy='250'%20r='0.8'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.1'/%3E%3Ccircle%20cx='140'%20cy='380'%20r='0.7'/%3E%3Ccircle%20cx='230'%20cy='450'%20r='0.9'/%3E%3Ccircle%20cx='320'%20cy='410'%20r='0.7'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.2'/%3E%3Ccircle%20cx='520'%20cy='430'%20r='0.7'/%3E%3Ccircle%20cx='610'%20cy='490'%20r='0.9'/%3E%3Ccircle%20cx='720'%20cy='420'%20r='0.7'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.1'/%3E%3C/g%3E%3C/svg%3E"),
-
-    /* Nebula glows */
-    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.10), transparent 60%),
-    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.08), transparent 60%);
-
-  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
-  background-size: auto, 900px 600px, auto, auto;
-
-  opacity: 0.24;
+  opacity: 0.14;
   mix-blend-mode: screen;
 }
 
-/* Ultra-light noise overlay for texture (still cannot block hover/click) */
-body::before {
+/* Mid stars: a bit larger */
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%20fill='white'%20fill-opacity='0.70'%3E%3Ccircle%20cx='120'%20cy='140'%20r='0.9'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='0.8'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='0.85'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='0.9'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='0.8'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='0.85'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='0.9'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='0.8'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='0.85'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 1200px 800px;
+
+  opacity: 0.14;
+  mix-blend-mode: screen;
+}
+
+/* Near stars + Milky Way + nebula glows (the “main” layer) */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 2;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.8%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.35%27/%3E%0A%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  opacity: 0.035;
+
+  background-image:
+    /* Milky Way band (diagonal, subtle) */
+    linear-gradient(115deg,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0) 34%,
+      rgba(120, 190, 255, 0.12) 44%,
+      rgba(140, 220, 255, 0.06) 49%,
+      rgba(120, 180, 255, 0.09) 54%,
+      rgba(0,0,0,0) 64%,
+      rgba(0,0,0,0) 100%),
+
+    /* Near stars (slightly brighter/larger) */
+    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Cg%20fill='white'%20fill-opacity='0.85'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.1'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.95'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.85'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.05'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.9'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.85'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.15'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.95'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.85'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.05'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.9'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='1.0'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.1'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='1.0'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.05'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.15'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.05'/%3E%3C/g%3E%3C/svg%3E"),
+
+    /* Nebula glows */
+    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.09), transparent 62%),
+    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.07), transparent 62%);
+
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+  background-size: auto, 900px 600px, auto, auto;
+
+  opacity: 0.18;
+  mix-blend-mode: screen;
 }
 
-/* Ensure all page content sits above the background layers */
+/* =========================================================
+   AURORA SWEEP (subtle) + NOISE + RARE METEOR STREAK
+   - sits above stars, under content
+   ========================================================= */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+
+  /* Order: meteor (no-repeat), aurora layers, noise (repeat) */
+  background-image:
+    /* Meteor streak: narrow gradient line (hidden offscreen most of the time) */
+    linear-gradient(135deg,
+      rgba(180, 235, 255, 0) 0%,
+      rgba(180, 235, 255, 0.85) 50%,
+      rgba(180, 235, 255, 0) 100%),
+
+    /* Aurora (top sweep) */
+    radial-gradient(1200px 520px at 20% 0%,
+      rgba(60, 200, 255, 0.10),
+      rgba(80, 140, 255, 0.06),
+      rgba(0,0,0,0) 65%),
+    radial-gradient(1100px 520px at 80% 0%,
+      rgba(140, 90, 255, 0.08),
+      rgba(80, 180, 255, 0.05),
+      rgba(0,0,0,0) 66%),
+
+    /* Noise texture */
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.8%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.35%27/%3E%0A%3C/svg%3E");
+
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+
+  /* Meteor size (thin streak), aurora full-size, noise tile */
+  background-size: 280px 2px, auto, auto, 200px 200px;
+
+  /* Initial positions: meteor far offscreen; aurora anchored near top; noise default */
+  background-position:
+    -200% -200%,
+    0% 0%,
+    0% 0%,
+    0% 0%;
+
+  opacity: 1;
+  mix-blend-mode: screen;
+  filter: blur(0px);
+}
+
+/* Keep all page content above visuals */
 body > * {
   position: relative;
-  z-index: 3;
+  z-index: 10;
 }
 
-/* Subtle drift animation for the starfield (Milky Way band drifts too) */
+/* =========================================================
+   PARALLAX ANIMATIONS (respect reduced motion)
+   ========================================================= */
 @media (prefers-reduced-motion: no-preference) {
+  /* Far stars: slowest */
+  html::before {
+    animation: driftFar 95s linear infinite;
+  }
+
+  /* Mid stars: medium */
+  html::after {
+    animation: driftMid 65s linear infinite;
+  }
+
+  /* Near stars + Milky Way: faster */
   body::after {
-    animation: star-drift 30s linear infinite;
+    animation: driftNear 36s linear infinite;
+  }
+
+  /* Aurora sweep + rare meteor pass */
+  body::before {
+    animation: auroraSweep 26s ease-in-out infinite, meteorPass 52s linear infinite;
   }
 }
-@keyframes star-drift {
+
+@keyframes driftFar {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-40px, 20px, 0); }
+  to   { transform: translate3d(-30px, 12px, 0); }
 }
 
+@keyframes driftMid {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-45px, 18px, 0); }
+}
+
+@keyframes driftNear {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-70px, 28px, 0); }
+}
+
+/* Aurora barely shifts (top only feeling) */
+@keyframes auroraSweep {
+  0% {
+    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  50% {
+    background-position: -200% -200%, 6% 0%, -6% 0%, 0% 0%;
+  }
+  100% {
+    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+/* Meteor streak: rare, quick diagonal pass */
+@keyframes meteorPass {
+  0%, 92% {
+    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  93% {
+    background-position: -10% -10%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  96% {
+    background-position: 120% 120%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  97%, 100% {
+    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+/* =========================================================
+   LAYOUT STYLES
+   ========================================================= */
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -160,11 +236,32 @@ body > * {
 }
 
 .site-header {
+  position: relative;
+  overflow: hidden;
   background: #14161f;
-  border-bottom: 1px solid #222633;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+/* Header “glow horizon” */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 260px at 50% 100%,
+      rgba(90, 170, 255, 0.18),
+      rgba(120, 80, 255, 0.10),
+      rgba(0,0,0,0) 70%),
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+  opacity: 0.55;
+  mix-blend-mode: screen;
 }
 
 .header-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -186,10 +283,30 @@ body > * {
   margin-top: 0.2rem;
 }
 
+/* Section separators as “starlight” */
 .section {
+  position: relative;
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #222633;
+  border-top: none;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(99,179,237,0.40),
+    rgba(255,255,255,0.18),
+    rgba(79,209,197,0.32),
+    rgba(255,255,255,0)
+  );
+  opacity: 0.55;
 }
 
 .section h2 {
@@ -264,7 +381,7 @@ body > * {
 .site-footer {
   margin-top: 2rem;
   padding: 1rem 0;
-  border-top: 1px solid #222633;
+  border-top: 1px solid rgba(255,255,255,0.10);
   font-size: 0.85rem;
   color: #a0aec0;
   text-align: center;
