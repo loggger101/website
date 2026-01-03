@@ -190,12 +190,10 @@ body > * {
 
 /* ===========================
    Upgrade #5: Enhanced project cards
-   - Featured header band + tags
-   - Hover/focus overlay (CONTENT AREA ONLY)
-   - When overlay appears: content text is FULLY hidden
    =========================== */
 
 .project-card--enhanced {
+  cursor: pointer;
   padding: 0;
   position: relative;
   overflow: hidden;
@@ -282,33 +280,24 @@ body > * {
   visibility: visible;
 }
 
-/* HARD hide on hover/focus: no bleed-through possible */
+/* Hide base content when overlay is showing */
 .project-card--enhanced:hover .project-body,
-.project-card--enhanced:focus-within .project-body {
+.project-card--enhanced:focus-within .project-body,
+.project-card--enhanced:focus .project-body,
+.project-card--enhanced:active .project-body {
   opacity: 0;
   visibility: hidden;
-}
-
-/* Link styling */
-.project-links a {
-  color: #63b3ed;
-  text-decoration: none;
-}
-
-.project-links a:hover {
-  color: #90cdf4;
-  text-decoration: underline;
 }
 
 /* Overlay (CONTENT AREA ONLY) — fully opaque background */
 .project-card__overlay {
   position: absolute;
+  z-index: 3;
   inset: 0;
   display: flex;
   align-items: center;
   padding: 1rem;
 
-  /* fully opaque, no underlying text can show */
   background: #0b0c10;
 
   opacity: 0;
@@ -318,7 +307,9 @@ body > * {
 }
 
 .project-card--enhanced:hover .project-card__overlay,
-.project-card--enhanced:focus-within .project-card__overlay {
+.project-card--enhanced:focus-within .project-card__overlay,
+.project-card--enhanced:focus .project-card__overlay,
+.project-card--enhanced:active .project-card__overlay {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
