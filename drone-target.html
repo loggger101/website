@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drone Target ID – Logan Edwards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <h1 class="site-title">Drone Target Identification Model</h1>
+      <p class="site-tagline">Project page • Logan M Edwards</p>
+      <p class="open-to"><a class="btn btn-sm btn-ghost" href="index.html">← Back to main site</a></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h2>Overview</h2>
+      <p>
+        YOLO-based detection paired with a classifier workflow to distinguish valid targets from non-targets and background in aerial imagery/video.
+        This page is meant to hold detailed methods, dataset notes, and demo results.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Key highlights</h2>
+      <ul class="contact-list">
+        <li>Real-time detection pipeline (segmentation/detection front-end).</li>
+        <li>Coarse “valid/invalid” classification stage for decision-making.</li>
+        <li>Designed for practical deployment with OpenCV / video streams.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Links</h2>
+      <p>
+        <a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/fpv-images" target="_blank" rel="noopener">View on Kaggle</a>
+        <a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1U_3uNBDcOX55h1ZSNn_pcUpBKPVT5tdFH6aje8d4m5E/edit?usp=drive_link" target="_blank" rel="noopener">Report / Writeup</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; Logan M Edwards</p>
+  </footer>
+
+  <!-- Mark icon as used even if user opened this page directly -->
+  <script>
+    localStorage.setItem("projectIconUsed:drone", "1");
+  </script>
+</body>
+</html>
