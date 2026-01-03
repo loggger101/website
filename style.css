@@ -116,3 +116,169 @@ body {
   color: #a0aec0;
   text-align: center;
 }
+
+/* ===========================
+   Upgrade #5: Enhanced project cards
+   - Featured header band + tags
+   - Hover/focus overlay with CTAs
+   (overall page format unchanged)
+   =========================== */
+
+.project-card--enhanced {
+  /* overrides the base .project-card padding so we can add a header band */
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.95rem;
+  background: #121521;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.project-card--enhanced:hover,
+.project-card--enhanced:focus-within {
+  transform: translateY(-6px);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.42),
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 0 26px rgba(var(--accent-rgb), 0.22);
+}
+
+/* keyboard focus ring */
+.project-card--enhanced:focus {
+  outline: 2px solid rgba(var(--accent-rgb), 0.95);
+  outline-offset: 3px;
+}
+
+/* Top “featured” band */
+.project-card__media {
+  padding: 1rem 1rem 0.9rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  background:
+    radial-gradient(900px 260px at 12% 18%, rgba(var(--accent-rgb), 0.30), transparent 60%),
+    radial-gradient(700px 240px at 88% 70%, rgba(160, 174, 192, 0.18), transparent 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+}
+
+.project-card__mediaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+  font-size: 1.05rem;
+}
+
+/* Tags */
+.project-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #dbe7ff;
+}
+
+/* Body content */
+.project-card__content {
+  padding: 1rem;
+}
+
+.project-links a {
+  color: #63b3ed;
+  text-decoration: none;
+}
+
+.project-links a:hover {
+  color: #90cdf4;
+  text-decoration: underline;
+}
+
+/* Overlay */
+.project-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.86),
+    rgba(0,0,0,0.35) 60%,
+    rgba(0,0,0,0.12)
+  );
+
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 170ms ease, transform 170ms ease;
+}
+
+.project-card--enhanced:hover .project-card__overlay,
+.project-card--enhanced:focus-within .project-card__overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.overlay-box {
+  width: 100%;
+}
+
+.overlay-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.74);
+  margin-bottom: 0.35rem;
+}
+
+.overlay-text {
+  color: rgba(255,255,255,0.92);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin-bottom: 0.8rem;
+}
+
+.overlay-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* Smaller & ghost buttons without affecting your existing .btn usage */
+.btn.btn-sm {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.btn.btn-ghost {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+}
+
+.btn.btn-ghost:hover {
+  background: rgba(255,255,255,0.16);
+}
