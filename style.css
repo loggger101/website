@@ -38,6 +38,12 @@ body {
   font-size: 0.95rem;
 }
 
+.open-to {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
 .section {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -80,6 +86,11 @@ body {
 }
 
 .project-tech {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.project-links {
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
