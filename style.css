@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+/* Overscan padding so drifting backgrounds never expose empty edges */
+:root {
+  --drift-overscan: 220px; /* >= max drift distance (we drift ~60px) */
+}
+
 html, body {
   min-height: 100%;
 }
@@ -39,7 +44,10 @@ body {
 html::before {
   content: "";
   position: fixed;
-  inset: 0;
+
+  /* IMPORTANT: overscan so drift never reveals edges */
+  inset: calc(-1 * var(--drift-overscan));
+
   pointer-events: none;
   z-index: 0;
 
@@ -49,13 +57,18 @@ html::before {
 
   opacity: 0.17;
   mix-blend-mode: screen;
+
+  will-change: transform;
 }
 
 /* Mid stars */
 html::after {
   content: "";
   position: fixed;
-  inset: 0;
+
+  /* IMPORTANT: overscan so drift never reveals edges */
+  inset: calc(-1 * var(--drift-overscan));
+
   pointer-events: none;
   z-index: 1;
 
@@ -65,13 +78,18 @@ html::after {
 
   opacity: 0.17;
   mix-blend-mode: screen;
+
+  will-change: transform;
 }
 
 /* Near layer: SAFE Milky Way (center-dense) + near stars + nebula */
 body::after {
   content: "";
   position: fixed;
-  inset: 0;
+
+  /* IMPORTANT: overscan so drift never reveals edges */
+  inset: calc(-1 * var(--drift-overscan));
+
   pointer-events: none;
   z-index: 2;
 
@@ -92,6 +110,8 @@ body::after {
 
   opacity: 0.28;
   mix-blend-mode: screen;
+
+  will-change: transform;
 }
 
 /* =========================================================
@@ -100,7 +120,10 @@ body::after {
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+
+  /* IMPORTANT: overscan so drift never reveals edges */
+  inset: calc(-1 * var(--drift-overscan));
+
   pointer-events: none;
   z-index: 3;
 
@@ -123,6 +146,8 @@ body::before {
   opacity: 0.10;
   filter: blur(0.2px);
   mix-blend-mode: normal;
+
+  will-change: transform, background-position;
 }
 
 /* Keep all content above visuals */
