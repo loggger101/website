@@ -7,10 +7,11 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Subtle deep-blue gradient background */
+  /* Space-like deep-blue backdrop */
   background:
     radial-gradient(1200px 700px at 15% -10%, rgba(49, 130, 206, 0.22), transparent 60%),
     radial-gradient(900px 600px at 85% 10%, rgba(0, 80, 160, 0.18), transparent 55%),
+    radial-gradient(800px 520px at 70% 85%, rgba(120, 80, 255, 0.10), transparent 60%),
     linear-gradient(180deg, #061027 0%, #0b0c10 55%, #060913 100%);
   background-color: #0b0c10;
 
@@ -19,16 +20,56 @@ body {
   min-height: 100vh;
 }
 
+/* Ultra-light noise overlay for texture (no images to host) */
 body::before {
-  /* Ultra-light noise overlay for texture (no images to host) */
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.8%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.35%27/%3E%0A%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
   opacity: 0.035;
+}
+
+/* Starfield + subtle nebula glow */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* Stars (SVG data URI) + faint nebula gradients */
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Crect%20width='900'%20height='600'%20fill='black'%20fill-opacity='0'/%3E%3Cg%20fill='white'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.2'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.9'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.7'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.1'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.8'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.7'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.3'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.9'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.7'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.1'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.8'/%3E%3Ccircle%20cx='70'%20cy='210'%20r='0.7'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='1.0'/%3E%3Ccircle%20cx='240'%20cy='230'%20r='0.8'/%3E%3Ccircle%20cx='330'%20cy='300'%20r='0.7'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.2'/%3E%3Ccircle%20cx='520'%20cy='310'%20r='0.8'/%3E%3Ccircle%20cx='610'%20cy='240'%20r='0.7'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='1.0'/%3E%3Ccircle%20cx='820'%20cy='250'%20r='0.8'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.1'/%3E%3Ccircle%20cx='140'%20cy='380'%20r='0.7'/%3E%3Ccircle%20cx='230'%20cy='450'%20r='0.9'/%3E%3Ccircle%20cx='320'%20cy='410'%20r='0.7'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.2'/%3E%3Ccircle%20cx='520'%20cy='430'%20r='0.7'/%3E%3Ccircle%20cx='610'%20cy='490'%20r='0.9'/%3E%3Ccircle%20cx='720'%20cy='420'%20r='0.7'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.1'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.10), transparent 60%),
+    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.08), transparent 60%);
+
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 900px 600px, auto, auto;
+
+  opacity: 0.22;
+  mix-blend-mode: screen;
+}
+
+/* Keep all site content above the space layers */
+body > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Subtle star drift (respects reduced motion preferences) */
+@media (prefers-reduced-motion: no-preference) {
+  body::after {
+    animation: star-drift 30s linear infinite;
+  }
+}
+
+@keyframes star-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-40px, 20px, 0); }
 }
 
 .container {
@@ -56,12 +97,6 @@ body::before {
 .site-tagline {
   color: #a0aec0;
   font-size: 0.95rem;
-}
-
-.open-to {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin-top: 0.2rem;
 }
 
 .section {
@@ -110,11 +145,6 @@ body::before {
   margin-top: 0.5rem;
 }
 
-.project-links {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
@@ -146,181 +176,4 @@ body::before {
   font-size: 0.85rem;
   color: #a0aec0;
   text-align: center;
-}
-
-/* ===========================
-   Upgrade #5: Enhanced project cards
-   - Featured header band + tags
-   - Hover/focus overlay (CONTENT AREA ONLY)
-   - When overlay appears: content text is FULLY hidden
-   =========================== */
-
-.project-card--enhanced {
-  padding: 0;
-  position: relative;
-  overflow: hidden;
-  border-radius: 0.95rem;
-  background: #121521;
-  border: 1px solid rgba(255,255,255,0.12);
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-}
-
-.project-card--enhanced:hover,
-.project-card--enhanced:focus-within {
-  transform: translateY(-6px);
-  border-color: rgba(var(--accent-rgb), 0.55);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.42),
-    0 0 0 1px rgba(255,255,255,0.06),
-    0 0 26px rgba(var(--accent-rgb), 0.22);
-}
-
-.project-card--enhanced:focus {
-  outline: 2px solid rgba(var(--accent-rgb), 0.95);
-  outline-offset: 3px;
-}
-
-/* Top band stays unobstructed */
-.project-card__media {
-  padding: 1rem 1rem 0.9rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  background:
-    radial-gradient(900px 260px at 12% 18%, rgba(var(--accent-rgb), 0.30), transparent 60%),
-    radial-gradient(700px 240px at 88% 70%, rgba(160, 174, 192, 0.18), transparent 60%),
-    linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
-}
-
-.project-card__mediaTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.project-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.92);
-  font-size: 1.05rem;
-}
-
-/* Tags */
-.project-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  justify-content: flex-end;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.22rem 0.55rem;
-  font-size: 0.78rem;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.22);
-  border: 1px solid rgba(255,255,255,0.14);
-  color: #dbe7ff;
-}
-
-/* Content (overlay anchors here) */
-.project-card__content {
-  position: relative;
-  padding: 1rem;
-}
-
-/* Base content elements that must disappear */
-.project-body {
-  transition: opacity 120ms ease;
-  opacity: 1;
-  visibility: visible;
-}
-
-/* HARD hide on hover/focus: no bleed-through possible */
-.project-card--enhanced:hover .project-body,
-.project-card--enhanced:focus-within .project-body {
-  opacity: 0;
-  visibility: hidden;
-}
-
-/* Link styling */
-.project-links a {
-  color: #63b3ed;
-  text-decoration: none;
-}
-
-.project-links a:hover {
-  color: #90cdf4;
-  text-decoration: underline;
-}
-
-/* Overlay (CONTENT AREA ONLY) — fully opaque background */
-.project-card__overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-
-  /* fully opaque, no underlying text can show */
-  background: #0b0c10;
-
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity 170ms ease, transform 170ms ease;
-}
-
-.project-card--enhanced:hover .project-card__overlay,
-.project-card--enhanced:focus-within .project-card__overlay {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.overlay-box {
-  width: 100%;
-}
-
-.overlay-label {
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.74);
-  margin-bottom: 0.35rem;
-}
-
-.overlay-text {
-  color: rgba(255,255,255,0.92);
-  font-size: 0.92rem;
-  line-height: 1.35;
-  margin-bottom: 0.8rem;
-}
-
-.overlay-actions {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-/* Button variants */
-.btn.btn-sm {
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-}
-
-.btn.btn-ghost {
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.16);
-}
-
-.btn.btn-ghost:hover {
-  background: rgba(255,255,255,0.16);
 }
