@@ -32,9 +32,9 @@ body {
 
 /* =========================================================
    PARALLAX STAR LAYERS (3 depths)
-   - Total perceived density stays about the same:
-     stars are distributed across layers rather than stacked.
-   - All are pointer-events: none so cards stay interactive.
+   IMPORTANT FIX:
+   - Lowered opacity + brightness so it doesn't look like "snow"
+   - Keeps overall density similar to before (not additive-feeling)
    ========================================================= */
 
 /* Far stars: smallest + slowest */
@@ -45,15 +45,15 @@ html::before {
   pointer-events: none;
   z-index: 0;
 
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%20fill='white'%20fill-opacity='0.60'%3E%3Ccircle%20cx='70'%20cy='80'%20r='0.7'/%3E%3Ccircle%20cx='220'%20cy='170'%20r='0.6'/%3E%3Ccircle%20cx='390'%20cy='90'%20r='0.7'/%3E%3Ccircle%20cx='520'%20cy='260'%20r='0.6'/%3E%3Ccircle%20cx='690'%20cy='140'%20r='0.7'/%3E%3Ccircle%20cx='820'%20cy='210'%20r='0.6'/%3E%3Ccircle%20cx='980'%20cy='70'%20r='0.7'/%3E%3Ccircle%20cx='1180'%20cy='260'%20r='0.6'/%3E%3Ccircle%20cx='1320'%20cy='120'%20r='0.7'/%3E%3Ccircle%20cx='160'%20cy='520'%20r='0.6'/%3E%3Ccircle%20cx='340'%20cy='640'%20r='0.7'/%3E%3Ccircle%20cx='560'%20cy='560'%20r='0.6'/%3E%3Ccircle%20cx='760'%20cy='690'%20r='0.7'/%3E%3Ccircle%20cx='980'%20cy='600'%20r='0.6'/%3E%3Ccircle%20cx='1200'%20cy='720'%20r='0.7'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1400'%20height='900'%3E%3Cg%20fill='white'%20fill-opacity='0.55'%3E%3Ccircle%20cx='70'%20cy='80'%20r='0.65'/%3E%3Ccircle%20cx='220'%20cy='170'%20r='0.55'/%3E%3Ccircle%20cx='390'%20cy='90'%20r='0.65'/%3E%3Ccircle%20cx='520'%20cy='260'%20r='0.55'/%3E%3Ccircle%20cx='690'%20cy='140'%20r='0.65'/%3E%3Ccircle%20cx='820'%20cy='210'%20r='0.55'/%3E%3Ccircle%20cx='980'%20cy='70'%20r='0.65'/%3E%3Ccircle%20cx='1180'%20cy='260'%20r='0.55'/%3E%3Ccircle%20cx='1320'%20cy='120'%20r='0.65'/%3E%3Ccircle%20cx='160'%20cy='520'%20r='0.55'/%3E%3Ccircle%20cx='340'%20cy='640'%20r='0.65'/%3E%3Ccircle%20cx='560'%20cy='560'%20r='0.55'/%3E%3Ccircle%20cx='760'%20cy='690'%20r='0.65'/%3E%3Ccircle%20cx='980'%20cy='600'%20r='0.55'/%3E%3Ccircle%20cx='1200'%20cy='720'%20r='0.65'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 1400px 900px;
 
-  opacity: 0.14;
+  opacity: 0.09;
   mix-blend-mode: screen;
 }
 
-/* Mid stars: a bit larger */
+/* Mid stars */
 html::after {
   content: "";
   position: fixed;
@@ -61,15 +61,15 @@ html::after {
   pointer-events: none;
   z-index: 1;
 
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%20fill='white'%20fill-opacity='0.70'%3E%3Ccircle%20cx='120'%20cy='140'%20r='0.9'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='0.8'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='0.85'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='0.9'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='0.8'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='0.85'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='0.9'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='0.8'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='0.85'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='1200'%20height='800'%3E%3Cg%20fill='white'%20fill-opacity='0.62'%3E%3Ccircle%20cx='120'%20cy='140'%20r='0.85'/%3E%3Ccircle%20cx='280'%20cy='520'%20r='0.75'/%3E%3Ccircle%20cx='460'%20cy='220'%20r='0.80'/%3E%3Ccircle%20cx='640'%20cy='680'%20r='0.85'/%3E%3Ccircle%20cx='820'%20cy='360'%20r='0.75'/%3E%3Ccircle%20cx='1040'%20cy='120'%20r='0.80'/%3E%3Ccircle%20cx='980'%20cy='640'%20r='0.85'/%3E%3Ccircle%20cx='180'%20cy='720'%20r='0.75'/%3E%3Ccircle%20cx='760'%20cy='80'%20r='0.80'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 1200px 800px;
 
-  opacity: 0.14;
+  opacity: 0.10;
   mix-blend-mode: screen;
 }
 
-/* Near stars + Milky Way + nebula glows (the “main” layer) */
+/* Near stars + Milky Way + nebula glows */
 body::after {
   content: "";
   position: fixed;
@@ -78,33 +78,35 @@ body::after {
   z-index: 2;
 
   background-image:
-    /* Milky Way band (diagonal, subtle) */
+    /* Milky Way band */
     linear-gradient(115deg,
       rgba(0,0,0,0) 0%,
       rgba(0,0,0,0) 34%,
-      rgba(120, 190, 255, 0.12) 44%,
-      rgba(140, 220, 255, 0.06) 49%,
-      rgba(120, 180, 255, 0.09) 54%,
+      rgba(120, 190, 255, 0.10) 44%,
+      rgba(140, 220, 255, 0.05) 49%,
+      rgba(120, 180, 255, 0.08) 54%,
       rgba(0,0,0,0) 64%,
       rgba(0,0,0,0) 100%),
 
-    /* Near stars (slightly brighter/larger) */
-    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Cg%20fill='white'%20fill-opacity='0.85'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.1'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.95'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.85'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.05'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.9'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.85'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.15'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.95'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.85'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.05'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.9'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='1.0'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.1'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='1.0'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.05'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.15'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.05'/%3E%3C/g%3E%3C/svg%3E"),
+    /* Near stars */
+    url("data:image/svg+xml,%3Csvg%20xmlns='http%3A//www.w3.org/2000/svg'%20width='900'%20height='600'%3E%3Cg%20fill='white'%20fill-opacity='0.72'%3E%3Ccircle%20cx='36'%20cy='48'%20r='1.0'/%3E%3Ccircle%20cx='110'%20cy='92'%20r='0.9'/%3E%3Ccircle%20cx='190'%20cy='40'%20r='0.8'/%3E%3Ccircle%20cx='270'%20cy='120'%20r='1.0'/%3E%3Ccircle%20cx='340'%20cy='70'%20r='0.85'/%3E%3Ccircle%20cx='420'%20cy='150'%20r='0.8'/%3E%3Ccircle%20cx='510'%20cy='60'%20r='1.05'/%3E%3Ccircle%20cx='600'%20cy='110'%20r='0.9'/%3E%3Ccircle%20cx='690'%20cy='40'%20r='0.8'/%3E%3Ccircle%20cx='780'%20cy='130'%20r='1.0'/%3E%3Ccircle%20cx='860'%20cy='80'%20r='0.85'/%3E%3Ccircle%20cx='150'%20cy='260'%20r='0.95'/%3E%3Ccircle%20cx='420'%20cy='260'%20r='1.05'/%3E%3Ccircle%20cx='700'%20cy='290'%20r='0.95'/%3E%3Ccircle%20cx='60'%20cy='420'%20r='1.0'/%3E%3Ccircle%20cx='410'%20cy='470'%20r='1.05'/%3E%3Ccircle%20cx='810'%20cy='470'%20r='1.0'/%3E%3C/g%3E%3C/svg%3E"),
 
     /* Nebula glows */
-    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.09), transparent 62%),
-    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.07), transparent 62%);
+    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.08), transparent 64%),
+    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.06), transparent 64%);
 
   background-repeat: no-repeat, repeat, no-repeat, no-repeat;
   background-size: auto, 900px 600px, auto, auto;
 
-  opacity: 0.18;
+  opacity: 0.13;
   mix-blend-mode: screen;
 }
 
 /* =========================================================
-   AURORA SWEEP (subtle) + NOISE + RARE METEOR STREAK
-   - sits above stars, under content
+   AURORA + (FIXED) NOISE
+   IMPORTANT FIX:
+   - Noise is now MUCH weaker and slightly blurred so it doesn't look like stars.
+   - Meteor removed entirely.
    ========================================================= */
 body::before {
   content: "";
@@ -113,45 +115,35 @@ body::before {
   pointer-events: none;
   z-index: 3;
 
-  /* Order: meteor (no-repeat), aurora layers, noise (repeat) */
   background-image:
-    /* Meteor streak: narrow gradient line (hidden offscreen most of the time) */
-    linear-gradient(135deg,
-      rgba(180, 235, 255, 0) 0%,
-      rgba(180, 235, 255, 0.85) 50%,
-      rgba(180, 235, 255, 0) 100%),
-
-    /* Aurora (top sweep) */
+    /* Aurora (subtle) */
     radial-gradient(1200px 520px at 20% 0%,
       rgba(60, 200, 255, 0.10),
-      rgba(80, 140, 255, 0.06),
-      rgba(0,0,0,0) 65%),
+      rgba(80, 140, 255, 0.05),
+      rgba(0,0,0,0) 66%),
     radial-gradient(1100px 520px at 80% 0%,
       rgba(140, 90, 255, 0.08),
-      rgba(80, 180, 255, 0.05),
-      rgba(0,0,0,0) 66%),
+      rgba(80, 180, 255, 0.04),
+      rgba(0,0,0,0) 68%),
 
-    /* Noise texture */
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.8%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.35%27/%3E%0A%3C/svg%3E");
+    /* Noise texture (reduced so it no longer reads as "star density") */
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%0A%3Cfilter%20id%3D%27n%27%3E%0A%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.75%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%0A%3C/filter%3E%0A%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%27.16%27/%3E%0A%3C/svg%3E");
 
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, 200px 200px;
+  background-position: 0% 0%, 0% 0%, 0% 0%;
 
-  /* Meteor size (thin streak), aurora full-size, noise tile */
-  background-size: 280px 2px, auto, auto, 200px 200px;
+  /* Overall strength: keep subtle */
+  opacity: 0.12;
 
-  /* Initial positions: meteor far offscreen; aurora anchored near top; noise default */
-  background-position:
-    -200% -200%,
-    0% 0%,
-    0% 0%,
-    0% 0%;
+  /* Slight blur prevents "static snow" look */
+  filter: blur(0.2px);
 
-  opacity: 1;
-  mix-blend-mode: screen;
-  filter: blur(0px);
+  /* Normal blend avoids whitening everything */
+  mix-blend-mode: normal;
 }
 
-/* Keep all page content above visuals */
+/* Keep all content above visuals */
 body > * {
   position: relative;
   z-index: 10;
@@ -161,73 +153,32 @@ body > * {
    PARALLAX ANIMATIONS (respect reduced motion)
    ========================================================= */
 @media (prefers-reduced-motion: no-preference) {
-  /* Far stars: slowest */
-  html::before {
-    animation: driftFar 95s linear infinite;
-  }
-
-  /* Mid stars: medium */
-  html::after {
-    animation: driftMid 65s linear infinite;
-  }
-
-  /* Near stars + Milky Way: faster */
-  body::after {
-    animation: driftNear 36s linear infinite;
-  }
-
-  /* Aurora sweep + rare meteor pass */
-  body::before {
-    animation: auroraSweep 26s ease-in-out infinite, meteorPass 52s linear infinite;
-  }
+  html::before { animation: driftFar 110s linear infinite; }
+  html::after  { animation: driftMid 80s linear infinite; }
+  body::after  { animation: driftNear 44s linear infinite; }
+  body::before { animation: auroraSweep 30s ease-in-out infinite; }
 }
 
 @keyframes driftFar {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-30px, 12px, 0); }
+  to   { transform: translate3d(-26px, 10px, 0); }
 }
-
 @keyframes driftMid {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-45px, 18px, 0); }
+  to   { transform: translate3d(-40px, 16px, 0); }
 }
-
 @keyframes driftNear {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-70px, 28px, 0); }
+  to   { transform: translate3d(-60px, 24px, 0); }
 }
-
-/* Aurora barely shifts (top only feeling) */
 @keyframes auroraSweep {
-  0% {
-    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
-  }
-  50% {
-    background-position: -200% -200%, 6% 0%, -6% 0%, 0% 0%;
-  }
-  100% {
-    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
-  }
-}
-
-/* Meteor streak: rare, quick diagonal pass */
-@keyframes meteorPass {
-  0%, 92% {
-    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
-  }
-  93% {
-    background-position: -10% -10%, 0% 0%, 0% 0%, 0% 0%;
-  }
-  96% {
-    background-position: 120% 120%, 0% 0%, 0% 0%, 0% 0%;
-  }
-  97%, 100% {
-    background-position: -200% -200%, 0% 0%, 0% 0%, 0% 0%;
-  }
+  0%   { background-position: 0% 0%, 0% 0%, 0% 0%; }
+  50%  { background-position: 6% 0%, -6% 0%, 0% 0%; }
+  100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
 }
 
 /* =========================================================
-   LAYOUT STYLES
+   LAYOUT
    ========================================================= */
 .container {
   max-width: 900px;
@@ -268,20 +219,9 @@ body > * {
   gap: 0.25rem;
 }
 
-.site-title {
-  font-size: 1.9rem;
-}
-
-.site-tagline {
-  color: #a0aec0;
-  font-size: 0.95rem;
-}
-
-.open-to {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin-top: 0.2rem;
-}
+.site-title { font-size: 1.9rem; }
+.site-tagline { color: #a0aec0; font-size: 0.95rem; }
+.open-to { color: #a0aec0; font-size: 0.9rem; margin-top: 0.2rem; }
 
 /* Section separators as “starlight” */
 .section {
@@ -290,7 +230,6 @@ body > * {
   padding-top: 1rem;
   border-top: none;
 }
-
 .section::before {
   content: "";
   position: absolute;
@@ -309,49 +248,14 @@ body > * {
   opacity: 0.55;
 }
 
-.section h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-
-.location {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-}
+.section h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.location { color: #a0aec0; font-size: 0.9rem; margin-bottom: 0.75rem; }
 
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   margin-top: 0.75rem;
-}
-
-.project-card {
-  padding: 1rem;
-  border-radius: 0.75rem;
-  background: #171923;
-  border: 1px solid #2d3748;
-}
-
-.project-card h3 {
-  margin-bottom: 0.25rem;
-}
-
-.project-subtitle {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-.project-tech {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-.project-links {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
 }
 
 .btn {
@@ -364,19 +268,10 @@ body > * {
   text-decoration: none;
   font-size: 0.95rem;
 }
+.btn:hover { background: #2b6cb0; }
 
-.btn:hover {
-  background: #2b6cb0;
-}
-
-.contact-list {
-  list-style: none;
-  margin-top: 0.5rem;
-}
-
-.contact-list li {
-  margin-bottom: 0.3rem;
-}
+.contact-list { list-style: none; margin-top: 0.5rem; }
+.contact-list li { margin-bottom: 0.3rem; }
 
 .site-footer {
   margin-top: 2rem;
@@ -387,9 +282,115 @@ body > * {
   text-align: center;
 }
 
-/* ===========================
-   Enhanced project cards
-   =========================== */
+/* =========================================================
+   PROJECT ICON LINK + TWINKLE UNTIL USED
+   ========================================================= */
+.project-icon-link {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  text-decoration: none;
+
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+  font-size: 1.05rem;
+
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
+  position: relative;
+}
+
+.project-icon-link.is-unvisited {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 0 18px rgba(var(--accent-rgb), 0.28);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-icon-link.is-unvisited {
+    animation: iconTwinkle 2.8s ease-in-out infinite;
+  }
+  .project-icon-link.is-unvisited::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(var(--accent-rgb), 0.20), transparent 55%),
+      radial-gradient(circle at 70% 70%, rgba(255,255,255,0.10), transparent 60%);
+    opacity: 0.0;
+    animation: sparklePulse 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes iconTwinkle {
+  0%, 70%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.08),
+      0 0 14px rgba(var(--accent-rgb), 0.20);
+  }
+  78% {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.16),
+      0 0 24px rgba(var(--accent-rgb), 0.36);
+  }
+  86% {
+    transform: translateY(0) scale(1.00);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.10),
+      0 0 18px rgba(var(--accent-rgb), 0.26);
+  }
+}
+
+@keyframes sparklePulse {
+  0%, 72%, 100% { opacity: 0.0; }
+  78% { opacity: 0.55; }
+  84% { opacity: 0.10; }
+}
+
+.project-icon-link.is-visited {
+  animation: none;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.10),
+    0 0 12px rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.22);
+  color: rgba(255,255,255,0.90);
+}
+
+.project-icon-link:hover,
+.project-icon-link:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.10),
+    0 0 22px rgba(var(--accent-rgb), 0.30);
+  outline: none;
+}
+
+/* =========================================================
+   ENHANCED PROJECT CARDS
+   ========================================================= */
+.project-card {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #171923;
+  border: 1px solid #2d3748;
+}
+
+.project-card h3 { margin-bottom: 0.25rem; }
+
+.project-subtitle {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.project-tech { font-size: 0.9rem; margin-top: 0.5rem; }
 
 .project-card--enhanced {
   cursor: pointer;
@@ -432,18 +433,6 @@ body > * {
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
-}
-
-.project-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.92);
-  font-size: 1.05rem;
 }
 
 .project-badges {
@@ -490,9 +479,7 @@ body > * {
   display: flex;
   align-items: center;
   padding: 1rem;
-
   background: #0b0c10;
-
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
@@ -508,9 +495,7 @@ body > * {
   pointer-events: auto;
 }
 
-.overlay-box {
-  width: 100%;
-}
+.overlay-box { width: 100%; }
 
 .overlay-label {
   font-size: 0.78rem;
