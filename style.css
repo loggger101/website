@@ -274,6 +274,8 @@ body > * {
   color: white;
   text-decoration: none;
   font-size: 0.95rem;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  will-change: transform;
 }
 .btn:hover { background: #2b6cb0; }
 
@@ -741,76 +743,45 @@ body > * {
   }
 }
 
-/* ===========================
-   Micro-interactions + UX
-   =========================== */
 
-.btn,
-.copy-btn,
-a {
-  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease, border-color 140ms ease, opacity 140ms ease;
+/* Micro-interactions */
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
 }
 
-.btn:active,
-.copy-btn:active {
-  transform: translateY(1px);
-}
-
-.btn:focus-visible,
-.copy-btn:focus-visible,
-a:focus-visible {
-  outline: 2px solid rgba(255,255,255,0.55);
-  outline-offset: 3px;
-  border-radius: 8px;
-}
-
-/* Soft hover lift for cards (where applicable) */
-.project-card,
-.mini-project-card,
-.card,
-.course-card {
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
-}
-
-.project-card:hover,
-.mini-project-card:hover,
-.card:hover,
-.course-card:hover {
-  transform: translateY(-2px);
-}
-
-/* External link indicator (text stays; icon is supplemental) */
-a.external-link::after {
-  content: " ↗";
-  font-size: 0.92em;
-  opacity: 0.85;
-}
-
-a.external-link:hover::after {
-  opacity: 1;
+.btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.20);
 }
 
 /* Copy email button */
 .copy-btn {
-  margin-left: 0.5rem;
-  padding: 0.28rem 0.7rem;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.10);
-  color: inherit;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+  color: #e2e8f0;
   cursor: pointer;
-  font-size: 0.82rem;
-  line-height: 1;
+  font-size: 0.9rem;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 
 .copy-btn:hover {
-  background: rgba(255,255,255,0.16);
-  border-color: rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.10);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+.copy-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
 .copy-status {
-  margin-left: 0.5rem;
-  font-size: 0.82rem;
-  opacity: 0.85;
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-size: 0.9rem;
+  color: #a0aec0;
 }
-
