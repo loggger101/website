@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <div class="container header-content">
       <h1 class="site-title">Star Cataloguing Deep Learning Model</h1>
       <p class="site-tagline">Project page • Logan M Edwards</p>
@@ -18,7 +18,7 @@
   <main class="container">
     <section class="section">
       <h2>Overview</h2>
-      <p>
+      <p class="section-intro">
         Deep learning pipeline for classifying stars by spectral type / stellar category using standardized survey imagery plus catalog metadata.
         This page is meant to hold a longer-form project description, results, and links.
       </p>
@@ -26,6 +26,8 @@
 
     <section class="section">
       <h2>Key highlights</h2>
+      <p class="section-intro">A quick snapshot of the most important features and design goals.</p>
+
       <ul class="contact-list">
         <li>Ingests astronomy catalogs + cutouts (e.g., Gaia / Pan-STARRS workflows).</li>
         <li>Model training + evaluation (confusion matrices, error inspection, etc.).</li>
@@ -35,16 +37,57 @@
 
     <section class="section">
       <h2>Links</h2>
+      <p class="section-intro">Primary references and artifacts for this project.</p>
       <p>
         <a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/star-image-bundles" target="_blank" rel="noopener">View on Kaggle</a>
         <a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1FZcBY3jxwTOmFkYY4g2otr7JUMC5jZKCfW_FAmLeRCM/edit?usp=drive_link" target="_blank" rel="noopener">Report / Writeup</a>
       </p>
     </section>
+
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p class="section-intro">Preferred contact: <strong>email</strong>. If you’d like to discuss this project, feel free to reach out.</p>
+
+      <div class="contact-grid" role="list" aria-label="Contact methods">
+        <div class="contact-card" role="listitem">
+          <p class="contact-label">Email (preferred)</p>
+          <a class="contact-link" href="mailto:ledwards2024@my.fit.edu">ledwards2024@my.fit.edu</a>
+        </div>
+
+        <div class="contact-card" role="listitem">
+          <p class="contact-label">LinkedIn</p>
+          <a class="contact-link" href="https://www.linkedin.com/in/logan-edwards-shf/" target="_blank" rel="noopener">https://www.linkedin.com/in/logan-edwards-shf/</a>
+        </div>
+
+        <div class="contact-card" role="listitem">
+          <p class="contact-label">Kaggle</p>
+          <a class="contact-link" href="https://www.kaggle.com/loggger" target="_blank" rel="noopener">https://www.kaggle.com/loggger</a>
+        </div>
+
+        <div class="contact-card" role="listitem">
+          <p class="contact-label">Sisters Hope Foundation — Board</p>
+          <a class="contact-link" href="https://www.sistershopefoundation.org/board-logan" target="_blank" rel="noopener">https://www.sistershopefoundation.org/board-logan</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
+  
   <footer class="site-footer">
-    <p>&copy; Logan M Edwards</p>
+    <div class="container footer-inner">
+      <nav class="footer-nav" aria-label="Site navigation">
+        <a href="index.html#about">About</a>
+        <a href="index.html#coursework">Coursework</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#resume">Resume</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="#top">Top</a>
+      </nav>
+      <p class="footer-copy">&copy; Logan M Edwards</p>
+    </div>
   </footer>
+
 
   <!-- Mark icon as used even if user opened this page directly -->
   <script>
