@@ -539,3 +539,204 @@ body > * {
 .btn.btn-ghost:hover {
   background: rgba(255,255,255,0.16);
 }
+
+/* =========================================================
+   HOMEPAGE EXPANSIONS (Coursework, mini-projects, contact cards)
+   ========================================================= */
+
+.section-intro {
+  color: #cbd5e0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: -0.15rem 0 0.9rem;
+  max-width: 70ch;
+}
+
+.subsection-title {
+  margin-top: 1.25rem;
+  font-size: 1.12rem;
+}
+
+.subsection-intro {
+  color: #a0aec0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0.35rem 0 0.85rem;
+  max-width: 70ch;
+}
+
+/* Selected Coursework */
+.coursework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.course-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 0.9rem 0.95rem;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+.course-card h3 {
+  font-size: 1.02rem;
+  margin-bottom: 0.35rem;
+}
+
+.course-card p {
+  color: #cbd5e0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* Mini projects */
+.mini-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.mini-project-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 0.85rem 0.9rem;
+}
+
+.mini-project-card h4 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.mini-project-card p {
+  color: #cbd5e0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.mini-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.tag--mini {
+  font-size: 0.78rem;
+  padding: 0.22rem 0.55rem;
+  opacity: 0.92;
+}
+
+/* Project actions (touch-friendly quick links) */
+.project-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  text-decoration: none;
+  background: rgba(49, 130, 206, 0.18);
+  border: 1px solid rgba(49, 130, 206, 0.35);
+  color: #e2e8f0;
+}
+
+.link-chip:hover {
+  background: rgba(49, 130, 206, 0.26);
+}
+
+.link-chip--ghost {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.link-chip--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Resume buttons */
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+/* Contact cards */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 0.9rem 0.95rem;
+}
+
+.contact-label {
+  color: #a0aec0;
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.contact-link {
+  color: #e2e8f0;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+/* Footer nav */
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.footer-nav a {
+  color: #cbd5e0;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.footer-nav a:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  color: #a0aec0;
+  font-size: 0.85rem;
+}
+
+/* Touch devices: don't rely on hover-only overlays */
+@media (hover: none) {
+  .project-card__overlay {
+    display: none;
+  }
+}
