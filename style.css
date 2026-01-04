@@ -740,3 +740,77 @@ body > * {
     display: none;
   }
 }
+
+/* ===========================
+   Micro-interactions + UX
+   =========================== */
+
+.btn,
+.copy-btn,
+a {
+  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease, border-color 140ms ease, opacity 140ms ease;
+}
+
+.btn:active,
+.copy-btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible,
+.copy-btn:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.55);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Soft hover lift for cards (where applicable) */
+.project-card,
+.mini-project-card,
+.card,
+.course-card {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.project-card:hover,
+.mini-project-card:hover,
+.card:hover,
+.course-card:hover {
+  transform: translateY(-2px);
+}
+
+/* External link indicator (text stays; icon is supplemental) */
+a.external-link::after {
+  content: " ↗";
+  font-size: 0.92em;
+  opacity: 0.85;
+}
+
+a.external-link:hover::after {
+  opacity: 1;
+}
+
+/* Copy email button */
+.copy-btn {
+  margin-left: 0.5rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.10);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.28);
+}
+
+.copy-status {
+  margin-left: 0.5rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
