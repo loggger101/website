@@ -1,4 +1,4 @@
-// site.js — tiny UX enhancements (external-link indicator + copy-to-clipboard)
+// site.js — tiny UX enhancements (open external links in new tab + copy-to-clipboard)
 (() => {
   function isExternalLink(a) {
     try {
@@ -11,19 +11,15 @@
   }
 
   async function copyText(text) {
-    // Prefer modern clipboard API when available
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text);
       return true;
     }
-
-    // Fallback for non-secure contexts
     const ta = document.createElement("textarea");
     ta.value = text;
     ta.setAttribute("readonly", "");
     ta.style.position = "fixed";
-    ta.style.top = "-1000px";
-    ta.style.left = "-1000px";
+    ta.style.left = "-9999px";
     document.body.appendChild(ta);
     ta.select();
     try {
@@ -36,42 +32,42 @@
     }
   }
 
+  function markExternalLinks() {
+    const links = document.querySelectorAll("a[href]");
+    links.forEach((a) => {
+      if (!isExternalLink(a)) return;
+
+      // Allow opt-out (e.g., direct-download buttons)
+      if (a.hasAttribute("download")) return;
+      if (a.dataset && a.dataset.noNewtab === "true") return;
+      if (a.classList.contains("no-newtab")) return;
+
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+
+      if (!a.getAttribute("title")) a.setAttribute("title", "Opens in a new tab");
+    });
+  }
+
   function wireCopyButtons() {
     const buttons = document.querySelectorAll("[data-copy]");
     buttons.forEach((btn) => {
       btn.addEventListener("click", async () => {
         const text = btn.getAttribute("data-copy") || "";
         const status = btn.parentElement?.querySelector(".copy-status");
-
-        btn.disabled = true;
-        const oldLabel = btn.textContent;
         try {
           const ok = await copyText(text);
-          if (status) status.textContent = ok ? "Copied!" : "Copy failed";
-          btn.textContent = ok ? "Copied" : "Copy";
-          setTimeout(() => {
-            if (status) status.textContent = "";
-            btn.textContent = oldLabel || "Copy email";
-          }, 1200);
-        } finally {
-          btn.disabled = false;
+          if (status) {
+            status.textContent = ok ? "Copied!" : "Copy failed";
+            setTimeout(() => (status.textContent = ""), 1200);
+          }
+        } catch {
+          if (status) {
+            status.textContent = "Copy failed";
+            setTimeout(() => (status.textContent = ""), 1200);
+          }
         }
       });
-    });
-  }
-
-  function markExternalLinks() {
-    const links = document.querySelectorAll("a[href]");
-    links.forEach((a) => {
-      if (!isExternalLink(a)) return;
-
-      a.classList.add("external-link");
-      // Ensure new-tab behavior + security
-      a.setAttribute("target", "_blank");
-      a.setAttribute("rel", "noopener noreferrer");
-
-      // Helpful tooltip (keeps words; icon is supplemental)
-      if (!a.getAttribute("title")) a.setAttribute("title", "Opens in a new tab");
     });
   }
 
