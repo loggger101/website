@@ -1,0 +1,15 @@
+{
+  "datasets": {
+    "loggger/fpv-images": {
+      "title": "Multi-class FPV Images (Drone Targeting Training)",
+      "totalDownloads": null,
+      "totalViews": null
+    },
+    "loggger/star-image-bundles": {
+      "title": "Star Image Bundles",
+      "totalDownloads": null,
+      "totalViews": null
+    }
+  },
+  "updatedAt": "2026-01-05T06:57:04Z"
+}
