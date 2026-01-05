@@ -823,3 +823,111 @@ body > * {
     transform: none !important;
   }
 }
+
+
+/* === Added: consolidated contact links row + contact form + Kaggle stats chip === */
+.contact-links-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin: 12px 0 18px;
+}
+.icon-link{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius: 999px;
+  text-decoration:none;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+}
+.icon-link__icon{
+  display:inline-grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  font-weight:700;
+  letter-spacing:0.4px;
+}
+.icon-link__text{
+  font-weight:600;
+}
+
+.contact-form{
+  margin: 12px 0 18px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.03);
+}
+.contact-form__grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 720px){
+  .contact-form__grid{ grid-template-columns: 1fr; }
+}
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+}
+.form-label{
+  font-weight: 650;
+}
+.form-input{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  color: inherit;
+  outline: none;
+}
+.form-input:focus{
+  border-color: rgba(79,209,197,0.45);
+}
+.form-textarea{
+  resize: vertical;
+}
+
+.hp-field{
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.contact-form__actions{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.form-status{
+  margin:0;
+  opacity:0.9;
+}
+.form-note{
+  margin: 10px 0 0;
+  opacity: 0.75;
+  font-size: 0.95em;
+}
+
+/* A small pill for stats; matches your existing chip style */
+.stat-chip{
+  display:inline-flex;
+  align-items:center;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  font-weight: 600;
+  white-space: nowrap;
+}
