@@ -826,36 +826,29 @@ body > * {
 
 
 /* =========================================================
-   PROJECT TOP BAND AS LINK TARGET (no arrows)
+   VIEW PAGE LABEL NEXT TO EMBLEM
    ========================================================= */
 
-/* Kill any arrow/badge pseudo-elements if present from older versions */
-.project-icon-link::before,
-.project-icon-link::after {
+/* Remove the top-band corner pill (we're moving the label next to the emblem) */
+.project-card__media[data-page-href]::after {
   content: none !important;
   display: none !important;
 }
 
-/* Big clickable target for enhanced cards */
-.project-card__media[data-page-href] {
-  cursor: pointer;
+/* Make the emblem + label behave like a compact inline button */
+.project-card--enhanced .project-icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   position: relative;
+  white-space: nowrap;
 }
 
-/* Subtle hover highlight so it feels clickable (no arrows) */
-.project-card--enhanced:hover .project-card__media[data-page-href],
-.project-card--enhanced:focus-within .project-card__media[data-page-href] {
-  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.25);
-  filter: brightness(1.03);
-}
-
-/* A small “View page” pill appears on hover/focus to make intent obvious */
-.project-card__media[data-page-href]::after {
+/* Text label appears only when the card is hovered/focused */
+.project-card--enhanced .project-icon-link::after {
   content: "View page";
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 2;
+  display: inline-flex;
+  align-items: center;
 
   padding: 6px 10px;
   border-radius: 999px;
@@ -869,24 +862,14 @@ body > * {
   color: rgba(255,255,255,0.92);
 
   opacity: 0;
-  transform: translateY(-4px);
+  transform: translateX(-4px);
   transition: opacity 160ms ease, transform 160ms ease;
-  pointer-events: none;
+
+  pointer-events: none; /* clicking still targets the link itself */
 }
 
-.project-card--enhanced:hover .project-card__media[data-page-href]::after,
-.project-card--enhanced:focus-within .project-card__media[data-page-href]::after {
+.project-card--enhanced:hover .project-icon-link::after,
+.project-card--enhanced:focus-within .project-icon-link::after {
   opacity: 1;
-  transform: translateY(0);
-}
-
-/* Still let the emblem pop a bit on card hover (keeps your current design) */
-.project-card--enhanced:hover .project-icon-link,
-.project-card--enhanced:focus-within .project-icon-link {
-  transform: translateY(-2px) scale(1.14);
-  background: rgba(var(--accent-rgb), 0.14);
-  border-color: rgba(var(--accent-rgb), 0.72);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12),
-    0 0 26px rgba(var(--accent-rgb), 0.38);
+  transform: translateX(0);
 }
