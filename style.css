@@ -824,31 +824,30 @@ body > * {
   }
 }
 
-
 /* =========================================================
-   VIEW PAGE LABEL NEXT TO EMBLEM
+   FIX: VIEW PAGE LABEL NEXT TO EMBLEM (NO LAYOUT SHIFT)
    ========================================================= */
 
-/* Remove the top-band corner pill (we're moving the label next to the emblem) */
-.project-card__media[data-page-href]::after {
+/* Remove any old arrow/badge */
+.project-icon-link::before {
   content: none !important;
   display: none !important;
 }
 
-/* Make the emblem + label behave like a compact inline button */
+/* Keep the emblem the same size/position (prevents layout shift) */
 .project-card--enhanced .project-icon-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  white-space: nowrap;
+  display: inline-grid;      /* matches your base design */
+  width: 38px;
+  height: 38px;
 }
 
-/* Text label appears only when the card is hovered/focused */
+/* Place the label OUTSIDE the 38x38 emblem so it doesn't move anything */
 .project-card--enhanced .project-icon-link::after {
   content: "View page";
-  display: inline-flex;
-  align-items: center;
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
 
   padding: 6px 10px;
   border-radius: 999px;
@@ -856,20 +855,19 @@ body > * {
   font-weight: 650;
   font-size: 12px;
   letter-spacing: 0.2px;
+  white-space: nowrap;
 
   background: rgba(var(--accent-rgb), 0.16);
   border: 1px solid rgba(var(--accent-rgb), 0.55);
   color: rgba(255,255,255,0.92);
 
   opacity: 0;
-  transform: translateX(-4px);
   transition: opacity 160ms ease, transform 160ms ease;
-
-  pointer-events: none; /* clicking still targets the link itself */
+  pointer-events: none;
 }
 
 .project-card--enhanced:hover .project-icon-link::after,
 .project-card--enhanced:focus-within .project-icon-link::after {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(-50%) translateX(0);
 }
