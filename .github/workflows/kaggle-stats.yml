@@ -15,143 +15,73 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "20"
+          python-version: "3.11"
 
-      - name: Install Playwright
+      - name: Install Kaggle API
         run: |
-          npm init -y
-          npm i playwright
-          npx playwright install --with-deps chromium
+          python -m pip install --upgrade pip
+          pip install kaggle
 
-      - name: Render Kaggle pages and extract counts
+      - name: Fetch stats via Kaggle API and write data/kaggle_stats.json
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
-          node - <<'NODE'
-          const fs = require("fs");
-          const path = require("path");
-          const { chromium } = require("playwright");
+          set -euo pipefail
+          mkdir -p data
+          python - <<'PY'
+          import json, datetime
+          from pathlib import Path
+          from kaggle.api.kaggle_api_extended import KaggleApi
 
-          const SLUGS = [
-            "loggger/fpv-images",
-            "loggger/star-image-bundles",
-          ];
+          SLUGS = ["loggger/fpv-images", "loggger/star-image-bundles"]
+          out_path = Path("data/kaggle_stats.json")
 
-          function deepFindNumber(obj, keyName) {
-            // returns first numeric value found for keyName in nested objects
-            const stack = [obj];
-            const seen = new Set();
-            while (stack.length) {
-              const cur = stack.pop();
-              if (!cur || typeof cur !== "object") continue;
-              if (seen.has(cur)) continue;
-              seen.add(cur);
+          # Load previous so we NEVER overwrite good values with 0 if Kaggle hiccups
+          prev = {}
+          if out_path.exists():
+            try:
+              prev = json.loads(out_path.read_text(encoding="utf-8"))
+            except Exception:
+              prev = {}
 
-              if (Object.prototype.hasOwnProperty.call(cur, keyName)) {
-                const v = cur[keyName];
-                if (typeof v === "number" && Number.isFinite(v)) return v;
-              }
+          api = KaggleApi()
+          api.authenticate()
 
-              for (const k of Object.keys(cur)) {
-                const v = cur[k];
-                if (v && typeof v === "object") stack.push(v);
-              }
-            }
-            return null;
+          out = {
+            "updatedAt": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+            "datasets": {}
           }
 
-          async function extractCounts(page, slug) {
-            const url = `https://www.kaggle.com/datasets/${slug}`;
-            await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+          for slug in SLUGS:
+            owner, ds = slug.split("/", 1)
 
-            // Try Next.js payload first
-            const nextData = await page.evaluate(() => window.__NEXT_DATA__ || null);
-            let views = null, downloads = null, title = slug;
+            meta = api.metadata_get(owner, ds)  # returns dict
+            info = meta.get("info", {}) if isinstance(meta, dict) else {}
 
-            if (nextData) {
-              // These keys are commonly present somewhere in the payload
-              views = deepFindNumber(nextData, "viewCount") ?? deepFindNumber(nextData, "totalViews");
-              downloads = deepFindNumber(nextData, "downloadCount") ?? deepFindNumber(nextData, "totalDownloads");
+            views = info.get("totalViews")
+            downloads = info.get("totalDownloads")
+            title = info.get("title") or slug
 
-              const t = await page.title();
-              if (t) title = t.replace(" | Kaggle", "").trim();
+            prev_item = (prev.get("datasets") or {}).get(slug, {})
+            if not isinstance(views, int):
+              views = prev_item.get("totalViews", 0)
+            if not isinstance(downloads, int):
+              downloads = prev_item.get("totalDownloads", 0)
+
+            out["datasets"][slug] = {
+              "title": title,
+              "totalViews": views,
+              "totalDownloads": downloads,
+              "sourceUrl": f"https://www.kaggle.com/datasets/{slug}"
             }
 
-            // DOM fallback (if Kaggle changes payload)
-            if (views == null || downloads == null) {
-              const dom = await page.evaluate(() => document.body.innerText);
-              // very loose patterns
-              // If it ever includes "Views" / "Downloads" text, we can grab nearby numbers
-              // (This is best-effort; payload extraction usually works)
-              const mV = dom.match(/([\d,\.]+)\s+Views/i);
-              const mD = dom.match(/([\d,\.]+)\s+Downloads/i);
-              const parse = (s) => {
-                if (!s) return null;
-                const n = Number(String(s).replace(/,/g, ""));
-                return Number.isFinite(n) ? n : null;
-              };
-              if (views == null && mV) views = parse(mV[1]);
-              if (downloads == null && mD) downloads = parse(mD[1]);
-            }
-
-            return { title, views, downloads, url };
-          }
-
-          (async () => {
-            const dataDir = path.join(process.cwd(), "data");
-            const outPath = path.join(dataDir, "kaggle_stats.json");
-            fs.mkdirSync(dataDir, { recursive: true });
-
-            // Load previous values so we NEVER overwrite with 0 on extraction failure
-            let prev = null;
-            try {
-              prev = JSON.parse(fs.readFileSync(outPath, "utf8"));
-            } catch {}
-
-            const browser = await chromium.launch();
-            const page = await browser.newPage({
-              userAgent:
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
-            });
-
-            const out = {
-              updatedAt: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
-              datasets: {},
-            };
-
-            for (const slug of SLUGS) {
-              const res = await extractCounts(page, slug);
-
-              // Keep last known good if extraction failed
-              const prevItem = prev?.datasets?.[slug];
-              const totalViews =
-                (typeof res.views === "number" && res.views > 0) ? res.views :
-                (typeof prevItem?.totalViews === "number" ? prevItem.totalViews : 0);
-
-              const totalDownloads =
-                (typeof res.downloads === "number" && res.downloads > 0) ? res.downloads :
-                (typeof prevItem?.totalDownloads === "number" ? prevItem.totalDownloads : 0);
-
-              out.datasets[slug] = {
-                title: res.title || prevItem?.title || slug,
-                totalViews,
-                totalDownloads,
-                sourceUrl: res.url
-              };
-
-              console.log(`[${slug}] views=${totalViews} downloads=${totalDownloads}`);
-            }
-
-            await browser.close();
-
-            fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + "\n", "utf8");
-            console.log("Wrote", outPath);
-          })().catch((e) => {
-            console.error(e);
-            process.exit(1);
-          });
-          NODE
+          out_path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          print("Wrote", out_path, "updatedAt=", out["updatedAt"])
+          PY
 
       - name: Commit and push (if changed)
         run: |
