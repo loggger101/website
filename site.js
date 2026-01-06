@@ -149,6 +149,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
     setUpCopyButtons();
-    setUpProjectBandLinks();
+
+    function safeCall(fn) {
+      try { if (typeof fn === "function") fn(); }
+      catch (e) { console.error(e); }
+    }
+    safeCall(setUpKaggleStats);
+    safeCall(setUpProjectBandLinks);
+    safeCall(setUpContactForm);
 });
 })();
