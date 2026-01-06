@@ -105,18 +105,33 @@
     });
   }
 
-    function setUpProjectTopBandLinks() {
-    var bands = document.querySelectorAll(".project-card__media[data-page-href]");
-    if (!bands.length) return;
+    function setUpProjectBandLinks() {
+    // Make the top media band of each enhanced project card act as a big link target.
+    var cards = document.querySelectorAll(".project-card--enhanced");
+    if (!cards.length) return;
 
-    bands.forEach(function (band) {
+    cards.forEach(function (card) {
+      var link = card.querySelector(".project-icon-link[href]");
+      var band = card.querySelector(".project-card__media");
+      if (!link || !band) return;
+
+      var href = link.getAttribute("href");
+      if (!href) return;
+
+      // Mark for CSS + accessibility
+      band.setAttribute("data-page-href", href);
+      band.setAttribute("role", "link");
+      band.setAttribute("tabindex", "0");
+
+      var label = link.getAttribute("aria-label") || "Open project page";
+      band.setAttribute("aria-label", label);
+
       function navigate() {
-        var href = band.getAttribute("data-page-href");
-        if (href) window.location.href = href;
+        window.location.href = href;
       }
 
       band.addEventListener("click", function (e) {
-        // If the user clicked an actual link inside the band (e.g., the emblem), let it behave normally.
+        // If user clicks a real link inside the band (emblem, etc.), let the browser handle it.
         if (e.target && e.target.closest && e.target.closest("a")) return;
         navigate();
       });
@@ -134,6 +149,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
     setUpCopyButtons();
-    setUpProjectTopBandLinks();
+    setUpProjectBandLinks();
 });
 })();
