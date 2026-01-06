@@ -825,131 +825,33 @@ body > * {
 }
 
 
-/* === Added: consolidated contact links row + contact form + Kaggle stats chip === */
-.contact-links-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin: 12px 0 18px;
-}
-.icon-link{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius: 999px;
-  text-decoration:none;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.04);
-}
-.icon-link__icon{
-  display:inline-grid;
-  place-items:center;
-  width:28px;
-  height:28px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  font-weight:700;
-  letter-spacing:0.4px;
-}
-.icon-link__text{
-  font-weight:600;
-}
+/* =========================================================
+   PROJECT TOP BAND AS LINK TARGET (no arrows)
+   ========================================================= */
 
-.contact-form{
-  margin: 12px 0 18px;
-  padding: 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.03);
-}
-.contact-form__grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-@media (max-width: 720px){
-  .contact-form__grid{ grid-template-columns: 1fr; }
-}
-
-.form-field{
-  display:flex;
-  flex-direction:column;
-  gap: 6px;
-}
-.form-label{
-  font-weight: 650;
-}
-.form-input{
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.04);
-  color: inherit;
-  outline: none;
-}
-.form-input:focus{
-  border-color: rgba(79,209,197,0.45);
-}
-.form-textarea{
-  resize: vertical;
-}
-
-.hp-field{
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-}
-
-.contact-form__actions{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-  margin-top: 10px;
-}
-.form-status{
-  margin:0;
-  opacity:0.9;
-}
-.form-note{
-  margin: 10px 0 0;
-  opacity: 0.75;
-  font-size: 0.95em;
-}
-
-/* A small pill for stats; matches your existing chip style */
-.stat-chip{
-  display:inline-flex;
-  align-items:center;
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.04);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* === Update: remove the ↗ badge on the project icon (top band is now the big click target) === */
-.project-card--enhanced .project-icon-link::before{
+/* Kill any arrow/badge pseudo-elements if present from older versions */
+.project-icon-link::before,
+.project-icon-link::after {
   content: none !important;
   display: none !important;
 }
 
-/* =========================================================
-   PROJECT TOP BAND AS LINK (no arrows)
-   ========================================================= */
-
-.project-card__media[data-page-href]{
+/* Big clickable target for enhanced cards */
+.project-card__media[data-page-href] {
   cursor: pointer;
-  position: relative; /* allows the hover cue pill */
+  position: relative;
 }
 
-/* subtle "clickable" cue pill that appears on hover/focus */
-.project-card__media[data-page-href]::after{
-  content: "Open page";
+/* Subtle hover highlight so it feels clickable (no arrows) */
+.project-card--enhanced:hover .project-card__media[data-page-href],
+.project-card--enhanced:focus-within .project-card__media[data-page-href] {
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.25);
+  filter: brightness(1.03);
+}
+
+/* A small “View page” pill appears on hover/focus to make intent obvious */
+.project-card__media[data-page-href]::after {
+  content: "View page";
   position: absolute;
   top: 12px;
   right: 12px;
@@ -962,7 +864,7 @@ body > * {
   font-size: 12px;
   letter-spacing: 0.2px;
 
-  background: rgba(var(--accent-rgb), 0.18);
+  background: rgba(var(--accent-rgb), 0.16);
   border: 1px solid rgba(var(--accent-rgb), 0.55);
   color: rgba(255,255,255,0.92);
 
@@ -973,14 +875,14 @@ body > * {
 }
 
 .project-card--enhanced:hover .project-card__media[data-page-href]::after,
-.project-card--enhanced:focus-within .project-card__media[data-page-href]::after{
+.project-card--enhanced:focus-within .project-card__media[data-page-href]::after {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* When the card is hovered/focused, also make the emblem pop a bit (keeps current design) */
+/* Still let the emblem pop a bit on card hover (keeps your current design) */
 .project-card--enhanced:hover .project-icon-link,
-.project-card--enhanced:focus-within .project-icon-link{
+.project-card--enhanced:focus-within .project-icon-link {
   transform: translateY(-2px) scale(1.14);
   background: rgba(var(--accent-rgb), 0.14);
   border-color: rgba(var(--accent-rgb), 0.72);
