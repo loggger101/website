@@ -15,39 +15,72 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch Kaggle stats and write data/kaggle_stats.json
-        shell: bash
+      - name: Fetch Kaggle stats (API with HTML fallback) and write data/kaggle_stats.json
         run: |
           set -euo pipefail
           mkdir -p data
 
-          fetch_ds () {
-            local slug="$1"
-            local owner="${slug%%/*}"
-            local ds="${slug#*/}"
-            local api="https://www.kaggle.com/api/v1/datasets/view/${owner}/${ds}"
-            local refer="https://www.kaggle.com/datasets/${owner}/${ds}"
-
-            # Retry a few times in case Kaggle is flaky
-            curl -fsSL --retry 4 --retry-delay 2 \
-              -H "Accept: application/json" \
-              -H "User-Agent: Mozilla/5.0 (GitHub Actions)" \
-              -H "Referer: ${refer}" \
-              "${api}"
-          }
-
-          FPV="$(fetch_ds "loggger/fpv-images")"
-          STAR="$(fetch_ds "loggger/star-image-bundles")"
-
           python - <<'PY'
-          import json, datetime, sys
+          import json, re, datetime, sys
+          from urllib.request import Request, urlopen
+          from urllib.error import URLError, HTTPError
 
-          fpv = json.loads(sys.stdin.readline())
-          star = json.loads(sys.stdin.readline())
+          SLUGS = [
+              "loggger/fpv-images",
+              "loggger/star-image-bundles",
+          ]
+
+          UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
+
+          def fetch_text(url, referer=None, timeout=30):
+              headers = {
+                  "User-Agent": UA,
+                  "Accept": "application/json,text/html;q=0.9,*/*;q=0.8",
+              }
+              if referer:
+                  headers["Referer"] = referer
+              req = Request(url, headers=headers)
+              with urlopen(req, timeout=timeout) as resp:
+                  return resp.read().decode("utf-8", errors="replace")
+
+          def try_api(slug):
+              owner, ds = slug.split("/", 1)
+              api = f"https://www.kaggle.com/api/v1/datasets/view/{owner}/{ds}"
+              refer = f"https://www.kaggle.com/datasets/{owner}/{ds}"
+              txt = fetch_text(api, referer=refer)
+              # If Kaggle returns HTML (bot page), this will not parse as JSON
+              if txt.lstrip().startswith("<"):
+                  return None
+              return json.loads(txt)
+
+          def scrape_from_html(slug):
+              owner, ds = slug.split("/", 1)
+              page = f"https://www.kaggle.com/datasets/{owner}/{ds}"
+              html = fetch_text(page, referer=page)
+
+              # Try to find viewCount/downloadCount anywhere in the page payload
+              # (Kaggle is Next.js; these usually appear in embedded JSON)
+              m_view = re.search(r'"viewCount"\s*:\s*(\d+)', html)
+              m_down = re.search(r'"downloadCount"\s*:\s*(\d+)', html)
+
+              # Fallback for alternate keys
+              if not m_view:
+                  m_view = re.search(r'"totalViews"\s*:\s*(\d+)', html)
+              if not m_down:
+                  m_down = re.search(r'"totalDownloads"\s*:\s*(\d+)', html)
+
+              views = int(m_view.group(1)) if m_view else None
+              downs = int(m_down.group(1)) if m_down else None
+
+              # Try to find a title as well
+              m_title = re.search(r'"title"\s*:\s*"([^"]+)"', html)
+              title = m_title.group(1) if m_title else slug
+
+              return {"title": title, "viewCount": views, "downloadCount": downs}
 
           def pick(d, keys):
               for k in keys:
-                  if k in d and d[k] is not None:
+                  if isinstance(d, dict) and k in d and d[k] is not None:
                       return d[k]
               return None
 
@@ -56,29 +89,39 @@ jobs:
               "datasets": {}
           }
 
-          def add(slug, d):
+          for slug in SLUGS:
+              data = None
+              try:
+                  data = try_api(slug)
+              except Exception:
+                  data = None
+
+              if isinstance(data, dict):
+                  title = pick(data, ["title", "titleNullable", "datasetTitle", "name"]) or slug
+                  views = pick(data, ["viewCount", "totalViews", "views"])
+                  downs = pick(data, ["downloadCount", "totalDownloads", "downloads"])
+              else:
+                  scraped = scrape_from_html(slug)
+                  title = scraped.get("title") or slug
+                  views = pick(scraped, ["viewCount", "totalViews"])
+                  downs = pick(scraped, ["downloadCount", "totalDownloads"])
+
               out["datasets"][slug] = {
-                  "title": pick(d, ["title", "titleNullable"]) or slug,
-                  "totalViews": pick(d, ["viewCount", "totalViews", "views"]),
-                  "totalDownloads": pick(d, ["downloadCount", "totalDownloads", "downloads"]),
+                  "title": title,
+                  "totalViews": views if views is not None else 0,
+                  "totalDownloads": downs if downs is not None else 0
               }
 
-          add("loggger/fpv-images", fpv)
-          add("loggger/star-image-bundles", star)
-
-          with open("data/kaggle_stats.json","w",encoding="utf-8") as f:
+          with open("data/kaggle_stats.json", "w", encoding="utf-8") as f:
               json.dump(out, f, indent=2, sort_keys=True)
               f.write("\n")
-          PY <<EOF
-          $FPV
-          $STAR
-          EOF
+
+          print("Wrote data/kaggle_stats.json:", out["updatedAt"])
+          PY
 
       - name: Commit and push (if changed)
-        shell: bash
         run: |
           set -euo pipefail
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
