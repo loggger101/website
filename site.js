@@ -105,8 +105,109 @@
     });
   }
 
-    function setUpProjectBandLinks() {
-    // Make the top media band of each enhanced project card act as a big link target.
+  function formatCompactNumber(n) {
+    if (typeof n !== "number" || !isFinite(n)) return null;
+    try {
+      return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+    } catch (e) {
+      if (n >= 1e6) return (Math.round((n / 1e6) * 10) / 10) + "M";
+      if (n >= 1e3) return (Math.round((n / 1e3) * 10) / 10) + "k";
+      return String(n);
+    }
+  }
+
+  function setUpKaggleStats() {
+    var els = document.querySelectorAll(".kaggle-stats[data-kaggle-dataset]");
+    if (!els.length) return;
+
+    fetch("data/kaggle_stats.json?ts=" + Date.now(), { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("stats fetch failed");
+        return r.json();
+      })
+      .then(function (payload) {
+        var datasets = (payload && payload.datasets) ? payload.datasets : {};
+        els.forEach(function (el) {
+          var slug = el.getAttribute("data-kaggle-dataset") || "";
+          var item = datasets[slug];
+          if (!item) {
+            el.textContent = "Stats unavailable";
+            return;
+          }
+
+          var views = Number(item.totalViews);
+          var downloads = Number(item.totalDownloads);
+
+          var vTxt = formatCompactNumber(views);
+          var dTxt = formatCompactNumber(downloads);
+
+          if (!vTxt && !dTxt) {
+            el.textContent = "Stats unavailable";
+            return;
+          }
+
+          var parts = [];
+          if (vTxt) parts.push("👁 " + vTxt);
+          if (dTxt) parts.push("⬇ " + dTxt);
+
+          el.textContent = parts.join(" • ");
+          el.setAttribute(
+            "title",
+            "Kaggle: " + (isFinite(views) ? views : 0) + " views, " + (isFinite(downloads) ? downloads : 0) + " downloads"
+          );
+        });
+      })
+      .catch(function () {
+        els.forEach(function (el) {
+          el.textContent = "Stats unavailable";
+        });
+      });
+  }
+
+  function setUpContactForm() {
+    var form = document.getElementById("contact-form");
+    if (!form) return;
+
+    var status = form.querySelector(".form-status");
+    var submitBtn = form.querySelector('button[type="submit"]');
+
+    function setStatus(msg) {
+      if (status) status.textContent = msg || "";
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var action = form.getAttribute("action") || "";
+      if (!action || action.indexOf("REPLACE_WITH_YOUR_FORM_ID") !== -1) {
+        setStatus("Form not configured yet (replace the Formspree form ID).");
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      setStatus("Sending…");
+
+      fetch(action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      })
+        .then(function (r) {
+          if (!r.ok) throw new Error("send failed");
+          setStatus("Sent! I’ll reply soon.");
+          form.reset();
+        })
+        .catch(function () {
+          setStatus("Send failed. Please try again.");
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+          window.setTimeout(function () { setStatus(""); }, 6000);
+        });
+    });
+  }
+
+  function setUpProjectBandLinks() {
     var cards = document.querySelectorAll(".project-card--enhanced");
     if (!cards.length) return;
 
@@ -118,7 +219,6 @@
       var href = link.getAttribute("href");
       if (!href) return;
 
-      // Mark for CSS + accessibility
       band.setAttribute("data-page-href", href);
       band.setAttribute("role", "link");
       band.setAttribute("tabindex", "0");
@@ -126,12 +226,9 @@
       var label = link.getAttribute("aria-label") || "Open project page";
       band.setAttribute("aria-label", label);
 
-      function navigate() {
-        window.location.href = href;
-      }
+      function navigate() { window.location.href = href; }
 
       band.addEventListener("click", function (e) {
-        // If user clicks a real link inside the band (emblem, etc.), let the browser handle it.
         if (e.target && e.target.closest && e.target.closest("a")) return;
         navigate();
       });
@@ -146,7 +243,8 @@
     });
   }
 
-document.addEventListener("DOMContentLoaded", function () {
+
+  document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
     setUpCopyButtons();
 
@@ -155,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
       catch (e) { console.error(e); }
     }
     safeCall(setUpKaggleStats);
-    safeCall(setUpProjectBandLinks);
     safeCall(setUpContactForm);
+    safeCall(setUpProjectBandLinks);
 });
 })();
