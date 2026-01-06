@@ -379,6 +379,60 @@ body > * {
   outline: none;
 }
 
+
+/* =========================================================
+   PROJECT ICON LINK — POPS ON CARD HOVER (keeps current design)
+   ========================================================= */
+
+/* When the *card* is hovered/focused, make the page-link emblem more obvious */
+.project-card--enhanced:hover .project-icon-link,
+.project-card--enhanced:focus-within .project-icon-link {
+  transform: translateY(-2px) scale(1.12);
+  background: rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.72);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.12),
+    0 0 26px rgba(var(--accent-rgb), 0.38);
+}
+
+/* Add a small “open” indicator badge only while the card is hovered/focused */
+.project-card--enhanced .project-icon-link::before {
+  content: "↗";
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+
+  background: rgba(var(--accent-rgb), 0.92);
+  color: #0b0c10;
+
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+
+  opacity: 0;
+  transform: translateY(2px) scale(0.92);
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
+.project-card--enhanced:hover .project-icon-link::before,
+.project-card--enhanced:focus-within .project-icon-link::before {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Keep the icon readable when the overlay is showing (card hover hides body text) */
+.project-card--enhanced:hover .project-icon-link,
+.project-card--enhanced:focus-within .project-icon-link,
+.project-card--enhanced:active .project-icon-link {
+  color: rgba(255,255,255,0.98);
+}
 /* =========================================================
    ENHANCED PROJECT CARDS
    ========================================================= */
