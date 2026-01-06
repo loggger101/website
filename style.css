@@ -824,25 +824,137 @@ body > * {
   }
 }
 
+
 /* =========================================================
-   FIX: VIEW PAGE LABEL NEXT TO EMBLEM (NO LAYOUT SHIFT)
+   FIX PACK — Kaggle stats, Contact form, Project band link, View page label
    ========================================================= */
 
-/* Remove any old arrow/badge */
-.project-icon-link::before {
+/* Kaggle stats text next to Kaggle chip */
+.kaggle-stats{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.78);
+  user-select: none;
+}
+
+/* Contact form card */
+.contact-formCard{
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(8px);
+}
+
+.contact-formTitle{
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+}
+
+.contact-formHint{
+  margin: 0 0 14px 0;
+  color: rgba(255,255,255,0.70);
+}
+
+.contact-formGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+
+.contact-field{
+  display: grid;
+  gap: 6px;
+}
+
+.contact-field--full{
+  grid-column: 1 / -1;
+}
+
+.contact-fieldLabel{
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.75);
+}
+
+.contact-form input,
+.contact-form textarea{
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.30);
+  color: rgba(255,255,255,0.92);
+  padding: 10px 12px;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus{
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+}
+
+.contact-formActions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.form-status{
+  color: rgba(255,255,255,0.78);
+  font-size: 0.92rem;
+}
+
+.contact-linksRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.contact-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: rgba(255,255,255,0.90);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.contact-pill:hover,
+.contact-pill:focus-visible{
+  transform: translateY(-1px);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10), 0 0 18px rgba(var(--accent-rgb), 0.22);
+  outline: none;
+}
+
+/* Make the top media band feel clickable (JS sets data-page-href) */
+.project-card__media[data-page-href]{
+  cursor: pointer;
+}
+
+.project-card--enhanced:hover .project-card__media[data-page-href],
+.project-card--enhanced:focus-within .project-card__media[data-page-href]{
+  filter: brightness(1.03);
+}
+
+/* Kill any prior arrow badge on the emblem */
+.project-icon-link::before{
   content: none !important;
   display: none !important;
 }
 
-/* Keep the emblem the same size/position (prevents layout shift) */
-.project-card--enhanced .project-icon-link {
-  display: inline-grid;      /* matches your base design */
-  width: 38px;
-  height: 38px;
-}
-
-/* Place the label OUTSIDE the 38x38 emblem so it doesn't move anything */
-.project-card--enhanced .project-icon-link::after {
+/* "View page" label next to emblem (no layout shift) */
+.project-card--enhanced .project-icon-link::after{
   content: "View page";
   position: absolute;
   left: calc(100% + 10px);
@@ -867,7 +979,13 @@ body > * {
 }
 
 .project-card--enhanced:hover .project-icon-link::after,
-.project-card--enhanced:focus-within .project-icon-link::after {
+.project-card--enhanced:focus-within .project-icon-link::after{
   opacity: 1;
   transform: translateY(-50%) translateX(0);
+}
+
+/* Mobile: avoid crowding */
+@media (max-width: 520px){
+  .contact-formGrid{ grid-template-columns: 1fr; }
+  .project-card--enhanced .project-icon-link::after{ display: none; }
 }
