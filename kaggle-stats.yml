@@ -16,73 +16,76 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Fetch Kaggle stats and write data/kaggle_stats.json
+        shell: bash
         run: |
           set -euo pipefail
           mkdir -p data
+
+          fetch_ds () {
+            local slug="$1"
+            local owner="${slug%%/*}"
+            local ds="${slug#*/}"
+            local api="https://www.kaggle.com/api/v1/datasets/view/${owner}/${ds}"
+            local refer="https://www.kaggle.com/datasets/${owner}/${ds}"
+
+            # Retry a few times in case Kaggle is flaky
+            curl -fsSL --retry 4 --retry-delay 2 \
+              -H "Accept: application/json" \
+              -H "User-Agent: Mozilla/5.0 (GitHub Actions)" \
+              -H "Referer: ${refer}" \
+              "${api}"
+          }
+
+          FPV="$(fetch_ds "loggger/fpv-images")"
+          STAR="$(fetch_ds "loggger/star-image-bundles")"
+
           python - <<'PY'
-          import json
-          import datetime
-          import urllib.request
+          import json, datetime, sys
 
-          SLUGS = [
-              "loggger/fpv-images",
-              "loggger/star-image-bundles",
-          ]
+          fpv = json.loads(sys.stdin.readline())
+          star = json.loads(sys.stdin.readline())
 
-          def first_present(d, keys):
+          def pick(d, keys):
               for k in keys:
-                  if isinstance(d, dict) and k in d and d[k] is not None:
+                  if k in d and d[k] is not None:
                       return d[k]
               return None
 
-          def fetch_json(url: str) -> dict:
-              req = urllib.request.Request(
-                  url,
-                  headers={
-                      "User-Agent": "Mozilla/5.0 (GitHub Actions)",
-                      "Accept": "application/json",
-                  },
-              )
-              with urllib.request.urlopen(req, timeout=30) as resp:
-                  raw = resp.read().decode("utf-8")
-              return json.loads(raw)
-
           out = {
               "updatedAt": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
-              "datasets": {},
+              "datasets": {}
           }
 
-          for slug in SLUGS:
-              owner, ds = slug.split("/", 1)
-              url = f"https://www.kaggle.com/api/v1/datasets/view/{owner}/{ds}"
-              data = fetch_json(url)
-
-              views = first_present(data, ["totalViews", "viewCount", "views"])
-              downloads = first_present(data, ["totalDownloads", "downloadCount", "downloads"])
-
+          def add(slug, d):
               out["datasets"][slug] = {
-                  "title": first_present(data, ["title", "titleNullable", "datasetTitle", "name"]) or slug,
-                  "totalViews": views,
-                  "totalDownloads": downloads,
+                  "title": pick(d, ["title", "titleNullable"]) or slug,
+                  "totalViews": pick(d, ["viewCount", "totalViews", "views"]),
+                  "totalDownloads": pick(d, ["downloadCount", "totalDownloads", "downloads"]),
               }
 
-          with open("data/kaggle_stats.json", "w", encoding="utf-8") as f:
+          add("loggger/fpv-images", fpv)
+          add("loggger/star-image-bundles", star)
+
+          with open("data/kaggle_stats.json","w",encoding="utf-8") as f:
               json.dump(out, f, indent=2, sort_keys=True)
               f.write("\n")
-
-          print("Wrote data/kaggle_stats.json")
-          PY
+          PY <<EOF
+          $FPV
+          $STAR
+          EOF
 
       - name: Commit and push (if changed)
+        shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
 
           git add data/kaggle_stats.json
           git commit -m "Update Kaggle dataset stats"
