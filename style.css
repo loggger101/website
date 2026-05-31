@@ -602,21 +602,44 @@ body > * {
 }
 
 .mini-project-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: #121521;
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 16px;
-  padding: 0.85rem 0.9rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.mini-project-card__media {
+  padding: 0.85rem 0.9rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  background:
+    radial-gradient(600px 180px at 12% 18%, rgba(var(--accent-rgb, 160,174,192), 0.22), transparent 60%),
+    radial-gradient(500px 160px at 88% 70%, rgba(160, 174, 192, 0.14), transparent 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015));
+}
+
+.mini-project-card__mediaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.55rem;
+}
+
+.mini-project-card__content {
+  padding: 0.8rem 0.9rem 0.85rem;
 }
 
 .mini-project-card h4 {
   font-size: 1rem;
-  margin-bottom: 0.35rem;
+  margin: 0;
 }
 
 .mini-project-card p {
   color: #cbd5e0;
   font-size: 0.9rem;
   line-height: 1.55;
+  margin: 0;
 }
 
 .mini-tags {
@@ -624,6 +647,12 @@ body > * {
   flex-wrap: wrap;
   gap: 0.35rem;
   margin-top: 0.65rem;
+}
+
+/* When tags sit in the mediaTop row alongside the icon, align right and drop top margin */
+.mini-project-card__mediaTop .mini-tags {
+  margin-top: 0;
+  justify-content: flex-end;
 }
 
 .tag--mini {
@@ -954,39 +983,7 @@ body > * {
   display: none !important;
 }
 
-/* "View page" label next to emblem (no layout shift) */
-.project-card--enhanced .project-icon-link::after{
-  content: "View page";
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%) translateX(-6px);
-
-  padding: 6px 10px;
-  border-radius: 999px;
-
-  font-weight: 650;
-  font-size: 12px;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-
-  background: rgba(var(--accent-rgb), 0.16);
-  border: 1px solid rgba(var(--accent-rgb), 0.55);
-  color: rgba(255,255,255,0.92);
-
-  opacity: 0;
-  transition: opacity 160ms ease, transform 160ms ease;
-  pointer-events: none;
-}
-
-.project-card--enhanced:hover .project-icon-link::after,
-.project-card--enhanced:focus-within .project-icon-link::after{
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
-}
-
 /* Mobile: avoid crowding */
 @media (max-width: 520px){
   .contact-formGrid{ grid-template-columns: 1fr; }
-  .project-card--enhanced .project-icon-link::after{ display: none; }
 }
