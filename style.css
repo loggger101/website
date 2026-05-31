@@ -303,7 +303,8 @@ body > * {
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.92);
-  font-size: 1.05rem;
+  font-size: 1.6rem;
+  line-height: 1;
 
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
   position: relative;
