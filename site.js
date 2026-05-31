@@ -157,6 +157,16 @@
     });
   }
 
+  // On a project subpage, mark this project as visited so the matching icon on
+  // the homepage stops twinkling on next visit. The subpage declares the slug
+  // via <body data-mark-visited="...">; site.js handles the localStorage write
+  // (replaces the per-subpage inline <script> blocks).
+  function markSubpageVisited() {
+    var key = document.body && document.body.dataset && document.body.dataset.markVisited;
+    if (!key) return;
+    try { localStorage.setItem("projectIconUsed:" + key, "1"); } catch (e) {}
+  }
+
   // Track which project icons the user has already opened so the twinkle
   // animation stops being noise. Per-subpage inline scripts also set the
   // same localStorage keys when a user lands on a subpage directly.
@@ -192,5 +202,6 @@
     safeCall(setUpKaggleStats);
     safeCall(setUpContactForm);
     safeCall(setUpProjectIconVisitedState);
+    safeCall(markSubpageVisited);
 });
 })();

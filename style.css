@@ -7,8 +7,28 @@
 /* Overscan padding so drifting backgrounds never expose empty edges */
 :root {
   --drift-overscan: 220px; /* >= max drift distance (we drift ~60px) */
-  /* Default accent (matches the star card). Individual cards override via inline style. */
+  /* Default accent (matches the star card). Each project card overrides via its --<color> modifier class below. */
   --accent-rgb: 99,179,237;
+}
+
+/* Per-card accent palette. Used by the rgba(var(--accent-rgb), ...) rules
+   throughout style.css to tint icon glows, hover halos, and media-band
+   gradients. Each project card carries one of these modifier classes. */
+.project-card--teal       { --accent-rgb: 79,209,197; }
+.project-card--blue       { --accent-rgb: 99,179,237; }
+.mini-project-card--amber { --accent-rgb: 246,173,85; }
+.mini-project-card--red   { --accent-rgb: 252,129,129; }
+.mini-project-card--purple{ --accent-rgb: 183,148,244; }
+
+/* Hidden honeypot field on the contact form (visually offscreen,
+   skipped by AT, never reachable via Tab). Formspree drops any
+   submission where this field is filled in. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 
 html, body {
