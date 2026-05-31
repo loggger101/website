@@ -265,6 +265,7 @@ body > * {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   margin-top: 0.75rem;
+  list-style: none;
 }
 
 .btn {
@@ -584,6 +585,7 @@ body > * {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.9rem;
   margin-top: 0.5rem;
+  list-style: none;
 }
 
 .course-card {
@@ -611,6 +613,7 @@ body > * {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 0.9rem;
   margin-top: 0.5rem;
+  list-style: none;
 }
 
 .mini-project-card {
