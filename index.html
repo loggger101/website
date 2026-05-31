@@ -6,9 +6,10 @@
 <title>Logan M Edwards | Astrophysics &amp; Planetary Science</title>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="style.css" rel="stylesheet"/><link href="favicon.svg" rel="icon" type="image/svg+xml"/><link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="favicon-16.png" rel="icon" sizes="16x16" type="image/png"/><link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/><link href="site.webmanifest" rel="manifest"/>
+<link rel="canonical" href="https://www.loganmedwardsastrophy.com/"/>
 <meta name="theme-color" content="#0b1020"/>
 <script async="" data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
-<script defer="True" src="site.js"></script>
+<script defer src="site.js"></script>
     <!-- SEO / Social -->
     <meta name="description" content="Astronomy & Astrophysics undergraduate portfolio featuring research, deep-learning projects, and coursework.">
     <meta name="keywords" content="Logan Edwards, astronomy, astrophysics, planetary science, machine learning, deep learning, computer vision, portfolio, resume">
@@ -89,8 +90,8 @@
 <h2>Projects</h2>
 <p class="section-intro">Selected projects with links to pages, datasets, and technical writeups.</p>
 <div class="projects-grid">
-<!-- Project 2 (Enhanced Card) -->
-<article class="project-card project-card--enhanced" style="--accent-rgb: 79,209,197;" tabindex="0">
+<!-- Drone Target Identification -->
+<article class="project-card project-card--enhanced" style="--accent-rgb: 79,209,197;">
 <div class="project-card__media">
 <div class="project-card__mediaTop">
 <!-- ICON IS A LINK -->
@@ -134,8 +135,8 @@
 </div>
 </div>
 </article>
-<!-- Project 1 (Enhanced Card) -->
-<article class="project-card project-card--enhanced" style="--accent-rgb: 99,179,237;" tabindex="0">
+<!-- Star Cataloguing -->
+<article class="project-card project-card--enhanced" style="--accent-rgb: 99,179,237;">
 <div class="project-card__media">
 <div class="project-card__mediaTop">
 <!-- ICON IS A LINK -->
@@ -254,6 +255,7 @@
 
   <div class="contact-formCard">
     <h3 class="contact-formTitle">Send a message</h3>
+    <p class="contact-formHint">Goes straight to my email.</p>
 
     <form id="contact-form" class="contact-form" action="https://formspree.io/f/mnjnwonl" method="POST" novalidate>
       <!-- Honeypot: real users leave this empty; bots tend to fill every field. Formspree drops submissions where _gotcha has a value. -->
@@ -284,7 +286,6 @@
         <button class="btn" type="submit">Send</button>
         <span class="form-status" aria-live="polite"></span>
       </div>
-        <p>Emails me directly</p>
     </form>
   </div>
     <div class="contact-linksRow" aria-label="Contact links">
@@ -306,30 +307,5 @@
 <p class="footer-copy">© Logan M Edwards</p>
 </div>
 </footer>
-<!-- Marks icon links as "used" after first interaction -->
-<script>
-    (function () {
-      function applyVisitedState(link) {
-        const id = link.dataset.project || "unknown";
-        const key = "projectIconUsed:" + id;
-        const used = localStorage.getItem(key) === "1";
-        link.classList.toggle("is-unvisited", !used);
-        link.classList.toggle("is-visited", used);
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const links = document.querySelectorAll(".project-icon-link");
-        links.forEach(function (link) {
-          applyVisitedState(link);
-
-          link.addEventListener("click", function () {
-            const id = link.dataset.project || "unknown";
-            localStorage.setItem("projectIconUsed:" + id, "1");
-            applyVisitedState(link);
-          }, { passive: true });
-        });
-      });
-    })();
-  </script>
 </body>
 </html>
