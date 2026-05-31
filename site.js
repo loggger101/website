@@ -179,8 +179,8 @@
       e.preventDefault();
 
       var action = form.getAttribute("action") || "";
-      if (!action || action.indexOf("REPLACE_WITH_YOUR_FORM_ID") !== -1) {
-        setStatus("Form not configured yet (replace the Formspree form ID).");
+      if (!action) {
+        setStatus("Form not configured (missing action URL).");
         return;
       }
 
@@ -207,39 +207,46 @@
     });
   }
 
-  function setUpProjectBandLinks() {
-    var cards = document.querySelectorAll(".project-card--enhanced");
-    if (!cards.length) return;
+  function wireBand(card, bandSelector) {
+    var link = card.querySelector(".project-icon-link[href]");
+    var band = card.querySelector(bandSelector);
+    if (!link || !band) return;
 
-    cards.forEach(function (card) {
-      var link = card.querySelector(".project-icon-link[href]");
-      var band = card.querySelector(".project-card__media");
-      if (!link || !band) return;
+    var href = link.getAttribute("href");
+    if (!href) return;
 
-      var href = link.getAttribute("href");
-      if (!href) return;
+    // Avoid double-wiring if this function is invoked twice
+    if (band.dataset.pageHref) return;
 
-      band.setAttribute("data-page-href", href);
-      band.setAttribute("role", "link");
-      band.setAttribute("tabindex", "0");
+    band.setAttribute("data-page-href", href);
+    band.setAttribute("role", "link");
+    band.setAttribute("tabindex", "0");
 
-      var label = link.getAttribute("aria-label") || "Open project page";
-      band.setAttribute("aria-label", label);
+    var label = link.getAttribute("aria-label") || "Open project page";
+    band.setAttribute("aria-label", label);
 
-      function navigate() { window.location.href = href; }
+    function navigate() { window.location.href = href; }
 
-      band.addEventListener("click", function (e) {
-        if (e.target && e.target.closest && e.target.closest("a")) return;
+    band.addEventListener("click", function (e) {
+      if (e.target && e.target.closest && e.target.closest("a")) return;
+      navigate();
+    });
+
+    band.addEventListener("keydown", function (e) {
+      var key = e.key || e.code;
+      if (key === "Enter" || key === " " || key === "Spacebar") {
+        e.preventDefault();
         navigate();
-      });
+      }
+    });
+  }
 
-      band.addEventListener("keydown", function (e) {
-        var key = e.key || e.code;
-        if (key === "Enter" || key === " " || key === "Spacebar") {
-          e.preventDefault();
-          navigate();
-        }
-      });
+  function setUpProjectBandLinks() {
+    document.querySelectorAll(".project-card--enhanced").forEach(function (card) {
+      wireBand(card, ".project-card__media");
+    });
+    document.querySelectorAll(".mini-project-card").forEach(function (card) {
+      wireBand(card, ".mini-project-card__media");
     });
   }
 

@@ -8,6 +8,12 @@ on:
 permissions:
   contents: write
 
+# Prevent overlapping runs (e.g., a manual workflow_dispatch firing during a scheduled run)
+# from racing on data/kaggle_stats.json and failing the second push.
+concurrency:
+  group: kaggle-stats
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -75,7 +81,7 @@ jobs:
               return json.loads(raw)
 
           out = {
-              "updatedAt": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+              "updatedAt": datetime.datetime.now(datetime.UTC).replace(microsecond=0, tzinfo=None).isoformat() + "Z",
               "datasets": {},
           }
 
