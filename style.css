@@ -372,14 +372,17 @@ body > * {
   color: rgba(255,255,255,0.90);
 }
 
+/* Icon micro-lift on mouse hover and when the parent band link is keyboard-focused.
+   (The icon itself is a decorative <span> and not focusable, so :focus-visible
+   is wired through the parent band link instead.) */
 .project-icon-link:hover,
-.project-icon-link:focus-visible {
+.project-card__media:focus-visible .project-icon-link,
+.mini-project-card__media:focus-visible .project-icon-link {
   transform: translateY(-1px);
   border-color: rgba(var(--accent-rgb), 0.55);
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.10),
     0 0 22px rgba(var(--accent-rgb), 0.30);
-  outline: none;
 }
 
 /* =========================================================
