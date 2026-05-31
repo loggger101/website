@@ -423,16 +423,19 @@ body > * {
     0 0 26px rgba(var(--accent-rgb), 0.22);
 }
 
-/* Visible focus indicator on the now-only focusable band of each card.
-   (The article itself no longer carries tabindex; the band handles
-   both keyboard navigation and the click affordance.) */
-.project-card__media[data-page-href]:focus-visible,
-.mini-project-card__media[data-page-href]:focus-visible {
+/* Visible focus indicator on the band link of each card.
+   (The article itself isn't focusable; the band <a> is the single
+   focus stop per project and the only AT-exposed link for it.) */
+.project-card__media:focus-visible,
+.mini-project-card__media:focus-visible {
   outline: 2px solid rgba(var(--accent-rgb), 0.95);
   outline-offset: 3px;
 }
 
 .project-card__media {
+  display: block;
+  color: inherit;
+  text-decoration: none;
   padding: 1rem 1rem 0.9rem 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.10);
   background:
@@ -616,6 +619,9 @@ body > * {
 }
 
 .mini-project-card__media {
+  display: block;
+  color: inherit;
+  text-decoration: none;
   padding: 0.85rem 0.9rem 0.75rem;
   border-bottom: 1px solid rgba(255,255,255,0.10);
   background:
@@ -973,16 +979,16 @@ body > * {
   outline: none;
 }
 
-/* Make the top media band feel clickable (JS sets data-page-href) */
-.project-card__media[data-page-href],
-.mini-project-card__media[data-page-href]{
+/* Make the top media band feel clickable (it IS an <a>) */
+.project-card__media,
+.mini-project-card__media{
   cursor: pointer;
 }
 
-.project-card--enhanced:hover .project-card__media[data-page-href],
-.project-card--enhanced:focus-within .project-card__media[data-page-href],
-.mini-project-card:hover .mini-project-card__media[data-page-href],
-.mini-project-card:focus-within .mini-project-card__media[data-page-href]{
+.project-card--enhanced:hover .project-card__media,
+.project-card--enhanced:focus-within .project-card__media,
+.mini-project-card:hover .mini-project-card__media,
+.mini-project-card:focus-within .mini-project-card__media{
   filter: brightness(1.03);
 }
 
