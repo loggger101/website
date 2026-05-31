@@ -250,6 +250,30 @@
     });
   }
 
+  // Track which project icons the user has already opened so the twinkle
+  // animation stops being noise. Per-subpage inline scripts also set the
+  // same localStorage keys when a user lands on a subpage directly.
+  function setUpProjectIconVisitedState() {
+    function applyVisitedState(link) {
+      var id = link.dataset.project || "unknown";
+      var key = "projectIconUsed:" + id;
+      var used = false;
+      try { used = localStorage.getItem(key) === "1"; } catch (e) {}
+      link.classList.toggle("is-unvisited", !used);
+      link.classList.toggle("is-visited", used);
+    }
+
+    document.querySelectorAll(".project-icon-link").forEach(function (link) {
+      if (!link.dataset.project) return;
+      applyVisitedState(link);
+      link.addEventListener("click", function () {
+        var id = link.dataset.project || "unknown";
+        try { localStorage.setItem("projectIconUsed:" + id, "1"); } catch (e) {}
+        applyVisitedState(link);
+      }, { passive: true });
+    });
+  }
+
 
   document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
@@ -262,5 +286,6 @@
     safeCall(setUpKaggleStats);
     safeCall(setUpContactForm);
     safeCall(setUpProjectBandLinks);
+    safeCall(setUpProjectIconVisitedState);
 });
 })();
