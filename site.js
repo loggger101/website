@@ -207,49 +207,6 @@
     });
   }
 
-  function wireBand(card, bandSelector) {
-    var link = card.querySelector(".project-icon-link[href]");
-    var band = card.querySelector(bandSelector);
-    if (!link || !band) return;
-
-    var href = link.getAttribute("href");
-    if (!href) return;
-
-    // Avoid double-wiring if this function is invoked twice
-    if (band.dataset.pageHref) return;
-
-    band.setAttribute("data-page-href", href);
-    band.setAttribute("role", "link");
-    band.setAttribute("tabindex", "0");
-
-    var label = link.getAttribute("aria-label") || "Open project page";
-    band.setAttribute("aria-label", label);
-
-    function navigate() { window.location.href = href; }
-
-    band.addEventListener("click", function (e) {
-      if (e.target && e.target.closest && e.target.closest("a")) return;
-      navigate();
-    });
-
-    band.addEventListener("keydown", function (e) {
-      var key = e.key || e.code;
-      if (key === "Enter" || key === " " || key === "Spacebar") {
-        e.preventDefault();
-        navigate();
-      }
-    });
-  }
-
-  function setUpProjectBandLinks() {
-    document.querySelectorAll(".project-card--enhanced").forEach(function (card) {
-      wireBand(card, ".project-card__media");
-    });
-    document.querySelectorAll(".mini-project-card").forEach(function (card) {
-      wireBand(card, ".mini-project-card__media");
-    });
-  }
-
   // Track which project icons the user has already opened so the twinkle
   // animation stops being noise. Per-subpage inline scripts also set the
   // same localStorage keys when a user lands on a subpage directly.
@@ -285,7 +242,6 @@
     }
     safeCall(setUpKaggleStats);
     safeCall(setUpContactForm);
-    safeCall(setUpProjectBandLinks);
     safeCall(setUpProjectIconVisitedState);
 });
 })();
