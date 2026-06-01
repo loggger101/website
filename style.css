@@ -1085,3 +1085,180 @@ body > * {
 .bj-sourceLinks {
   margin-top: 0.75rem;
 }
+
+/* =========================================================
+   ORTEGA EXPOSURE TIME CALCULATOR MINI-PROJECT
+   ========================================================= */
+.etc-form {
+  --etc-accent: 246,173,85;
+  margin-top: 0.75rem;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.34);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.etc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.etc-field {
+  display: grid;
+  gap: 6px;
+}
+
+.etc-label {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.78);
+}
+
+.etc-field input,
+.etc-field select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.30);
+  color: rgba(255,255,255,0.92);
+  padding: 8px 10px;
+  font: inherit;
+  outline: none;
+}
+
+.etc-field input:focus,
+.etc-field select:focus {
+  border-color: rgba(var(--etc-accent), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--etc-accent), 0.18);
+}
+
+.etc-result {
+  --etc-accent: 246,173,85;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(var(--etc-accent), 0.06);
+  border: 1px solid rgba(var(--etc-accent), 0.22);
+}
+
+.etc-result__label {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.74);
+}
+
+.etc-result__primary {
+  margin: 4px 0 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.etc-result__value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.96);
+  font-variant-numeric: tabular-nums;
+}
+
+.etc-result__friendly {
+  color: rgba(255,255,255,0.72);
+  font-size: 1rem;
+}
+
+.etc-result__details {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: 18px;
+  row-gap: 0;
+  font-size: 0.9rem;
+}
+
+.etc-result__details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.etc-result__details dt {
+  color: rgba(255,255,255,0.70);
+}
+
+.etc-result__details dd {
+  margin: 0;
+  color: rgba(255,255,255,0.92);
+  font-variant-numeric: tabular-nums;
+}
+
+.etc-noscript {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.78);
+}
+
+.etc-noscript a {
+  color: rgba(246,173,85, 1);
+}
+
+/* Source viewer — amber-accented variant of the blackjack one */
+.etc-source {
+  margin-top: 0.5rem;
+}
+.etc-source > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.90);
+  user-select: none;
+  list-style: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.etc-source > summary::-webkit-details-marker { display: none; }
+.etc-source > summary::before {
+  content: "▸";
+  display: inline-block;
+  color: rgba(246,173,85, 0.90);
+  font-size: 0.95em;
+  line-height: 1;
+}
+.etc-source[open] > summary::before {
+  content: "▾";
+}
+.etc-source > summary:hover,
+.etc-source > summary:focus-visible {
+  border-color: rgba(246,173,85, 0.55);
+  box-shadow: 0 0 0 3px rgba(246,173,85, 0.15);
+  outline: none;
+}
+.etc-sourceBody {
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.50);
+}
+.etc-sourceBody pre {
+  margin: 0;
+  padding: 12px 14px;
+  overflow: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(220,235,250,0.92);
+  max-height: 480px;
+}
+.etc-sourceLinks {
+  margin-top: 0.75rem;
+}
