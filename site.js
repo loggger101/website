@@ -16,7 +16,6 @@
   }
 
   function shouldSkipNewTab(a) {
-    if (a.dataset && a.dataset.noNewtab === "true") return true;
     if (a.hasAttribute("download")) return true;
 
     var target = (a.getAttribute("target") || "").toLowerCase();
