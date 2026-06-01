@@ -40,6 +40,7 @@
   </script>
   <script async crossorigin="anonymous" data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count" integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi" src="https://gc.zgo.at/count.js"></script>
   <script defer src="site.js"></script>
+  <script defer src="blackjack.js"></script>
 </head>
 <body data-mark-visited="blackjack-game">
   <header class="site-header" id="top">
@@ -59,6 +60,23 @@
       </p>
     </section>
     <section class="section">
+      <h2>Play the game</h2>
+      <p class="section-intro">
+        The original Python is a Colab CLI. This in-browser port preserves the same flow — same dealer behaviour,
+        same insurance and double-down rules, same 3:2 natural blackjack payout, and yes, the same snarky messages
+        when you try to bet zero or sneak a negative number past the dealer.
+      </p>
+      <div id="bj-game" class="bj-game" aria-label="Playable blackjack mini-project">
+        <div class="bj-status" aria-live="polite"></div>
+        <div class="bj-log" role="log" aria-live="polite" aria-atomic="false"></div>
+        <div class="bj-controls" aria-label="Game controls"></div>
+      </div>
+      <noscript>
+        <p class="bj-noscript">Enable JavaScript to play, or
+          <a href="blackjack.py" download>download the original Python source</a>.</p>
+      </noscript>
+    </section>
+    <section class="section">
       <h2>Key highlights</h2>
       <p class="section-intro">Features and learning objectives explored in this project.</p>
       <ul class="contact-list">
@@ -67,6 +85,22 @@
         <li>Calculates hand totals with appropriate handling of Aces as 1 or 11.</li>
         <li>Demonstrates random shuffling, loops, conditional logic and basic game state management.</li>
       </ul>
+    </section>
+    <section class="section">
+      <h2>Source</h2>
+      <p class="section-intro">
+        The original Colab Python script, kept verbatim. The in-browser version above ports its logic to JavaScript
+        without changing rules.
+      </p>
+      <details id="bj-source" class="bj-source">
+        <summary>View original Python source (<code>blackjack.py</code>)</summary>
+        <div class="bj-sourceBody">
+          <pre><code class="bj-sourceCode">Open this section to load the source.</code></pre>
+        </div>
+      </details>
+      <p class="bj-sourceLinks">
+        <a class="btn btn-sm btn-ghost" href="blackjack.py" download>Download blackjack.py</a>
+      </p>
     </section>
   </main>
   <footer class="site-footer">
