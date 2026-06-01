@@ -409,13 +409,6 @@ body > * {
 /* =========================================================
    ENHANCED PROJECT CARDS
    ========================================================= */
-.project-card {
-  padding: 1rem;
-  border-radius: 0.75rem;
-  background: #171923;
-  border: 1px solid #2d3748;
-}
-
 .project-card h3 { margin-bottom: 0.25rem; }
 
 .project-subtitle {
@@ -741,37 +734,6 @@ body > * {
   margin-top: 0.5rem;
 }
 
-/* Contact cards */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0.9rem;
-  margin-top: 0.75rem;
-}
-
-.contact-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 16px;
-  padding: 0.9rem 0.95rem;
-}
-
-.contact-label {
-  color: #a0aec0;
-  font-size: 0.85rem;
-  margin-bottom: 0.35rem;
-}
-
-.contact-link {
-  color: #e2e8f0;
-  text-decoration: none;
-  word-break: break-word;
-}
-
-.contact-link:hover {
-  text-decoration: underline;
-}
-
 /* Footer nav */
 .footer-inner {
   display: flex;
@@ -810,7 +772,7 @@ body > * {
 }
 
 /* =========================================================
-   MICRO-INTERACTIONS + COPY EMAIL (added)
+   MICRO-INTERACTIONS
    ========================================================= */
 
 .btn {
@@ -827,50 +789,14 @@ body > * {
 
 .project-card,
 .course-card,
-.mini-project-card,
-.contact-card {
+.mini-project-card {
   transition: transform 180ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 
 .project-card:hover,
 .course-card:hover,
-.mini-project-card:hover,
-.contact-card:hover {
+.mini-project-card:hover {
   transform: translateY(-2px);
-}
-
-.contact-actions {
-  margin-top: 0.55rem;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  flex-wrap: wrap;
-}
-
-.copy-btn {
-  appearance: none;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.25);
-  color: rgba(255,255,255,0.92);
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.copy-btn:hover {
-  border-color: rgba(99,179,237,0.55);
-  box-shadow: 0 0 0 3px rgba(99,179,237,0.12);
-}
-
-.copy-btn:active {
-  transform: translateY(1px);
-}
-
-.copy-status {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.72);
-  min-height: 1em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -878,16 +804,13 @@ body > * {
   .link-chip,
   .project-card,
   .course-card,
-  .mini-project-card,
-  .contact-card {
+  .mini-project-card {
     transition: none !important;
   }
   .btn:active,
-  .copy-btn:active,
   .project-card:hover,
   .course-card:hover,
-  .mini-project-card:hover,
-  .contact-card:hover {
+  .mini-project-card:hover {
     transform: none !important;
   }
 }
