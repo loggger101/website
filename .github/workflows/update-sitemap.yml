@@ -1,0 +1,92 @@
+name: Update sitemap lastmod
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "*.html"
+
+permissions:
+  contents: write
+
+# Avoid racing with another run (e.g. manual dispatch during a push-triggered run)
+# overwriting the same sitemap.xml.
+concurrency:
+  group: update-sitemap
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need full history so `git log` can find each HTML file's true last-modified date.
+          fetch-depth: 0
+
+      - name: Regenerate sitemap lastmod from git history
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          import subprocess
+
+          SITEMAP = "sitemap.xml"
+          SITE = "https://www.loganmedwardsastrophy.com/"
+
+          def url_to_path(url: str) -> str:
+              rest = url[len(SITE):] if url.startswith(SITE) else url.lstrip("/")
+              if not rest or rest == "/":
+                  return "index.html"
+              return rest
+
+          def last_commit_date(path: str) -> str | None:
+              try:
+                  out = subprocess.check_output(
+                      ["git", "log", "-1", "--format=%cd", "--date=format:%Y-%m-%d", "--", path],
+                      text=True,
+                  ).strip()
+                  return out or None
+              except subprocess.CalledProcessError:
+                  return None
+
+          with open(SITEMAP, "r", encoding="utf-8") as f:
+              text = f.read()
+
+          def update_block(match: re.Match) -> str:
+              block = match.group(0)
+              loc_match = re.search(r"<loc>([^<]+)</loc>", block)
+              if not loc_match:
+                  return block
+              path = url_to_path(loc_match.group(1).strip())
+              date = last_commit_date(path)
+              if not date:
+                  return block
+              return re.sub(r"<lastmod>[^<]+</lastmod>", f"<lastmod>{date}</lastmod>", block)
+
+          new_text = re.sub(r"<url>.*?</url>", update_block, text, flags=re.DOTALL)
+
+          if new_text != text:
+              with open(SITEMAP, "w", encoding="utf-8") as f:
+                  f.write(new_text)
+              print("sitemap.xml updated")
+          else:
+              print("sitemap.xml already up to date")
+          PY
+
+      - name: Commit and push (if changed)
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- sitemap.xml; then
+            echo "No sitemap changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add sitemap.xml
+          git commit -m "Update sitemap lastmod from git history"
+          git push
