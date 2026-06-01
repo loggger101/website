@@ -278,7 +278,6 @@ body > * {
 }
 
 .section h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-.location { color: #a0aec0; font-size: 0.9rem; margin-bottom: 0.75rem; }
 
 .projects-grid {
   display: grid;
@@ -297,8 +296,10 @@ body > * {
   color: white;
   text-decoration: none;
   font-size: 0.95rem;
+  transition: transform 120ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 .btn:hover { background: #2b6cb0; }
+.btn:active { transform: translateY(1px) scale(0.99); }
 
 .contact-list { list-style: none; margin-top: 0.5rem; }
 .contact-list li { margin-bottom: 0.3rem; }
@@ -711,6 +712,7 @@ body > * {
   background: rgba(49, 130, 206, 0.18);
   border: 1px solid rgba(49, 130, 206, 0.35);
   color: #e2e8f0;
+  transition: transform 140ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .link-chip:hover {
@@ -772,20 +774,8 @@ body > * {
 }
 
 /* =========================================================
-   MICRO-INTERACTIONS
+   CARD MICRO-INTERACTIONS
    ========================================================= */
-
-.btn {
-  transition: transform 120ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
-}
-
-.btn:active {
-  transform: translateY(1px) scale(0.99);
-}
-
-.link-chip {
-  transition: transform 140ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
-}
 
 .project-card,
 .course-card,
@@ -817,7 +807,7 @@ body > * {
 
 
 /* =========================================================
-   FIX PACK — Kaggle stats, Contact form, Project band link, View page label
+   KAGGLE STATS + CONTACT FORM + BAND INTERACTIONS
    ========================================================= */
 
 /* Kaggle stats text next to Kaggle chip */
@@ -939,12 +929,6 @@ body > * {
 .mini-project-card:hover .mini-project-card__media,
 .mini-project-card:focus-within .mini-project-card__media{
   filter: brightness(1.03);
-}
-
-/* Kill any prior arrow badge on the emblem */
-.project-icon-link::before{
-  content: none !important;
-  display: none !important;
 }
 
 /* Mobile: avoid crowding */
