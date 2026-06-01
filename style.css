@@ -935,3 +935,130 @@ body > * {
 @media (max-width: 520px){
   .contact-formGrid{ grid-template-columns: 1fr; }
 }
+
+/* =========================================================
+   BLACKJACK MINI-PROJECT PLAYABLE PORT
+   ========================================================= */
+.bj-game {
+  --bj-accent: 252,129,129;
+  margin-top: 0.75rem;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.34);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.bj-status {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.86);
+  margin-bottom: 8px;
+  min-height: 1.4em;
+  letter-spacing: 0.02em;
+}
+
+.bj-log {
+  height: 280px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.50);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.90);
+}
+
+.bj-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bj-divider {
+  height: 1px;
+  margin: 10px 0;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(var(--bj-accent), 0.35),
+    rgba(255,255,255,0));
+}
+
+.bj-controls {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.bj-betform {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 220px;
+}
+
+.bj-input {
+  flex: 1;
+  min-width: 140px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.30);
+  color: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  font: inherit;
+  outline: none;
+}
+.bj-input:focus {
+  border-color: rgba(var(--bj-accent), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--bj-accent), 0.18);
+}
+
+.bj-noscript {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.78);
+}
+
+/* Source viewer */
+.bj-source {
+  margin-top: 0.5rem;
+}
+.bj-source > summary {
+  cursor: pointer;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.90);
+  user-select: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.bj-source > summary:hover,
+.bj-source > summary:focus-visible {
+  border-color: rgba(252,129,129, 0.55);
+  box-shadow: 0 0 0 3px rgba(252,129,129, 0.15);
+  outline: none;
+}
+.bj-sourceBody {
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.50);
+}
+.bj-sourceBody pre {
+  margin: 0;
+  padding: 12px 14px;
+  overflow: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(220,235,250,0.92);
+  max-height: 480px;
+}
+.bj-sourceLinks {
+  margin-top: 0.75rem;
+}
