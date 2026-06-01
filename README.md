@@ -19,12 +19,14 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `index.html` | Homepage (about, coursework, projects, resume, contact) |
 | `drone-target.html`, `star-catalog.html` | Main project detail pages |
 | `ortega-exposure.html`, `blackjack-game.html`, `portfolio-website.html` | Mini-project detail pages |
+| `blackjack.py` | Canonical Python source for the blackjack mini-project; downloadable from the page and inlined for SEO in `blackjack-game.html` (keep them in sync) |
+| `blackjack.js` | Vanilla-JS port of `blackjack.py` that powers the in-browser game on `blackjack-game.html` |
 | `style.css` | All styles (dark space theme with parallax star layers) |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state) |
 | `assets/` | Extracted parallax SVGs (stars-far/mid/near, milky-way, noise) |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
-| `.github/workflows/` | Kaggle stats refresh job |
+| `.github/workflows/` | Kaggle stats refresh job and sitemap-lastmod auto-update |
 
 ## Local development
 
