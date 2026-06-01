@@ -1015,10 +1015,18 @@ body > * {
   box-shadow: 0 0 0 3px rgba(var(--bj-accent), 0.18);
 }
 
-.bj-noscript {
-  margin-top: 0.75rem;
+.bj-noscript,
+.bj-fallback {
+  margin: 0;
   font-size: 0.92rem;
   color: rgba(255,255,255,0.78);
+}
+.bj-fallback a,
+.bj-noscript a {
+  color: rgba(var(--bj-accent), 1);
+}
+.bj-noscript {
+  margin-top: 0.75rem;
 }
 
 /* Source viewer */
@@ -1027,6 +1035,9 @@ body > * {
 }
 .bj-source > summary {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 9px 12px;
   border-radius: 10px;
   background: rgba(255,255,255,0.05);
@@ -1034,7 +1045,19 @@ body > * {
   font-size: 0.95rem;
   color: rgba(255,255,255,0.90);
   user-select: none;
+  list-style: none;
   transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.bj-source > summary::-webkit-details-marker { display: none; }
+.bj-source > summary::before {
+  content: "▸";
+  display: inline-block;
+  color: rgba(252,129,129, 0.85);
+  font-size: 0.95em;
+  line-height: 1;
+}
+.bj-source[open] > summary::before {
+  content: "▾";
 }
 .bj-source > summary:hover,
 .bj-source > summary:focus-visible {

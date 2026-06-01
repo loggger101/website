@@ -182,7 +182,7 @@
     appendLine("How much would you like to bet?");
     makeBetInput(function (raw) {
       // Non-integer detection mirrors `int(initial_bet)` raising.
-      if (raw === "" || !/^-?\d+$/.test(raw)) {
+      if (raw === "" || !/^[+-]?\d+$/.test(raw)) {
         appendLine("We don't gamble in variables bud");
         showGameOver();
         return;
@@ -424,34 +424,10 @@
     btn.focus();
   }
 
-  // ---------------------------------------------------------------
-  // Source viewer — lazy-load blackjack.py on first <details> open.
-  // ---------------------------------------------------------------
-  function wireSourceViewer() {
-    var details = document.getElementById("bj-source");
-    if (!details) return;
-    var target = details.querySelector(".bj-sourceCode");
-    if (!target) return;
-
-    var loaded = false;
-    details.addEventListener("toggle", function () {
-      if (!details.open || loaded) return;
-      loaded = true;
-      target.textContent = "Loading source…";
-      fetch("blackjack.py", { cache: "no-cache" })
-        .then(function (r) {
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          return r.text();
-        })
-        .then(function (text) { target.textContent = text; })
-        .catch(function () {
-          loaded = false;
-          target.textContent = "Could not load source. Use the download link instead.";
-        });
-    });
-  }
+  // The source viewer is rendered inline in blackjack-game.html so it is
+  // visible to crawlers and to noscript visitors without an extra fetch.
+  // No JS wiring needed here.
 
   // Boot
   showWelcome();
-  wireSourceViewer();
 })();
