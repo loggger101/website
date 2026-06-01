@@ -21,6 +21,8 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `ortega-exposure.html`, `blackjack-game.html`, `portfolio-website.html` | Mini-project detail pages |
 | `blackjack.py` | Canonical Python source for the blackjack mini-project; downloadable from the page and inlined for SEO in `blackjack-game.html` (keep them in sync) |
 | `blackjack.js` | Vanilla-JS port of `blackjack.py` that powers the in-browser game on `blackjack-game.html` |
+| `ortega-exposure.py` | Canonical Python source for the Ortega exposure-time calculator; downloadable and inlined for SEO in `ortega-exposure.html` (keep in sync) |
+| `ortega-exposure.js` | Vanilla-JS port of `ortega-exposure.py` that powers the in-browser calculator on `ortega-exposure.html` |
 | `style.css` | All styles (dark space theme with parallax star layers) |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state) |
 | `assets/` | Extracted parallax SVGs (stars-far/mid/near, milky-way, noise) |
