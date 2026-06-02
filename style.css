@@ -1029,11 +1029,17 @@ body > * {
   margin-top: 0.75rem;
 }
 
-/* Source viewer */
-.bj-source {
+/* Source viewer — shared across mini-project pages.
+   Each instance can override --src-accent (default red); see modifier
+   classes like .source-viewer--amber below. */
+.source-viewer {
+  --src-accent: 252,129,129;
   margin-top: 0.5rem;
 }
-.bj-source > summary {
+.source-viewer--amber {
+  --src-accent: 246,173,85;
+}
+.source-viewer > summary {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1048,31 +1054,31 @@ body > * {
   list-style: none;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
-.bj-source > summary::-webkit-details-marker { display: none; }
-.bj-source > summary::before {
+.source-viewer > summary::-webkit-details-marker { display: none; }
+.source-viewer > summary::before {
   content: "▸";
   display: inline-block;
-  color: rgba(252,129,129, 0.85);
+  color: rgba(var(--src-accent), 0.85);
   font-size: 0.95em;
   line-height: 1;
 }
-.bj-source[open] > summary::before {
+.source-viewer[open] > summary::before {
   content: "▾";
 }
-.bj-source > summary:hover,
-.bj-source > summary:focus-visible {
-  border-color: rgba(252,129,129, 0.55);
-  box-shadow: 0 0 0 3px rgba(252,129,129, 0.15);
+.source-viewer > summary:hover,
+.source-viewer > summary:focus-visible {
+  border-color: rgba(var(--src-accent), 0.55);
+  box-shadow: 0 0 0 3px rgba(var(--src-accent), 0.15);
   outline: none;
 }
-.bj-sourceBody {
+.source-viewer__body {
   margin-top: 10px;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(0,0,0,0.50);
 }
-.bj-sourceBody pre {
+.source-viewer__body pre {
   margin: 0;
   padding: 12px 14px;
   overflow: auto;
@@ -1082,7 +1088,7 @@ body > * {
   color: rgba(220,235,250,0.92);
   max-height: 480px;
 }
-.bj-sourceLinks {
+.source-viewer__links {
   margin-top: 0.75rem;
 }
 
@@ -1206,59 +1212,5 @@ body > * {
   color: rgba(246,173,85, 1);
 }
 
-/* Source viewer — amber-accented variant of the blackjack one */
-.etc-source {
-  margin-top: 0.5rem;
-}
-.etc-source > summary {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-  font-size: 0.95rem;
-  color: rgba(255,255,255,0.90);
-  user-select: none;
-  list-style: none;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-}
-.etc-source > summary::-webkit-details-marker { display: none; }
-.etc-source > summary::before {
-  content: "▸";
-  display: inline-block;
-  color: rgba(246,173,85, 0.90);
-  font-size: 0.95em;
-  line-height: 1;
-}
-.etc-source[open] > summary::before {
-  content: "▾";
-}
-.etc-source > summary:hover,
-.etc-source > summary:focus-visible {
-  border-color: rgba(246,173,85, 0.55);
-  box-shadow: 0 0 0 3px rgba(246,173,85, 0.15);
-  outline: none;
-}
-.etc-sourceBody {
-  margin-top: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(0,0,0,0.50);
-}
-.etc-sourceBody pre {
-  margin: 0;
-  padding: 12px 14px;
-  overflow: auto;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.82rem;
-  line-height: 1.5;
-  color: rgba(220,235,250,0.92);
-  max-height: 480px;
-}
-.etc-sourceLinks {
-  margin-top: 0.75rem;
-}
+/* Source viewer for this page uses the shared .source-viewer family
+   defined above (see .source-viewer--amber modifier). */
