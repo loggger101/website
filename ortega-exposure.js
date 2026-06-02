@@ -131,5 +131,8 @@
 
   form.addEventListener("input", update);
   form.addEventListener("change", update);
+  // No submit endpoint — keep Enter from reloading the page with input
+  // values appended as a query string (which would wipe the result panel).
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
   update();
 })();
