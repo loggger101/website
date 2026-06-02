@@ -14,15 +14,15 @@
   <link rel="canonical" href="https://www.loganmedwardsastrophy.com/ortega-exposure.html"/>
   <link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
   <meta name="theme-color" content="#0b1020"/>
-  <meta name="description" content="Python utility that estimates the recommended exposure time for observations with the Ortega telescope based on sky brightness, seeing, target magnitude, and desired SNR."/>
+  <meta name="description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source: solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR."/>
   <meta property="og:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards"/>
-  <meta property="og:description" content="Python utility that estimates the recommended Ortega telescope exposure time from sky brightness, seeing, target magnitude, and target SNR."/>
-  <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."/>
+  <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://www.loganmedwardsastrophy.com/ortega-exposure.html"/>
   <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards"/>
-  <meta name="twitter:description" content="Python utility that estimates the recommended Ortega telescope exposure time from sky brightness, seeing, target magnitude, and target SNR."/>
+  <meta name="twitter:description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."/>
   <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
   <meta name="author" content="Logan M Edwards"/>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io; form-action https://formspree.io; base-uri 'self'"/>
@@ -31,8 +31,10 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Ortega Telescope Exposure Time Calculator",
-    "description": "Python utility that estimates the recommended exposure time for observations with the Ortega telescope based on sky brightness, seeing, target magnitude, and desired SNR.",
+    "description": "Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source available for download. Solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR.",
     "applicationCategory": "EducationalApplication",
+    "browserRequirements": "Requires JavaScript",
+    "isAccessibleForFree": true,
     "operatingSystem": "Cross-platform",
     "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
     "url": "https://www.loganmedwardsastrophy.com/ortega-exposure.html",
@@ -56,10 +58,10 @@
     <section class="section">
       <h2>Overview</h2>
       <p class="section-intro">
-        This lightweight tool estimates the optimal exposure time for observations with the Ortega telescope.  
-        Taking into account sky brightness, seeing conditions, the desired signal‑to‑noise ratio and target magnitude,  
-        it provides a recommended integration time to achieve high‑quality imaging without saturating the detector.  
-        Built as a simple command‑line utility in Python, it’s designed for quick field calculations during observing runs.
+        This lightweight tool estimates the optimal exposure time for observations with the Ortega telescope.
+        Taking into account sky brightness, seeing conditions, the desired signal‑to‑noise ratio and target magnitude,
+        it provides a recommended integration time to achieve high‑quality imaging without saturating the detector.
+        Originally a Colab Python script for quick field calculations during observing runs — now also runs live in the browser below.
       </p>
     </section>
     <section class="section">
@@ -131,12 +133,12 @@
     </section>
     <section class="section">
       <h2>Source</h2>
-      <details id="etc-source" class="etc-source">
+      <details id="etc-source" class="source-viewer source-viewer--amber">
         <summary>View original Python source (<code>ortega-exposure.py</code>)</summary>
         <!-- Source is inlined here so crawlers and noscript visitors see the
              actual code. Keep this in sync with ortega-exposure.py at the repo root. -->
-        <div class="etc-sourceBody">
-          <pre><code class="etc-sourceCode"># -*- coding: utf-8 -*-
+        <div class="source-viewer__body">
+          <pre><code class="source-viewer__code"># -*- coding: utf-8 -*-
 # NOTE: ortega-exposure.html inlines this source in its &lt;details&gt; source viewer
 # so search engines and noscript visitors see it. Keep the two in sync.
 """Exposure Time Calculator
@@ -219,7 +221,7 @@ print(Chosen_age)
 </code></pre>
         </div>
       </details>
-      <div class="etc-sourceLinks" aria-label="Source actions">
+      <div class="source-viewer__links" aria-label="Source actions">
         <a class="btn btn-sm btn-ghost" href="ortega-exposure.py" download>Download ortega-exposure.py</a>
       </div>
     </section>
