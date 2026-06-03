@@ -29,6 +29,8 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos) |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
+| `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
+| `scripts/generate-og-card.ps1` | Regenerates `og.png` (the 1200×630 social-share card referenced by every page's `og:image` / `twitter:image` meta tags) |
 | `.github/workflows/` | Kaggle stats refresh job and sitemap-lastmod auto-update |
 
 ## Local development

@@ -157,7 +157,7 @@ pipeline ahead of the GPU. Plateau-triggered LR reductions and early stopping wi
 best-weight restoration prevent overfitting.
 </p>
 <figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/star/training_curves_letters.png" alt="Letter-head training and validation loss/accuracy curves over the multi-task training run." width="1280" height="960" loading="lazy"/>
+<img class="project-figure__img" src="assets/projects/star/training_curves_letters.png" alt="Letter-head training and validation loss/accuracy curves over the multi-task training run." width="1280" height="960" loading="lazy" decoding="async"/>
 <figcaption>Letter-head loss and accuracy across training. The two-stage schedule is visible — Stage 1 establishes the backbone on the letter task alone, before Stage 2 unfreezes the full multi-task model.</figcaption>
 </figure>
 </section>
@@ -207,7 +207,7 @@ dominates as expected; what little off-diagonal mass exists is concentrated on
 adjacent letters in the temperature sequence.
 </p>
 <figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/star/confusion_matrix_letters_test.png" alt="7-class spectral letter confusion matrix (O, B, A, F, G, K, M) on the held-out test set." width="1200" height="1000" loading="lazy"/>
+<img class="project-figure__img" src="assets/projects/star/confusion_matrix_letters_test.png" alt="7-class spectral letter confusion matrix (O, B, A, F, G, K, M) on the held-out test set." width="1200" height="1000" loading="lazy" decoding="async"/>
 <figcaption>Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M — neighbouring letters in the H–R diagram — which is consistent with the model learning a smooth temperature sequence.</figcaption>
 </figure>
 </section>
@@ -224,7 +224,7 @@ identities.
 <li><strong>Combined accuracy tracks letter accuracy</strong> — when the letter is right, subclass resolution is competitive; misclassified letters drag the combined number down by construction.</li>
 </ul>
 <figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/star/confusion_matrix_combined_test.png" alt="Combined letter × subclass confusion matrix — 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits." width="1600" height="1600" loading="lazy"/>
+<img class="project-figure__img" src="assets/projects/star/confusion_matrix_combined_test.png" alt="Combined letter × subclass confusion matrix — 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits." width="1600" height="1600" loading="lazy" decoding="async"/>
 <figcaption>Combined letter × subclass confusion matrix on the test set. The block-diagonal structure shows that errors cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries — the model has learned the temperature sequence as a continuous quantity, not a set of independent classes.</figcaption>
 </figure>
 </section>
