@@ -81,7 +81,8 @@ $g.DrawString('Logan M Edwards', $titleFont, $titleBrush, [single]380, [single]2
 # 7. Subtitle.
 $subFont = New-Object System.Drawing.Font -ArgumentList $titleFam, 36, ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
 $subBrush = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::FromArgb(220, 160, 174, 192))
-$g.DrawString('Astronomy & Astrophysics  -  Planetary Science', $subFont, $subBrush, [single]380, [single]330)
+$bullet = [char]0x2022   # • — matches the on-page site tagline
+$g.DrawString("Astronomy & Astrophysics  $bullet  Planetary Science", $subFont, $subBrush, [single]380, [single]330)
 
 # 8. URL footer.
 $urlFont = New-Object System.Drawing.Font -ArgumentList $titleFam, 28, ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)

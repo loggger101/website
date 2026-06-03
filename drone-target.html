@@ -141,7 +141,7 @@ Two recipes were used: end-to-end joint training from scratch, and a two-stage w
 where the coarse head trains alone before the fine head joins.
 </p>
 <figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/drone/training_curves.png" alt="Training and validation loss/accuracy curves for the multi-output drone CNN across 50 epochs at 128×128 input resolution." width="1000" height="400" loading="lazy"/>
+<img class="project-figure__img" src="assets/projects/drone/training_curves.png" alt="Training and validation loss/accuracy curves for the multi-output drone CNN across 50 epochs at 128×128 input resolution." width="1000" height="400" loading="lazy" decoding="async"/>
 <figcaption>Training and validation curves at 128×128 input resolution. Loss and accuracy converge cleanly with no major overfitting, with the LR scheduler kicking in on plateau.</figcaption>
 </figure>
 </section>
@@ -180,7 +180,7 @@ off-diagonal mass clusters on visually similar pairs (soldier / civilian,
 random_animal / bird, rock_debris / invalid_background).
 </p>
 <figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/drone/final_confusion_fine.png" alt="Fine-head confusion matrix across 11 classes — civilian_vehicle, tank_av, aerial_landscape, cloud_blanksky, tree_shrub, flying_target, bird, random_animal, civilian, soldier, rock_debris." width="800" height="600" loading="lazy"/>
+<img class="project-figure__img" src="assets/projects/drone/final_confusion_fine.png" alt="Fine-head confusion matrix across 11 classes — civilian_vehicle, tank_av, aerial_landscape, cloud_blanksky, tree_shrub, flying_target, bird, random_animal, civilian, soldier, rock_debris." width="800" height="600" loading="lazy" decoding="async"/>
 <figcaption>Held-out test set, 27,362 samples. Diagonal dominance confirms the 87.1% headline accuracy; the brightest off-diagonals match the qualitative error patterns documented in the writeup.</figcaption>
 </figure>
 <h3 class="subsection-title">Per-class precision</h3>
