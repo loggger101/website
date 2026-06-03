@@ -26,7 +26,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume section (replaces the prior Google Drive link) |
 | `style.css` | All styles (dark space theme with parallax star layers) |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state) |
-| `assets/` | Extracted parallax SVGs (stars-far/mid/near, milky-way, noise) |
+| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos) |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `.github/workflows/` | Kaggle stats refresh job and sitemap-lastmod auto-update |
