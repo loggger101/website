@@ -14,15 +14,15 @@
 <link rel="canonical" href="https://www.loganmedwardsastrophy.com/star-catalog.html"/>
 <link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
 <meta name="theme-color" content="#0b1020"/>
-<meta name="description" content="Deep-learning pipeline for cataloguing and classifying stars by spectral type using standardized survey imagery and metadata from Gaia and Pan-STARRS."/>
+<meta name="description" content="Catalog-driven deep-learning pipeline that classifies stars from RGB cutouts: 84.3% letter top-1 (O/B/A/F/G/K/M), 98.4% top-2, plus subclass digit prediction. Built on Gaia DR3, HIPPARCOS, PS1, and WISE."/>
 <meta property="og:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards"/>
-<meta property="og:description" content="CNN pipeline for stellar spectral classification using Gaia and Pan-STARRS survey data."/>
+<meta property="og:description" content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."/>
 <meta property="og:type" content="article"/>
 <meta property="og:url" content="https://www.loganmedwardsastrophy.com/star-catalog.html"/>
 <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards"/>
-<meta name="twitter:description" content="CNN pipeline for stellar spectral classification using Gaia and Pan-STARRS survey data."/>
+<meta name="twitter:description" content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."/>
 <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
 <meta name="author" content="Logan M Edwards"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io; form-action https://formspree.io; base-uri 'self'"/>
@@ -32,17 +32,17 @@
   "@type": "CreativeWork",
   "name": "Star Cataloguing Deep Learning Model",
   "headline": "Star Cataloguing Deep Learning Model",
-  "description": "CNN pipeline that catalogs and classifies stars by spectral type using standardized survey imagery and metadata from Gaia and Pan-STARRS.",
+  "description": "Multi-task CNN that classifies stars by spectral letter (O, B, A, F, G, K, M) and subclass digit (0-9) from RGB cutouts. Catalogs queried via VizieR (Gaia DR3, HIPPARCOS, PS1, WISE); images sourced from Pan-STARRS with graceful fallbacks. Reaches 84.3% letter top-1 / 98.4% top-2 accuracy.",
   "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
   "url": "https://www.loganmedwardsastrophy.com/star-catalog.html",
   "image": "https://www.loganmedwardsastrophy.com/og.png",
-  "keywords": ["deep learning", "astronomy", "Python", "Gaia", "Pan-STARRS", "spectral classification"]
+  "keywords": ["deep learning", "astronomy", "Python", "TensorFlow", "Gaia", "Pan-STARRS", "VizieR", "spectral classification"]
 }
 </script>
 <script async="" crossorigin="anonymous" data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count" integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi" src="https://gc.zgo.at/count.js"></script>
 <script defer src="site.js"></script>
 </head>
-<body data-mark-visited="star">
+<body data-mark-visited="star" class="project-page--blue">
 <header class="site-header" id="top">
 <div class="container header-content">
 <h1 class="site-title">Star Cataloguing Deep Learning Model</h1>
@@ -54,25 +54,191 @@
 <section class="section">
 <h2>Overview</h2>
 <p class="section-intro">
-        Deep learning pipeline for classifying stars by spectral type / stellar category using standardized survey imagery plus catalog metadata.
-        This page is meant to hold a longer-form project description, results, and links.
-      </p>
+A catalog-driven deep-learning pipeline that classifies stars from RGB image cutouts.
+The model predicts the Morgan–Keenan spectral letter (O, B, A, F, G, K, M) and the
+subclass digit (0–9 within the predicted letter) from photometric imagery alone.
+</p>
+<p>
+Inputs are constructed by querying VizieR catalogs for coordinates, magnitudes,
+colors, and spectral hints, then fetching color cutouts from Pan-STARRS with
+graceful fallbacks to other surveys. Each cutout is preprocessed to expose color
+cues without saturating the stellar core, then routed through a multi-task CNN.
+</p>
 </section>
 <section class="section">
-<h2>Key highlights</h2>
-<p class="section-intro">A quick snapshot of the most important features and design goals.</p>
+<h2>Pipeline</h2>
+<p class="section-intro">Three independent stages — catalog ingestion, image builder, and classifier.</p>
 <ul class="contact-list">
-<li>Ingests astronomy catalogs + cutouts (e.g., Gaia / Pan-STARRS workflows).</li>
-<li>Model training + evaluation (confusion matrices, error inspection, etc.).</li>
-<li>Clear outputs that support a "resume-style" project summary.</li>
+<li><strong>Catalog ingestion</strong> — programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE assemble a unified metadata table (coordinates, magnitudes, colors, effective-temperature hints, spectral types where present).</li>
+<li><strong>Image builder</strong> — fetches color cutouts, recenters and stretches them, scales toward a magnitude-aware target peak to avoid blown cores, and rejects grayscale or low-quality frames via explicit quality gates.</li>
+<li><strong>Multi-task CNN classifier</strong> — three heads (letter, combined letter × subclass, stage) trained jointly. The combined head lets the model learn letter-specific subclass boundaries from a single softmax.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Dataset</h2>
+<p class="section-intro">
+The raw class distribution is steeply imbalanced — K and F stars dominate; O and M
+are rare. The builder applies a "curved" target distribution to soften this skew
+without throwing away the long tail.
+</p>
+<div class="results-tableWrap">
+<table class="results-table">
+<caption>Letter class counts</caption>
+<thead>
+<tr><th scope="col">Letter</th><th scope="col">Before balancing</th><th scope="col">After balancing</th></tr>
+</thead>
+<tbody>
+<tr><td>K</td><td>30,901</td><td>26,154</td></tr>
+<tr><td>F</td><td>30,117</td><td>25,754</td></tr>
+<tr><td>A</td><td>17,127</td><td>18,356</td></tr>
+<tr><td>G</td><td>12,072</td><td>14,881</td></tr>
+<tr><td>B</td><td>5,537</td><td>9,322</td></tr>
+<tr><td>M</td><td>285</td><td>1,572</td></tr>
+<tr><td>O</td><td>78</td><td>283</td></tr>
+</tbody>
+</table>
+</div>
+<div class="results-tableWrap">
+<table class="results-table">
+<caption>Final dataset splits</caption>
+<thead>
+<tr><th scope="col">Split</th><th scope="col">Images</th></tr>
+</thead>
+<tbody>
+<tr><td>Train</td><td>67,227</td></tr>
+<tr><td>Validation</td><td>14,406</td></tr>
+<tr><td>Test</td><td>14,406</td></tr>
+</tbody>
+</table>
+</div>
+<h3 class="subsection-title">Quality gates</h3>
+<ul class="contact-list">
+<li>Minimum peak intensity and peak-to-background ratio.</li>
+<li>Maximum centroid offset from frame center.</li>
+<li>Maximum fraction of saturated pixels.</li>
+<li>Grayscale detection — RGB channels must carry independent information.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Model architecture</h2>
+<p class="section-intro">A compact, regularized three-block ConvNet with three jointly-trained heads.</p>
+<p>
+<em>Conv → BatchNorm → ReLU</em> blocks feed global average pooling and dense layers.
+Three softmax heads sit on top:
+</p>
+<ul class="contact-list">
+<li><strong>Letter head</strong> — softmax over the present spectral letters.</li>
+<li><strong>Combined head</strong> — softmax over <code>letter × 10 + subclass</code>, letting the model learn letter-specific subclass boundaries from a single classifier.</li>
+<li><strong>Stage head</strong> — softmax over evolutionary stage, used whenever stage labels are available.</li>
+</ul>
+</section>
+<section class="section">
+<h2>Training</h2>
+<p>
+Two-stage. Stage 1 optimizes the letter head alone to establish a stable backbone.
+Stage 2 unfreezes the full multi-task model, balancing letter and combined-head losses;
+the stage head joins if any stage labels are present. Class balance is handled by
+curved resampling plus class-balanced sample weights. The 70 / 15 / 15 split is
+stratified on letter; <code>tf.data</code> caching and prefetching keep the input
+pipeline ahead of the GPU. Plateau-triggered LR reductions and early stopping with
+best-weight restoration prevent overfitting.
+</p>
+<figure class="project-figure">
+<img class="project-figure__img" src="assets/projects/star/training_curves_letters.png" alt="Letter-head training and validation loss/accuracy curves over the multi-task training run." width="1280" height="960" loading="lazy"/>
+<figcaption>Letter-head loss and accuracy across training. The two-stage schedule is visible — Stage 1 establishes the backbone on the letter task alone, before Stage 2 unfreezes the full multi-task model.</figcaption>
+</figure>
+</section>
+<section class="section">
+<h2>Results</h2>
+<p class="section-intro">
+The letter head is the headline number — it tracks the macroscopic temperature
+sequence robustly. Subclass resolution is harder because RGB cutouts encode color
+differences only coarsely.
+</p>
+<ul class="metrics-grid">
+<li class="metric">
+<span class="metric__value">84.3%</span>
+<span class="metric__label">Letter top-1</span>
+<span class="metric__hint">7-class softmax (O, B, A, F, G, K, M)</span>
+</li>
+<li class="metric">
+<span class="metric__value">98.4%</span>
+<span class="metric__label">Letter top-2</span>
+<span class="metric__hint">Adjacent-letter confusion is common but bounded</span>
+</li>
+<li class="metric">
+<span class="metric__value">0.846</span>
+<span class="metric__label">Letter macro F1</span>
+<span class="metric__hint">Precision 0.847 / Recall 0.848</span>
+</li>
+<li class="metric">
+<span class="metric__value">34.4%</span>
+<span class="metric__label">Subclass | correct letter</span>
+<span class="metric__hint">Top-2 subclass: 54.1%</span>
+</li>
+<li class="metric">
+<span class="metric__value">30.6%</span>
+<span class="metric__label">Subclass overall</span>
+<span class="metric__hint">10-way digit prediction</span>
+</li>
+<li class="metric">
+<span class="metric__value">30.2%</span>
+<span class="metric__label">Combined exact</span>
+<span class="metric__hint">Exact letter + digit match</span>
+</li>
+</ul>
+<h3 class="subsection-title">Letter confusion matrix</h3>
+<p class="subsection-intro">
+Test set letter-head confusion across the seven spectral classes. The diagonal
+dominates as expected; what little off-diagonal mass exists is concentrated on
+adjacent letters in the temperature sequence.
+</p>
+<figure class="project-figure">
+<img class="project-figure__img" src="assets/projects/star/confusion_matrix_letters_test.png" alt="7-class spectral letter confusion matrix (O, B, A, F, G, K, M) on the held-out test set." width="1200" height="1000" loading="lazy"/>
+<figcaption>Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M — neighbouring letters in the H–R diagram — which is consistent with the model learning a smooth temperature sequence.</figcaption>
+</figure>
+</section>
+<section class="section">
+<h2>Error analysis</h2>
+<p class="section-intro">
+Confusion concentrates at decision boundaries that are physically adjacent — the
+model is learning a smooth temperature sequence rather than memorizing class
+identities.
+</p>
+<ul class="contact-list">
+<li><strong>Letter confusion</strong> is dominated by A/F, F/G, and K/M pairs — neighboring colors in the H–R diagram.</li>
+<li><strong>Subclass errors</strong> are locally smooth: typically off by ±1 subclass. Large jumps occur primarily where the underlying subclass has few training examples.</li>
+<li><strong>Combined accuracy tracks letter accuracy</strong> — when the letter is right, subclass resolution is competitive; misclassified letters drag the combined number down by construction.</li>
+</ul>
+<figure class="project-figure">
+<img class="project-figure__img" src="assets/projects/star/confusion_matrix_combined_test.png" alt="Combined letter × subclass confusion matrix — 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits." width="1600" height="1600" loading="lazy"/>
+<figcaption>Combined letter × subclass confusion matrix on the test set. The block-diagonal structure shows that errors cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries — the model has learned the temperature sequence as a continuous quantity, not a set of independent classes.</figcaption>
+</figure>
+</section>
+<section class="section">
+<h2>Utilization program</h2>
+<p>
+The inference script loads the trained model and the class map, reads new star
+images, applies the same preprocessing as training, and writes per-object
+predictions for letter and subclass with confidence scores. Batch evaluation
+produces a CSV that can be merged back onto catalog rows for downstream analysis.
+</p>
+</section>
+<section class="section">
+<h2>Limitations &amp; future work</h2>
+<ul class="contact-list">
+<li><strong>RGB-only inputs</strong> — spectral subclass boundaries are intrinsically fuzzy in three-band photometry and are confused further by interstellar reddening.</li>
+<li><strong>Saturation &amp; centring</strong> — performance is sensitive to data hygiene; quality gates exist, but borderline frames still leak through.</li>
+<li><strong>Rare classes</strong> — O and M, even after balancing, are limited by raw availability. Targeted sampling or modest augmentation would help further.</li>
+<li><strong>Next directions</strong> — calibrated photometry, extinction estimates, NIR bands, and attention pooling over radial profiles are the most promising routes to sharper subclass resolution.</li>
 </ul>
 </section>
 <section class="section">
 <h2>Links</h2>
-<p class="section-intro">Primary references and artifacts for this project.</p>
+<p class="section-intro">Dataset, full writeup, and source.</p>
 <p>
 <a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/star-image-bundles" rel="noopener" target="_blank">View on Kaggle</a>
-<a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1FZcBY3jxwTOmFkYY4g2otr7JUMC5jZKCfW_FAmLeRCM/edit?usp=drive_link" rel="noopener" target="_blank">Report / Writeup</a>
+<a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1FZcBY3jxwTOmFkYY4g2otr7JUMC5jZKCfW_FAmLeRCM/edit?usp=drive_link" rel="noopener" target="_blank">Full report</a>
 </p>
 </section>
 </main>
