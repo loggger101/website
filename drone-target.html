@@ -14,6 +14,7 @@
 <link rel="canonical" href="https://www.loganmedwardsastrophy.com/drone-target.html"/>
 <link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
 <meta name="theme-color" content="#0b1020"/>
+<meta name="color-scheme" content="dark"/>
 <meta name="description" content="YOLO-based live detection paired with a multi-output CNN classifier that reaches 87% fine-class and 91% coarse valid/invalid accuracy on a 27k-sample held-out test set of aerial drone imagery."/>
 <meta property="og:title" content="Drone Target Identification Model | Logan M Edwards"/>
 <meta property="og:description" content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."/>
@@ -51,7 +52,19 @@
 </div>
 </header>
 <main class="container">
-<section class="section">
+<nav class="section-nav" aria-label="Sections on this page">
+<a href="#overview">Overview</a>
+<a href="#pipeline">Pipeline</a>
+<a href="#dataset">Dataset</a>
+<a href="#model">Model</a>
+<a href="#training">Training</a>
+<a href="#results">Results</a>
+<a href="#errors">Errors</a>
+<a href="#utilization">Real-time</a>
+<a href="#limitations">Limitations</a>
+<a href="#links">Links</a>
+</nav>
+<section class="section" id="overview">
 <h2>Overview</h2>
 <p class="section-intro">
 An end-to-end deep-learning pipeline for drone- and camera-based target identification.
@@ -65,7 +78,7 @@ computational efficiency — so the classifier can be dropped into a streaming a
 running on drone footage or fixed surveillance cameras.
 </p>
 </section>
-<section class="section">
+<section class="section" id="pipeline">
 <h2>Pipeline</h2>
 <p class="section-intro">Three modular stages, each independently upgradable.</p>
 <ul class="contact-list">
@@ -74,7 +87,7 @@ running on drone footage or fixed surveillance cameras.
 <li><strong>Real-time utilization program</strong> — a YOLO segmentation front-end produces per-frame instance masks; each mask is cropped, normalized to match training, classified, and overlaid onto the source frame at the predicted coarse label's color.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="dataset">
 <h2>Dataset</h2>
 <p class="section-intro">
 Source datasets use inconsistent directory layouts, label columns, and category names.
@@ -91,7 +104,7 @@ corrupted files, and ensure every split contains a minimum number of valid examp
 Hash-based de-duplication catches the same image appearing across multiple sources.
 </p>
 </section>
-<section class="section">
+<section class="section" id="model">
 <h2>Model architecture</h2>
 <p class="section-intro">A compact multi-output ConvNet shared between two classification heads.</p>
 <p>
@@ -110,7 +123,7 @@ AdamW with a plateau-triggered LR schedule, and optional mixed-precision trainin
 round out the optimizer setup.
 </p>
 </section>
-<section class="section">
+<section class="section" id="training">
 <h2>Training</h2>
 <p>
 Implemented in TensorFlow with <code>tf.data</code> pipelines built directly from
@@ -132,7 +145,7 @@ where the coarse head trains alone before the fine head joins.
 <figcaption>Training and validation curves at 128×128 input resolution. Loss and accuracy converge cleanly with no major overfitting, with the LR scheduler kicking in on plateau.</figcaption>
 </figure>
 </section>
-<section class="section">
+<section class="section" id="results">
 <h2>Results</h2>
 <p class="section-intro">
 Held-out test set: 27,362 samples across 11 fine classes. Naïve single-class baselines
@@ -211,7 +224,7 @@ rock debris / background).
 </table>
 </div>
 </section>
-<section class="section">
+<section class="section" id="errors">
 <h2>Error analysis</h2>
 <p class="section-intro">Confusion matrices and qualitative review highlight three recurring failure modes.</p>
 <ul class="contact-list">
@@ -228,7 +241,7 @@ the YOLO + CNN loop closer to real time and improved detection of small, distant
 targets thanks to the larger effective receptive field.
 </p>
 </section>
-<section class="section">
+<section class="section" id="utilization">
 <h2>Real-time utilization</h2>
 <p>
 The deployment program runs against video files (with webcam and live drone feed as
@@ -257,7 +270,7 @@ Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head 
 </figcaption>
 </figure>
 </section>
-<section class="section">
+<section class="section" id="limitations">
 <h2>Limitations &amp; future work</h2>
 <ul class="contact-list">
 <li><strong>Data coverage</strong> — performance is bounded by the diversity of the unified training set. Drone altitude, camera angle, lighting, and environmental context all affect generalization.</li>
@@ -266,7 +279,7 @@ Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head 
 <li><strong>Next directions</strong> — temporal modelling across consecutive frames, backbones pretrained on aerial imagery, active-learning loops fed by uncertain detections, and lightweight backbones (MobileNet-class) for constrained hardware.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="links">
 <h2>Links</h2>
 <p class="section-intro">Dataset, full writeup, and source.</p>
 <p>
@@ -274,6 +287,12 @@ Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head 
 <a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1U_3uNBDcOX55h1ZSNn_pcUpBKPVT5tdFH6aje8d4m5E/edit?usp=drive_link" rel="noopener" target="_blank">Full report</a>
 </p>
 </section>
+<nav class="next-project" aria-label="Next project">
+<a class="next-project__card" href="star-catalog.html">
+<span class="next-project__label">Next project</span>
+<span class="next-project__title">Star Cataloguing Deep Learning Model →</span>
+</a>
+</nav>
 </main>
 <footer class="site-footer">
 <div class="container footer-inner">

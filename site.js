@@ -167,8 +167,8 @@
   }
 
   // Track which project icons the user has already opened so the twinkle
-  // animation stops being noise. Per-subpage inline scripts also set the
-  // same localStorage keys when a user lands on a subpage directly.
+  // animation stops being noise. markSubpageVisited() (called below) writes
+  // the same localStorage keys when a user lands on a subpage directly.
   function setUpProjectIconVisitedState() {
     function applyVisitedState(link) {
       var id = link.dataset.project || "unknown";
@@ -202,5 +202,5 @@
     safeCall(setUpContactForm);
     safeCall(setUpProjectIconVisitedState);
     safeCall(markSubpageVisited);
-});
+  });
 })();

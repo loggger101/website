@@ -14,6 +14,7 @@
 <link rel="canonical" href="https://www.loganmedwardsastrophy.com/star-catalog.html"/>
 <link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
 <meta name="theme-color" content="#0b1020"/>
+<meta name="color-scheme" content="dark"/>
 <meta name="description" content="Catalog-driven deep-learning pipeline that classifies stars from RGB cutouts: 84.3% letter top-1 (O/B/A/F/G/K/M), 98.4% top-2, plus subclass digit prediction. Built on Gaia DR3, HIPPARCOS, PS1, and WISE."/>
 <meta property="og:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards"/>
 <meta property="og:description" content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."/>
@@ -51,7 +52,19 @@
 </div>
 </header>
 <main class="container">
-<section class="section">
+<nav class="section-nav" aria-label="Sections on this page">
+<a href="#overview">Overview</a>
+<a href="#pipeline">Pipeline</a>
+<a href="#dataset">Dataset</a>
+<a href="#model">Model</a>
+<a href="#training">Training</a>
+<a href="#results">Results</a>
+<a href="#errors">Errors</a>
+<a href="#utilization">Inference</a>
+<a href="#limitations">Limitations</a>
+<a href="#links">Links</a>
+</nav>
+<section class="section" id="overview">
 <h2>Overview</h2>
 <p class="section-intro">
 A catalog-driven deep-learning pipeline that classifies stars from RGB image cutouts.
@@ -65,7 +78,7 @@ graceful fallbacks to other surveys. Each cutout is preprocessed to expose color
 cues without saturating the stellar core, then routed through a multi-task CNN.
 </p>
 </section>
-<section class="section">
+<section class="section" id="pipeline">
 <h2>Pipeline</h2>
 <p class="section-intro">Three independent stages — catalog ingestion, image builder, and classifier.</p>
 <ul class="contact-list">
@@ -74,7 +87,7 @@ cues without saturating the stellar core, then routed through a multi-task CNN.
 <li><strong>Multi-task CNN classifier</strong> — three heads (letter, combined letter × subclass, stage) trained jointly. The combined head lets the model learn letter-specific subclass boundaries from a single softmax.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="dataset">
 <h2>Dataset</h2>
 <p class="section-intro">
 The raw class distribution is steeply imbalanced — K and F stars dominate; O and M
@@ -119,7 +132,7 @@ without throwing away the long tail.
 <li>Grayscale detection — RGB channels must carry independent information.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="model">
 <h2>Model architecture</h2>
 <p class="section-intro">A compact, regularized three-block ConvNet with three jointly-trained heads.</p>
 <p>
@@ -132,7 +145,7 @@ Three softmax heads sit on top:
 <li><strong>Stage head</strong> — softmax over evolutionary stage, used whenever stage labels are available.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="training">
 <h2>Training</h2>
 <p>
 Two-stage. Stage 1 optimizes the letter head alone to establish a stable backbone.
@@ -148,7 +161,7 @@ best-weight restoration prevent overfitting.
 <figcaption>Letter-head loss and accuracy across training. The two-stage schedule is visible — Stage 1 establishes the backbone on the letter task alone, before Stage 2 unfreezes the full multi-task model.</figcaption>
 </figure>
 </section>
-<section class="section">
+<section class="section" id="results">
 <h2>Results</h2>
 <p class="section-intro">
 The letter head is the headline number — it tracks the macroscopic temperature
@@ -198,7 +211,7 @@ adjacent letters in the temperature sequence.
 <figcaption>Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M — neighbouring letters in the H–R diagram — which is consistent with the model learning a smooth temperature sequence.</figcaption>
 </figure>
 </section>
-<section class="section">
+<section class="section" id="errors">
 <h2>Error analysis</h2>
 <p class="section-intro">
 Confusion concentrates at decision boundaries that are physically adjacent — the
@@ -215,7 +228,7 @@ identities.
 <figcaption>Combined letter × subclass confusion matrix on the test set. The block-diagonal structure shows that errors cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries — the model has learned the temperature sequence as a continuous quantity, not a set of independent classes.</figcaption>
 </figure>
 </section>
-<section class="section">
+<section class="section" id="utilization">
 <h2>Utilization program</h2>
 <p>
 The inference script loads the trained model and the class map, reads new star
@@ -224,7 +237,7 @@ predictions for letter and subclass with confidence scores. Batch evaluation
 produces a CSV that can be merged back onto catalog rows for downstream analysis.
 </p>
 </section>
-<section class="section">
+<section class="section" id="limitations">
 <h2>Limitations &amp; future work</h2>
 <ul class="contact-list">
 <li><strong>RGB-only inputs</strong> — spectral subclass boundaries are intrinsically fuzzy in three-band photometry and are confused further by interstellar reddening.</li>
@@ -233,7 +246,7 @@ produces a CSV that can be merged back onto catalog rows for downstream analysis
 <li><strong>Next directions</strong> — calibrated photometry, extinction estimates, NIR bands, and attention pooling over radial profiles are the most promising routes to sharper subclass resolution.</li>
 </ul>
 </section>
-<section class="section">
+<section class="section" id="links">
 <h2>Links</h2>
 <p class="section-intro">Dataset, full writeup, and source.</p>
 <p>
@@ -241,6 +254,12 @@ produces a CSV that can be merged back onto catalog rows for downstream analysis
 <a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1FZcBY3jxwTOmFkYY4g2otr7JUMC5jZKCfW_FAmLeRCM/edit?usp=drive_link" rel="noopener" target="_blank">Full report</a>
 </p>
 </section>
+<nav class="next-project" aria-label="Next project">
+<a class="next-project__card" href="drone-target.html">
+<span class="next-project__label">Next project</span>
+<span class="next-project__title">Drone Target Identification Model →</span>
+</a>
+</nav>
 </main>
 <footer class="site-footer">
 <div class="container footer-inner">
