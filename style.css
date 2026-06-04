@@ -734,6 +734,14 @@ body > * {
   margin-top: 0.5rem;
 }
 
+/* "Updated <month>" stamp directly below the Resume action buttons. */
+.resume-updated {
+  margin: 0.75rem 0 0;
+  font-size: 0.86rem;
+  color: rgba(160, 174, 192, 0.85);
+  font-style: italic;
+}
+
 /* Footer nav */
 .footer-inner {
   display: flex;
@@ -1360,7 +1368,45 @@ body > * {
 }
 
 /* Scroll offset so section headings clear the top edge after a jump. */
-.section[id] { scroll-margin-top: 1rem; }
+.section[id],
+.tl-dr[id] { scroll-margin-top: 1rem; }
+
+/* =========================================================
+   PROJECT DETAIL PAGES — "AT A GLANCE" SUMMARY CARD
+   Mirrors the headline metric from #results so the result
+   numbers are visible before any scrolling.
+   ========================================================= */
+.tl-dr {
+  margin: 1.2rem 0 0.4rem;
+  padding: 1rem 1.15rem 1.1rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(var(--accent-rgb, 99,179,237), 0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(var(--accent-rgb, 99,179,237), 0.22);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+.tl-dr__label {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: rgba(var(--accent-rgb, 99,179,237), 0.92);
+}
+
+.tl-dr__line {
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(203,213,224,0.88);
+}
+
+/* Compact grid variant — slightly smaller metric values, tighter padding. */
+.metrics-grid--compact { gap: 0.55rem; margin: 0; }
+.metrics-grid--compact .metric { padding: 0.7rem 0.85rem 0.75rem; }
+.metrics-grid--compact .metric__value { font-size: 1.35rem; }
+.metrics-grid--compact .metric__label { font-size: 0.76rem; margin-top: 0.2rem; }
 
 /* =========================================================
    PROJECT DETAIL PAGES — NEXT-PROJECT CROSS-LINK CARD
