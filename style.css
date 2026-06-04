@@ -687,11 +687,9 @@ body > * {
   justify-content: flex-end;
 }
 
-.tag--mini {
-  font-size: 0.78rem;
-  padding: 0.22rem 0.55rem;
-  opacity: 0.92;
-}
+/* .tag--mini is only ever used combined with .tag, so inherit
+   font-size/padding from the base and only tweak opacity here. */
+.tag--mini { opacity: 0.92; }
 
 /* Project actions (touch-friendly quick links) */
 .project-actions-row {
