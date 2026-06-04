@@ -20,11 +20,11 @@
 <meta property="og:description" content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."/>
 <meta property="og:type" content="article"/>
 <meta property="og:url" content="https://www.loganmedwardsastrophy.com/drone-target.html"/>
-<meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
+<meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Drone Target Identification Model | Logan M Edwards"/>
 <meta name="twitter:description" content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."/>
-<meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
+<meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
 <meta name="author" content="Logan M Edwards"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io; form-action https://formspree.io; base-uri 'self'"/>
 <script type="application/ld+json">
@@ -36,7 +36,7 @@
   "description": "YOLO segmentation front-end paired with a multi-output CNN classifier (fine + coarse heads) for aerial target identification. Reaches 87% fine-class and 91% coarse accuracy on a held-out test set of 27k samples.",
   "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
   "url": "https://www.loganmedwardsastrophy.com/drone-target.html",
-  "image": "https://www.loganmedwardsastrophy.com/og.png",
+  "image": "https://www.loganmedwardsastrophy.com/og.jpg",
   "keywords": ["computer vision", "YOLO", "Python", "TensorFlow", "deep learning", "drone", "multi-output CNN"]
 }
 </script>
@@ -53,6 +53,7 @@
 </header>
 <main class="container">
 <nav class="section-nav" aria-label="Sections on this page">
+<a href="#summary">Summary</a>
 <a href="#overview">Overview</a>
 <a href="#pipeline">Pipeline</a>
 <a href="#dataset">Dataset</a>
@@ -64,6 +65,28 @@
 <a href="#limitations">Limitations</a>
 <a href="#links">Links</a>
 </nav>
+<aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+<p class="tl-dr__label">At a glance</p>
+<ul class="metrics-grid metrics-grid--compact">
+<li class="metric">
+<span class="metric__value">87.1%</span>
+<span class="metric__label">Fine accuracy</span>
+</li>
+<li class="metric">
+<span class="metric__value">91.3%</span>
+<span class="metric__label">Coarse accuracy</span>
+</li>
+<li class="metric">
+<span class="metric__value">27,362</span>
+<span class="metric__label">Held-out samples</span>
+</li>
+<li class="metric">
+<span class="metric__value">11 / 3</span>
+<span class="metric__label">Fine / coarse classes</span>
+</li>
+</ul>
+<p class="tl-dr__line">YOLO segmentation front-end + multi-output CNN classifier for aerial target ID. Full methodology, error analysis, and live demo below.</p>
+</aside>
 <section class="section" id="overview">
 <h2>Overview</h2>
 <p class="section-intro">
@@ -113,7 +136,7 @@ channel depth (32 → 64 → 128) and shrinking spatial resolution. Global avera
 collapses the final feature map into a fixed-length vector that feeds both heads:
 </p>
 <ul class="contact-list">
-<li><strong>Fine head</strong> — dense layers ending in an <em>N</em>-way softmax over the canonical fine classes.</li>
+<li><strong>Fine head</strong> — dense layers ending in an 11-way softmax over the canonical fine classes.</li>
 <li><strong>Coarse head</strong> — branches off the same backbone features, ending in a three-way softmax over the validity categories.</li>
 </ul>
 <p>
@@ -275,7 +298,7 @@ Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head 
 <ul class="contact-list">
 <li><strong>Data coverage</strong> — performance is bounded by the diversity of the unified training set. Drone altitude, camera angle, lighting, and environmental context all affect generalization.</li>
 <li><strong>Small targets</strong> — objects that occupy only a handful of pixels remain the hardest case.</li>
-<li><strong>Static taxonomy</strong> — adding new fine classes requires modifying the output head and retraining (at minimum, fine-tuning).</li>
+<li><strong>No temporal smoothing</strong> — the live overlay treats each frame independently, so detections on borderline crops can flicker between coarse labels across consecutive frames.</li>
 <li><strong>Next directions</strong> — temporal modelling across consecutive frames, backbones pretrained on aerial imagery, active-learning loops fed by uncertain detections, and lightweight backbones (MobileNet-class) for constrained hardware.</li>
 </ul>
 </section>

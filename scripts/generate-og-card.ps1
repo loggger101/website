@@ -1,10 +1,13 @@
 # generate-og-card.ps1
 #
-# Regenerates og.png at the repo root. The output is the social-share card
+# Regenerates og.jpg at the repo root. The output is the social-share card
 # referenced by every page's og:image and twitter:image meta tags.
 #
-# Output: 1200x630 PNG, deep-blue gradient + scattered stars + accent star
-# glyph + the site title / tagline / URL.
+# Output: 1200x630 JPEG (quality 88), deep-blue gradient + scattered stars +
+# accent star glyph + the site title / tagline / URL. JPEG is used instead of
+# PNG because the card is gradient-heavy with no transparency — q=88 gives a
+# 3-4x size reduction over PNG with no visible degradation, and OG / Twitter
+# both accept image/jpeg.
 #
 # Usage (from the repo root, on Windows PowerShell 5.1+):
 #   .\scripts\generate-og-card.ps1
@@ -93,10 +96,17 @@ $titleFont.Dispose(); $subFont.Dispose(); $urlFont.Dispose()
 $titleBrush.Dispose(); $subBrush.Dispose(); $urlBrush.Dispose()
 $g.Dispose()
 
-# Resolve the repo-root path relative to this script and write og.png there.
+# Resolve the repo-root path relative to this script and write og.jpg there.
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
-$out = Join-Path $repoRoot 'og.png'
-$bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+$out = Join-Path $repoRoot 'og.jpg'
+
+# Save as JPEG quality 88 — see header comment for the rationale.
+$jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() |
+  Where-Object { $_.MimeType -eq 'image/jpeg' } | Select-Object -First 1
+$encParams = New-Object System.Drawing.Imaging.EncoderParameters -ArgumentList 1
+$encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter -ArgumentList ([System.Drawing.Imaging.Encoder]::Quality, [long]88)
+$bmp.Save($out, $jpegCodec, $encParams)
+$encParams.Dispose()
 $bmp.Dispose()
 
 $size = (Get-Item $out).Length
