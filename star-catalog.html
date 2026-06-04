@@ -20,11 +20,11 @@
 <meta property="og:description" content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."/>
 <meta property="og:type" content="article"/>
 <meta property="og:url" content="https://www.loganmedwardsastrophy.com/star-catalog.html"/>
-<meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
+<meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards"/>
 <meta name="twitter:description" content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."/>
-<meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.png"/>
+<meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
 <meta name="author" content="Logan M Edwards"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io; form-action https://formspree.io; base-uri 'self'"/>
 <script type="application/ld+json">
@@ -36,7 +36,7 @@
   "description": "Multi-task CNN that classifies stars by spectral letter (O, B, A, F, G, K, M) and subclass digit (0-9) from RGB cutouts. Catalogs queried via VizieR (Gaia DR3, HIPPARCOS, PS1, WISE); images sourced from Pan-STARRS with graceful fallbacks. Reaches 84.3% letter top-1 / 98.4% top-2 accuracy.",
   "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
   "url": "https://www.loganmedwardsastrophy.com/star-catalog.html",
-  "image": "https://www.loganmedwardsastrophy.com/og.png",
+  "image": "https://www.loganmedwardsastrophy.com/og.jpg",
   "keywords": ["deep learning", "astronomy", "Python", "TensorFlow", "Gaia", "Pan-STARRS", "VizieR", "spectral classification"]
 }
 </script>
@@ -53,6 +53,7 @@
 </header>
 <main class="container">
 <nav class="section-nav" aria-label="Sections on this page">
+<a href="#summary">Summary</a>
 <a href="#overview">Overview</a>
 <a href="#pipeline">Pipeline</a>
 <a href="#dataset">Dataset</a>
@@ -64,6 +65,28 @@
 <a href="#limitations">Limitations</a>
 <a href="#links">Links</a>
 </nav>
+<aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+<p class="tl-dr__label">At a glance</p>
+<ul class="metrics-grid metrics-grid--compact">
+<li class="metric">
+<span class="metric__value">84.3%</span>
+<span class="metric__label">Letter top-1</span>
+</li>
+<li class="metric">
+<span class="metric__value">98.4%</span>
+<span class="metric__label">Letter top-2</span>
+</li>
+<li class="metric">
+<span class="metric__value">14,406</span>
+<span class="metric__label">Held-out samples</span>
+</li>
+<li class="metric">
+<span class="metric__value">7 / 70</span>
+<span class="metric__label">Letter / combined classes</span>
+</li>
+</ul>
+<p class="tl-dr__line">Multi-task CNN over Pan-STARRS RGB cutouts for spectral letter (O/B/A/F/G/K/M) and subclass digit. Full pipeline, results, and error analysis below.</p>
+</aside>
 <section class="section" id="overview">
 <h2>Overview</h2>
 <p class="section-intro">
@@ -124,6 +147,11 @@ without throwing away the long tail.
 </tbody>
 </table>
 </div>
+<p class="subsection-intro">
+Splits total 96,039 rows — slightly below the post-balancing total of 96,322 because
+the per-split quality gates reject a handful of frames that survived initial balancing
+(corrupted decodes, missing files, or borderline centring).
+</p>
 <h3 class="subsection-title">Quality gates</h3>
 <ul class="contact-list">
 <li>Minimum peak intensity and peak-to-background ratio.</li>
@@ -142,7 +170,7 @@ Three softmax heads sit on top:
 <ul class="contact-list">
 <li><strong>Letter head</strong> — softmax over the present spectral letters.</li>
 <li><strong>Combined head</strong> — softmax over <code>letter × 10 + subclass</code>, letting the model learn letter-specific subclass boundaries from a single classifier.</li>
-<li><strong>Stage head</strong> — softmax over evolutionary stage, used whenever stage labels are available.</li>
+<li><strong>Stage head</strong> — auxiliary softmax over evolutionary stage, trained whenever stage labels are available; not reported in the headline metrics below.</li>
 </ul>
 </section>
 <section class="section" id="training">
@@ -166,7 +194,9 @@ best-weight restoration prevent overfitting.
 <p class="section-intro">
 The letter head is the headline number — it tracks the macroscopic temperature
 sequence robustly. Subclass resolution is harder because RGB cutouts encode color
-differences only coarsely.
+differences only coarsely. Subclass accuracy is reported two ways: conditional on
+the letter being correct (isolates the subclass head's own contribution) and
+overall (penalizes letter errors as well).
 </p>
 <ul class="metrics-grid">
 <li class="metric">
@@ -229,7 +259,7 @@ identities.
 </figure>
 </section>
 <section class="section" id="utilization">
-<h2>Utilization program</h2>
+<h2>Inference program</h2>
 <p>
 The inference script loads the trained model and the class map, reads new star
 images, applies the same preprocessing as training, and writes per-object
