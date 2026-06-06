@@ -1,0 +1,86 @@
+name: Update resume date
+
+# Rewrites the "Updated <Month Year>" string in index.html's #resume section to
+# match the git mtime of Logan_Edwards_Resume_ATS.pdf. Mirrors the
+# update-sitemap.yml workflow so the displayed date can never drift from the
+# actual file commit.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "Logan_Edwards_Resume_ATS.pdf"
+
+permissions:
+  contents: write
+
+# Avoid racing with another run (e.g. manual dispatch during a push-triggered
+# run) overwriting the same index.html.
+concurrency:
+  group: update-resume-date
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need full history so `git log` can find the PDF's true mtime.
+          fetch-depth: 0
+
+      - name: Rewrite resume-updated string in index.html
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          import subprocess
+
+          PDF = "Logan_Edwards_Resume_ATS.pdf"
+          INDEX = "index.html"
+
+          # Git mtime of the PDF formatted as "Month Year" — matches the
+          # existing copy ("Updated June 2026").
+          date_str = subprocess.check_output(
+              ["git", "log", "-1", "--format=%cd", "--date=format:%B %Y", "--", PDF],
+              text=True,
+          ).strip()
+          if not date_str:
+              raise SystemExit(f"No commit found for {PDF}; nothing to update.")
+
+          with open(INDEX, "r", encoding="utf-8") as f:
+              html = f.read()
+
+          new_html, n = re.subn(
+              r'(<p class="resume-updated">)Updated [^<]+(</p>)',
+              rf"\1Updated {date_str}\2",
+              html,
+          )
+
+          if n == 0:
+              raise SystemExit("No <p class=\"resume-updated\"> tag found in index.html.")
+
+          if new_html != html:
+              with open(INDEX, "w", encoding="utf-8") as f:
+                  f.write(new_html)
+              print(f"index.html: resume-updated -> {date_str}")
+          else:
+              print(f"index.html already shows {date_str}")
+          PY
+
+      - name: Commit and push (if changed)
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo "No resume-date changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add index.html
+          git commit -m "Update resume date from PDF git mtime"
+          git push
