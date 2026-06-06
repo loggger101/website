@@ -1,0 +1,37 @@
+name: JS port tests
+
+# Runs the smoke tests in tests/ against the vanilla-JS ports of the
+# Python originals (blackjack.js, ortega-exposure.js). Uses Node's built-in
+# test runner — no package.json, no npm install, no dev dependencies.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "blackjack.js"
+      - "ortega-exposure.js"
+      - "tests/**"
+      - ".github/workflows/test.yml"
+  push:
+    branches: [main]
+    paths:
+      - "blackjack.js"
+      - "ortega-exposure.js"
+      - "tests/**"
+      - ".github/workflows/test.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Node 20 ships node:test stable; the LTS line covers what we need.
+          node-version: "20"
+
+      - name: Run tests
+        run: node --test tests/
