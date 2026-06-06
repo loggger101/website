@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Overscan padding so drifting backgrounds never expose empty edges */
+:root {
+  --drift-overscan: 220px; /* >= max drift distance (we drift ~60px) */
+  /* Default accent (matches the star card). Each project card overrides via its --<color> modifier class below. */
+  --accent-rgb: 99,179,237;
+}
+
+/* Per-card accent palette. Used by the rgba(var(--accent-rgb), ...) rules
+   throughout style.css to tint icon glows, hover halos, and media-band
+   gradients. Each project card carries one of these modifier classes. */
+.project-card--teal       { --accent-rgb: 79,209,197; }
+.project-card--blue       { --accent-rgb: 99,179,237; }
+.mini-project-card--amber { --accent-rgb: 246,173,85; }
+.mini-project-card--red   { --accent-rgb: 252,129,129; }
+.mini-project-card--purple{ --accent-rgb: 183,148,244; }
+
+/* Hidden honeypot field on the contact form (visually offscreen,
+   skipped by AT, never reachable via Tab). Formspree drops any
+   submission where this field is filled in. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+html {
+  background: #0b0c10;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Base deep-blue space backdrop + gentle vignette for realism */
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(49, 130, 206, 0.20), transparent 60%),
+    radial-gradient(900px 600px at 85% 10%, rgba(0, 80, 160, 0.16), transparent 55%),
+    radial-gradient(900px 620px at 70% 90%, rgba(120, 80, 255, 0.08), transparent 62%),
+    radial-gradient(1400px 1000px at 50% 35%, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.22) 70%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, #061027 0%, #0b0c10 55%, #060913 100%);
+  background-color: #0b0c10;
+
+  color: #f5f5f5;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
