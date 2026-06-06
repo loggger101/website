@@ -1227,8 +1227,11 @@ body > * {
 
 /* Page-level accent: set --accent-rgb on the body for project subpages so
    the chips below can pick up a project-matching glow. Falls back to blue. */
-.project-page--teal { --accent-rgb: 79,209,197; }
-.project-page--blue { --accent-rgb: 99,179,237; }
+.project-page--teal   { --accent-rgb: 79,209,197; }
+.project-page--blue   { --accent-rgb: 99,179,237; }
+.project-page--amber  { --accent-rgb: 246,173,85; }
+.project-page--red    { --accent-rgb: 252,129,129; }
+.project-page--purple { --accent-rgb: 183,148,244; }
 
 .metrics-grid {
   display: grid;
