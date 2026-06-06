@@ -43,7 +43,7 @@
   <script defer src="site.js"></script>
   <script defer src="blackjack.js"></script>
 </head>
-<body data-mark-visited="blackjack-game">
+<body data-mark-visited="blackjack-game" class="project-page--red">
   <header class="site-header" id="top">
     <div class="container header-content">
       <h1 class="site-title">Simple Blackjack Game</h1>
@@ -52,7 +52,32 @@
     </div>
   </header>
   <main class="container">
-    <section class="section">
+    <nav class="section-nav" aria-label="Sections on this page">
+      <a href="#summary">Summary</a>
+      <a href="#overview">Overview</a>
+      <a href="#play">Play</a>
+      <a href="#highlights">Highlights</a>
+      <a href="#source">Source</a>
+    </nav>
+    <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+      <p class="tl-dr__label">At a glance</p>
+      <ul class="metrics-grid metrics-grid--compact">
+        <li class="metric">
+          <span class="metric__value">52</span>
+          <span class="metric__label">Single-deck shoe</span>
+        </li>
+        <li class="metric">
+          <span class="metric__value">3:2</span>
+          <span class="metric__label">Natural blackjack payout</span>
+        </li>
+        <li class="metric">
+          <span class="metric__value">Py → JS</span>
+          <span class="metric__label">Vanilla-JS port of the original</span>
+        </li>
+      </ul>
+      <p class="tl-dr__line">Browser blackjack against a virtual dealer with hit, stand, double-down, and insurance. Original Colab Python kept verbatim below.</p>
+    </aside>
+    <section class="section" id="overview">
       <h2>Overview</h2>
       <p class="section-intro">
         This miniature project implements the classic casino card game of blackjack.
@@ -60,7 +85,7 @@
         Originally a small college assignment in Python introducing control flow, data structures and random number generation — now also playable in the browser below.
       </p>
     </section>
-    <section class="section">
+    <section class="section" id="play">
       <h2>Play the game</h2>
       <div id="bj-game" class="bj-game" aria-label="Playable blackjack mini-project">
         <div class="bj-status" aria-live="polite"></div>
@@ -75,7 +100,7 @@
           <a href="blackjack.py" download>download the original Python source</a>.</p>
       </noscript>
     </section>
-    <section class="section">
+    <section class="section" id="highlights">
       <h2>Key highlights</h2>
       <p class="section-intro">Features and learning objectives explored in this project.</p>
       <ul class="contact-list">
@@ -85,7 +110,7 @@
         <li>Demonstrates random shuffling, loops, conditional logic and basic game state management.</li>
       </ul>
     </section>
-    <section class="section">
+    <section class="section" id="source">
       <h2>Source</h2>
       <p class="section-intro">
         The original Colab Python script, kept verbatim. The in-browser version above ports its logic to JavaScript
@@ -405,6 +430,12 @@ while user_cash &gt; 0:
         <a class="btn btn-sm btn-ghost" href="blackjack.py" download>Download blackjack.py</a>
       </div>
     </section>
+    <nav class="next-project" aria-label="Next project">
+      <a class="next-project__card" href="portfolio-website.html">
+        <span class="next-project__label">Next project</span>
+        <span class="next-project__title">Portfolio Website →</span>
+      </a>
+    </nav>
   </main>
   <footer class="site-footer">
     <div class="container footer-inner">
