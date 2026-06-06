@@ -1,19 +1,15 @@
 /* blackjack.js — port of blackjack.py to vanilla JS for the mini-project page.
    Preserves the original's flow exactly: same dealer-on-hit quirk, same
    snarky strings, same insurance / double-down / natural-blackjack rules,
-   same bet-validation gauntlet. */
+   same bet-validation gauntlet.
+
+   The pure card model (makeDeck, shuffle, handTotal, fmtHand) is also
+   exported via module.exports when loaded under Node so
+   tests/blackjack.test.js can reach it without a DOM. */
 
 (function () {
-  var container = document.getElementById("bj-game");
-  if (!container) return;
-
-  var logEl = container.querySelector(".bj-log");
-  var controlsEl = container.querySelector(".bj-controls");
-  var statusEl = container.querySelector(".bj-status");
-  if (!logEl || !controlsEl || !statusEl) return;
-
   // ---------------------------------------------------------------
-  // Card model
+  // Card model — pure, exported below for tests.
   // ---------------------------------------------------------------
   var SUITS = ["Spades", "Clubs", "Hearts", "Diamonds"];
   var RANKS = [
@@ -58,6 +54,29 @@
   function fmtHand(hand) {
     return "[" + hand.map(function (c) { return "'" + c.name + "'"; }).join(", ") + "]";
   }
+
+  // Expose pure logic for Node tests. Browser builds skip this and continue
+  // to the DOM bindings below.
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      makeDeck: makeDeck,
+      shuffle: shuffle,
+      handTotal: handTotal,
+      fmtHand: fmtHand
+    };
+    return;
+  }
+
+  // ---------------------------------------------------------------
+  // DOM lookups
+  // ---------------------------------------------------------------
+  var container = document.getElementById("bj-game");
+  if (!container) return;
+
+  var logEl = container.querySelector(".bj-log");
+  var controlsEl = container.querySelector(".bj-controls");
+  var statusEl = container.querySelector(".bj-status");
+  if (!logEl || !controlsEl || !statusEl) return;
 
   // ---------------------------------------------------------------
   // State

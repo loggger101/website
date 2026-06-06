@@ -2,12 +2,13 @@
    mini-project page. Mirrors the original quadratic-SNR exposure-time
    formula, Johnson–Cousins extinction, lunar-age sky brightness lookup,
    and pixel-scale derivation exactly. Re-runs on every input change so
-   the result panel updates live. */
+   the result panel updates live.
+
+   The pure math (calculate, formatDuration) is also exported via
+   module.exports when loaded under Node so tests/ortega.test.js can
+   reach it without a DOM. */
 
 (function () {
-  var form = document.getElementById("etc-form");
-  if (!form) return;
-
   // ---------------------------------------------------------------
   // Constants (from the Python source)
   // ---------------------------------------------------------------
@@ -75,9 +76,19 @@
     return h + " h " + m2 + " min " + (rem - m2 * 60) + " sec";
   }
 
+  // Expose pure logic for Node tests. Browser builds skip this and continue
+  // to the DOM bindings below.
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = { calculate: calculate, formatDuration: formatDuration };
+    return;
+  }
+
   // ---------------------------------------------------------------
   // DOM
   // ---------------------------------------------------------------
+  var form = document.getElementById("etc-form");
+  if (!form) return;
+
   function setText(id, text) {
     var el = document.getElementById(id);
     if (el) el.textContent = text;
