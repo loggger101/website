@@ -1,4 +1,4 @@
 User-agent: *
-Allow: /
+Disallow:
 
 Sitemap: https://www.loganmedwardsastrophy.com/sitemap.xml
