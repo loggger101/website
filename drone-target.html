@@ -1,334 +1,482 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-<title>Drone Target Identification | Logan M Edwards</title>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="style.css" rel="stylesheet"/>
-<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
-<link href="favicon-16.png" rel="icon" sizes="16x16" type="image/png"/>
-<link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
-<link href="site.webmanifest" rel="manifest"/>
-<link rel="canonical" href="https://www.loganmedwardsastrophy.com/drone-target.html"/>
-<link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
-<meta name="theme-color" content="#0b0c10"/>
-<meta name="color-scheme" content="dark"/>
-<meta name="description" content="YOLO-based live detection paired with a multi-output CNN classifier that reaches 87% fine-class and 91% coarse valid/invalid accuracy on a 27k-sample held-out test set of aerial drone imagery."/>
-<meta property="og:title" content="Drone Target Identification Model | Logan M Edwards"/>
-<meta property="og:description" content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."/>
-<meta property="og:type" content="article"/>
-<meta property="og:url" content="https://www.loganmedwardsastrophy.com/drone-target.html"/>
-<meta property="og:image" content="https://www.loganmedwardsastrophy.com/og-drone.jpg"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Drone Target Identification Model | Logan M Edwards"/>
-<meta name="twitter:description" content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."/>
-<meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og-drone.jpg"/>
-<meta name="author" content="Logan M Edwards"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"/>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "CreativeWork",
-  "name": "Drone Target Identification Model",
-  "headline": "Drone Target Identification Model",
-  "description": "YOLO segmentation front-end paired with a multi-output CNN classifier (fine + coarse heads) for aerial target identification. Reaches 87% fine-class and 91% coarse accuracy on a held-out test set of 27k samples.",
-  "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
-  "url": "https://www.loganmedwardsastrophy.com/drone-target.html",
-  "image": "https://www.loganmedwardsastrophy.com/og-drone.jpg",
-  "keywords": ["computer vision", "YOLO", "Python", "TensorFlow", "deep learning", "drone", "multi-output CNN"]
-}
-</script>
-<script async crossorigin="anonymous" data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count" integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi" src="https://gc.zgo.at/count.js"></script>
-<script defer src="site.js"></script>
-</head>
-<body data-mark-visited="drone" class="project-page--teal">
-<header class="site-header" id="top">
-<div class="container header-content">
-<h1 class="site-title">Drone Target Identification Model</h1>
-<p class="site-tagline">Project page • Logan M Edwards</p>
-<p class="open-to"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
-</div>
-</header>
-<main class="container">
-<nav class="section-nav" aria-label="Sections on this page">
-<a href="#summary">Summary</a>
-<a href="#overview">Overview</a>
-<a href="#pipeline">Pipeline</a>
-<a href="#dataset">Dataset</a>
-<a href="#model">Model</a>
-<a href="#training">Training</a>
-<a href="#results">Results</a>
-<a href="#errors">Errors</a>
-<a href="#utilization">Real-time</a>
-<a href="#limitations">Limitations</a>
-<a href="#links">Links</a>
-</nav>
-<aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
-<p class="tl-dr__label">At a glance</p>
-<ul class="metrics-grid metrics-grid--compact">
-<li class="metric">
-<span class="metric__value">87.1%</span>
-<span class="metric__label">Fine accuracy</span>
-</li>
-<li class="metric">
-<span class="metric__value">91.3%</span>
-<span class="metric__label">Coarse accuracy</span>
-</li>
-<li class="metric">
-<span class="metric__value">27,362</span>
-<span class="metric__label">Held-out samples</span>
-</li>
-<li class="metric">
-<span class="metric__value">11 / 3</span>
-<span class="metric__label">Fine / coarse classes</span>
-</li>
-</ul>
-<p class="tl-dr__line">YOLO segmentation front-end + multi-output CNN classifier for aerial target ID. Full methodology, error analysis, and live demo below.</p>
-</aside>
-<section class="section" id="overview">
-<h2>Overview</h2>
-<p class="section-intro">
-An end-to-end deep-learning pipeline for drone- and camera-based target identification.
-The system unifies heterogeneous public image datasets, trains a multi-output CNN that
-predicts both a fine-grained object class and a coarse valid/invalid label, and embeds
-the trained classifier behind a YOLO segmentation front-end for real-time video.
-</p>
-<p>
-The work emphasizes practical concerns — dataset unification, label consistency, and
-computational efficiency — so the classifier can be dropped into a streaming application
-running on drone footage or fixed surveillance cameras.
-</p>
-</section>
-<section class="section" id="pipeline">
-<h2>Pipeline</h2>
-<p class="section-intro">Three modular stages, each independently upgradable.</p>
-<ul class="contact-list">
-<li><strong>Dataset builder</strong> — pulls images from multiple KaggleHub sources, reorganizes them into a single <code>images/</code> directory and a unified <code>metadata.csv</code>, hash-dedupes, and aliases dataset-specific terms (e.g. <em>pedestrian</em> / <em>walker</em>) onto canonical labels.</li>
-<li><strong>Multi-output CNN classifier</strong> — a regularized ConvNet with two heads: one over the 11 canonical fine classes, one over three coarse validity classes (<code>valid</code>, <code>invalid_nontarget</code>, <code>invalid_background</code>).</li>
-<li><strong>Real-time utilization program</strong> — a YOLO segmentation front-end produces per-frame instance masks; each mask is cropped, normalized to match training, classified, and overlaid onto the source frame at the predicted coarse label's color.</li>
-</ul>
-</section>
-<section class="section" id="dataset">
-<h2>Dataset</h2>
-<p class="section-intro">
-Source datasets use inconsistent directory layouts, label columns, and category names.
-The builder normalizes all of this into one corpus suitable for stratified training.
-</p>
-<p>
-Each fine label (e.g. <code>person_pedestrian</code>, <code>civilian_vehicle</code>, <code>tank_av</code>)
-is mapped onto one of three coarse buckets. Labels are derived per source via folder
-names, CSV columns, or filename regex, then aliased onto a canonical taxonomy. The
-70 / 15 / 15 train/val/test split is stratified on both fine and coarse labels, with
-class-balanced sampling and per-label caps to prevent background and other dominant
-categories from swamping training. Quality checks verify on-disk presence, skip
-corrupted files, and ensure every split contains a minimum number of valid examples.
-Hash-based de-duplication catches the same image appearing across multiple sources.
-</p>
-</section>
-<section class="section" id="model">
-<h2>Model architecture</h2>
-<p class="section-intro">A compact multi-output ConvNet shared between two classification heads.</p>
-<p>
-The backbone is a stack of <em>Conv → BatchNorm → ReLU → MaxPool</em> blocks with growing
-channel depth (32 → 64 → 128) and shrinking spatial resolution. Global average pooling
-collapses the final feature map into a fixed-length vector that feeds both heads:
-</p>
-<ul class="contact-list">
-<li><strong>Fine head</strong> — dense layers ending in an 11-way softmax over the canonical fine classes.</li>
-<li><strong>Coarse head</strong> — branches off the same backbone features, ending in a three-way softmax over the validity categories.</li>
-</ul>
-<p>
-Both heads are optimized jointly with categorical cross-entropy and configurable
-per-head weights. Dropout and L2 weight regularization mitigate overfitting; Adam /
-AdamW with a plateau-triggered LR schedule, and optional mixed-precision training,
-round out the optimizer setup.
-</p>
-</section>
-<section class="section" id="training">
-<h2>Training</h2>
-<p>
-Implemented in TensorFlow with <code>tf.data</code> pipelines built directly from
-<code>metadata.csv</code>. Each row loads its image via <code>out_relpath</code>, decodes
-to RGB, resizes to a fixed input resolution, and normalizes pixel values. Augmentations
-(horizontal flip, mild rotation, brightness/contrast jitter) are applied conservatively
-so small targets and label semantics survive.
-</p>
-<p>
-Sample weights down-weight over-represented classes (notably <code>invalid_background</code>)
-and up-weight under-represented valid categories. An optional flag controls whether
-invalid examples contribute to the fine-head loss — when disabled, invalids train only
-the coarse head, freeing the fine head to focus on examples with meaningful fine labels.
-Two recipes were used: end-to-end joint training from scratch, and a two-stage warm-up
-where the coarse head trains alone before the fine head joins.
-</p>
-<figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/drone/training_curves.png" alt="Training and validation loss/accuracy curves for the multi-output drone CNN across 50 epochs at 128×128 input resolution." width="1000" height="400" loading="lazy" decoding="async"/>
-<figcaption>Training and validation curves at 128×128 input resolution. Loss and accuracy converge cleanly with no major overfitting, with the LR scheduler kicking in on plateau.</figcaption>
-</figure>
-</section>
-<section class="section" id="results">
-<h2>Results</h2>
-<p class="section-intro">
-Held-out test set: 27,362 samples across 11 fine classes. Naïve single-class baselines
-reach 23.5% (fine) and 34.5% (coarse), so both heads must learn real structure to be useful.
-</p>
-<ul class="metrics-grid">
-<li class="metric">
-<span class="metric__value">87.1%</span>
-<span class="metric__label">Fine accuracy</span>
-<span class="metric__hint">11-class softmax — vs. 23.5% baseline</span>
-</li>
-<li class="metric">
-<span class="metric__value">91.3%</span>
-<span class="metric__label">Coarse accuracy</span>
-<span class="metric__hint">3-way valid/invalid — vs. 34.5% baseline</span>
-</li>
-<li class="metric">
-<span class="metric__value">0.836</span>
-<span class="metric__label">Fine macro F1</span>
-<span class="metric__hint">Precision 0.857 / Recall 0.821</span>
-</li>
-<li class="metric">
-<span class="metric__value">0.913</span>
-<span class="metric__label">Coarse weighted F1</span>
-<span class="metric__hint">Precision 0.913 / Recall 0.913</span>
-</li>
-</ul>
-<h3 class="subsection-title">Fine confusion matrix</h3>
-<p class="subsection-intro">
-Test set confusion matrix for the 11-class fine head. Strong diagonal dominance — most
-off-diagonal mass clusters on visually similar pairs (soldier / civilian,
-random_animal / bird, rock_debris / invalid_background).
-</p>
-<figure class="project-figure">
-<img class="project-figure__img" src="assets/projects/drone/final_confusion_fine.png" alt="Fine-head confusion matrix across 11 classes — civilian_vehicle, tank_av, aerial_landscape, cloud_blanksky, tree_shrub, flying_target, bird, random_animal, civilian, soldier, rock_debris." width="800" height="600" loading="lazy" decoding="async"/>
-<figcaption>Held-out test set, 27,362 samples. Diagonal dominance confirms the 87.1% headline accuracy; the brightest off-diagonals match the qualitative error patterns documented in the writeup.</figcaption>
-</figure>
-<h3 class="subsection-title">Per-class precision</h3>
-<p class="subsection-intro">
-The fine head is strongest on visually distinct categories (vehicles, landscape) and
-weakest where classes share appearance (soldier / civilian, random animal / bird,
-rock debris / background).
-</p>
-<div class="results-tableWrap">
-<table class="results-table">
-<caption>Fine head — test precision per class</caption>
-<thead>
-<tr><th scope="col">Class</th><th scope="col">Precision</th></tr>
-</thead>
-<tbody>
-<tr><td>civilian_vehicle</td><td>0.9538</td></tr>
-<tr><td>tank_av</td><td>0.9426</td></tr>
-<tr><td>aerial_landscape</td><td>0.9306</td></tr>
-<tr><td>cloud_blanksky</td><td>0.9174</td></tr>
-<tr><td>tree_shrub</td><td>0.8885</td></tr>
-<tr><td>flying_target</td><td>0.8629</td></tr>
-<tr><td>bird</td><td>0.8123</td></tr>
-<tr><td>random_animal</td><td>0.8027</td></tr>
-<tr><td>civilian</td><td>0.7882</td></tr>
-<tr><td>soldier</td><td>0.7730</td></tr>
-<tr><td>rock_debris</td><td>0.7547</td></tr>
-</tbody>
-</table>
-</div>
-<div class="results-tableWrap">
-<table class="results-table">
-<caption>Coarse head — test precision per class</caption>
-<thead>
-<tr><th scope="col">Class</th><th scope="col">Precision</th></tr>
-</thead>
-<tbody>
-<tr><td>invalid_nontarget</td><td>0.9277</td></tr>
-<tr><td>valid</td><td>0.9165</td></tr>
-<tr><td>invalid_background</td><td>0.8941</td></tr>
-</tbody>
-</table>
-</div>
-</section>
-<section class="section" id="errors">
-<h2>Error analysis</h2>
-<p class="section-intro">Confusion matrices and qualitative review highlight three recurring failure modes.</p>
-<ul class="contact-list">
-<li><strong>Borderline crops</strong> — segmentation masks that mix target and background pixels. When background dominates the crop, the classifier defaults to an invalid label even when part of a target is visible.</li>
-<li><strong>Small or occluded targets</strong> — distant or partially blocked objects provide too few pixels for confident fine-class prediction.</li>
-<li><strong>Visually similar classes</strong> — soldier vs. civilian, bird vs. random_animal, and invalid_nontarget vs. invalid_background account for most off-diagonal confusion-matrix mass.</li>
-</ul>
-<h3 class="subsection-title">Input resolution trade-off</h3>
-<p>
-Bumping inputs from 64×64 to 128×128 significantly improved both fine and coarse
-accuracy; 256×256 added very little. For offline classification, 128×128 is the sweet
-spot. For the live video pipeline, lower-resolution crops actually helped — they kept
-the YOLO + CNN loop closer to real time and improved detection of small, distant
-targets thanks to the larger effective receptive field.
-</p>
-</section>
-<section class="section" id="utilization">
-<h2>Real-time utilization</h2>
-<p>
-The deployment program runs against video files (with webcam and live drone feed as
-future targets). YOLO produces per-frame instance masks; each mask is cropped from the
-source frame, resized to the CNN's input size, and normalized identically to training.
-Only the coarse head is consulted in the live overlay — the operational question is
-"valid target?", and the three-way decision is fast and easy to render:
-</p>
-<ul class="contact-list">
-<li><strong>valid</strong> — green overlay, optionally annotated with the fine-class label.</li>
-<li><strong>invalid_nontarget</strong> — red overlay, signalling a real object that is not the target.</li>
-<li><strong>invalid_background</strong> — suppressed entirely.</li>
-</ul>
-<p>
-Optional frame skipping keeps throughput up. Decoupling detection from classification
-means a newer YOLO model can drop in without touching the CNN, and adding new fine
-classes only requires retraining the classifier.
-</p>
-<figure class="project-figure">
-<video class="project-video" src="assets/projects/drone/overlay_demo.mp4" controls preload="metadata" playsinline width="640" height="360" aria-label="Live drone target detection demo — YOLO segmentation with CNN coarse-head overlays (green for valid targets, red for invalid_nontarget) on aerial footage.">
-Your browser does not support embedded video. Use the link below to view the demo.
-</video>
-<figcaption>
-Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head colors each detection valid (green) or invalid_nontarget (red), and ignores invalid_background. Lower-resolution CNN input crops (32×32 in this run) keep the loop close to real time without sacrificing detection of small distant targets.
-<span class="project-figure__fallback">Prefer the longer demo? <a href="assets/projects/drone/overlay_demo_long.mp4">Download the extended cut</a> (≈7 MB).</span>
-</figcaption>
-</figure>
-</section>
-<section class="section" id="limitations">
-<h2>Limitations &amp; future work</h2>
-<ul class="contact-list">
-<li><strong>Data coverage</strong> — performance is bounded by the diversity of the unified training set. Drone altitude, camera angle, lighting, and environmental context all affect generalization.</li>
-<li><strong>Small targets</strong> — objects that occupy only a handful of pixels remain the hardest case.</li>
-<li><strong>No temporal smoothing</strong> — the live overlay treats each frame independently, so detections on borderline crops can flicker between coarse labels across consecutive frames.</li>
-<li><strong>Next directions</strong> — temporal modelling across consecutive frames, backbones pretrained on aerial imagery, active-learning loops fed by uncertain detections, and lightweight backbones (MobileNet-class) for constrained hardware.</li>
-</ul>
-</section>
-<section class="section" id="links">
-<h2>Links</h2>
-<p class="section-intro">Dataset, full writeup, and source.</p>
-<p>
-<a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/fpv-images" rel="noopener" target="_blank">View on Kaggle</a>
-<a class="btn btn-sm btn-ghost" href="https://docs.google.com/document/d/1U_3uNBDcOX55h1ZSNn_pcUpBKPVT5tdFH6aje8d4m5E/edit?usp=drive_link" rel="noopener" target="_blank">Full report</a>
-</p>
-</section>
-<nav class="next-project" aria-label="Next project">
-<a class="next-project__card" href="star-catalog.html">
-<span class="next-project__label">Next project</span>
-<span class="next-project__title">Star Cataloguing Deep Learning Model →</span>
-</a>
-</nav>
-</main>
-<footer class="site-footer">
-<div class="container footer-inner">
-<nav aria-label="Site navigation" class="footer-nav">
-<a href="index.html#about">About</a>
-<a href="index.html#projects">Projects</a>
-<a href="index.html#resume">Resume</a>
-<a href="index.html#coursework">Coursework</a>
-<a href="index.html#contact">Contact</a>
-<a href="#top">Top</a>
-</nav>
-<p class="footer-copy">© Logan M Edwards</p>
-</div>
-</footer>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Drone Target Identification | Logan M Edwards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="style.css" rel="stylesheet" />
+    <link href="favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png" />
+    <link href="favicon-16.png" rel="icon" sizes="16x16" type="image/png" />
+    <link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="site.webmanifest" rel="manifest" />
+    <link rel="canonical" href="https://www.loganmedwardsastrophy.com/drone-target.html" />
+    <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
+    <meta name="theme-color" content="#0b0c10" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="YOLO-based live detection paired with a multi-output CNN classifier that reaches 87% fine-class and 91% coarse valid/invalid accuracy on a 27k-sample held-out test set of aerial drone imagery."
+    />
+    <meta property="og:title" content="Drone Target Identification Model | Logan M Edwards" />
+    <meta
+      property="og:description"
+      content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.loganmedwardsastrophy.com/drone-target.html" />
+    <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og-drone.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Drone Target Identification Model | Logan M Edwards" />
+    <meta
+      name="twitter:description"
+      content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."
+    />
+    <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og-drone.jpg" />
+    <meta name="author" content="Logan M Edwards" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "Drone Target Identification Model",
+        "headline": "Drone Target Identification Model",
+        "description": "YOLO segmentation front-end paired with a multi-output CNN classifier (fine + coarse heads) for aerial target identification. Reaches 87% fine-class and 91% coarse accuracy on a held-out test set of 27k samples.",
+        "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
+        "url": "https://www.loganmedwardsastrophy.com/drone-target.html",
+        "image": "https://www.loganmedwardsastrophy.com/og-drone.jpg",
+        "keywords": ["computer vision", "YOLO", "Python", "TensorFlow", "deep learning", "drone", "multi-output CNN"]
+      }
+    </script>
+    <script
+      async
+      crossorigin="anonymous"
+      data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count"
+      integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi"
+      src="https://gc.zgo.at/count.js"
+    ></script>
+    <script defer src="site.js"></script>
+  </head>
+  <body data-mark-visited="drone" class="project-page--teal">
+    <header class="site-header" id="top">
+      <div class="container header-content">
+        <h1 class="site-title">Drone Target Identification Model</h1>
+        <p class="site-tagline">Project page • Logan M Edwards</p>
+        <p class="open-to"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
+      </div>
+    </header>
+    <main class="container">
+      <nav class="section-nav" aria-label="Sections on this page">
+        <a href="#summary">Summary</a>
+        <a href="#overview">Overview</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#dataset">Dataset</a>
+        <a href="#model">Model</a>
+        <a href="#training">Training</a>
+        <a href="#results">Results</a>
+        <a href="#errors">Errors</a>
+        <a href="#utilization">Real-time</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#links">Links</a>
+      </nav>
+      <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+        <p class="tl-dr__label">At a glance</p>
+        <ul class="metrics-grid metrics-grid--compact">
+          <li class="metric">
+            <span class="metric__value">87.1%</span>
+            <span class="metric__label">Fine accuracy</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">91.3%</span>
+            <span class="metric__label">Coarse accuracy</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">27,362</span>
+            <span class="metric__label">Held-out samples</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">11 / 3</span>
+            <span class="metric__label">Fine / coarse classes</span>
+          </li>
+        </ul>
+        <p class="tl-dr__line">
+          YOLO segmentation front-end + multi-output CNN classifier for aerial target ID. Full methodology, error
+          analysis, and live demo below.
+        </p>
+      </aside>
+      <section class="section" id="overview">
+        <h2>Overview</h2>
+        <p class="section-intro">
+          An end-to-end deep-learning pipeline for drone- and camera-based target identification. The system unifies
+          heterogeneous public image datasets, trains a multi-output CNN that predicts both a fine-grained object class
+          and a coarse valid/invalid label, and embeds the trained classifier behind a YOLO segmentation front-end for
+          real-time video.
+        </p>
+        <p>
+          The work emphasizes practical concerns — dataset unification, label consistency, and computational efficiency
+          — so the classifier can be dropped into a streaming application running on drone footage or fixed surveillance
+          cameras.
+        </p>
+      </section>
+      <section class="section" id="pipeline">
+        <h2>Pipeline</h2>
+        <p class="section-intro">Three modular stages, each independently upgradable.</p>
+        <ul class="contact-list">
+          <li>
+            <strong>Dataset builder</strong> — pulls images from multiple KaggleHub sources, reorganizes them into a
+            single <code>images/</code> directory and a unified <code>metadata.csv</code>, hash-dedupes, and aliases
+            dataset-specific terms (e.g. <em>pedestrian</em> / <em>walker</em>) onto canonical labels.
+          </li>
+          <li>
+            <strong>Multi-output CNN classifier</strong> — a regularized ConvNet with two heads: one over the 11
+            canonical fine classes, one over three coarse validity classes (<code>valid</code>,
+            <code>invalid_nontarget</code>, <code>invalid_background</code>).
+          </li>
+          <li>
+            <strong>Real-time utilization program</strong> — a YOLO segmentation front-end produces per-frame instance
+            masks; each mask is cropped, normalized to match training, classified, and overlaid onto the source frame at
+            the predicted coarse label's color.
+          </li>
+        </ul>
+      </section>
+      <section class="section" id="dataset">
+        <h2>Dataset</h2>
+        <p class="section-intro">
+          Source datasets use inconsistent directory layouts, label columns, and category names. The builder normalizes
+          all of this into one corpus suitable for stratified training.
+        </p>
+        <p>
+          Each fine label (e.g. <code>person_pedestrian</code>, <code>civilian_vehicle</code>, <code>tank_av</code>) is
+          mapped onto one of three coarse buckets. Labels are derived per source via folder names, CSV columns, or
+          filename regex, then aliased onto a canonical taxonomy. The 70 / 15 / 15 train/val/test split is stratified on
+          both fine and coarse labels, with class-balanced sampling and per-label caps to prevent background and other
+          dominant categories from swamping training. Quality checks verify on-disk presence, skip corrupted files, and
+          ensure every split contains a minimum number of valid examples. Hash-based de-duplication catches the same
+          image appearing across multiple sources.
+        </p>
+      </section>
+      <section class="section" id="model">
+        <h2>Model architecture</h2>
+        <p class="section-intro">A compact multi-output ConvNet shared between two classification heads.</p>
+        <p>
+          The backbone is a stack of <em>Conv → BatchNorm → ReLU → MaxPool</em> blocks with growing channel depth (32 →
+          64 → 128) and shrinking spatial resolution. Global average pooling collapses the final feature map into a
+          fixed-length vector that feeds both heads:
+        </p>
+        <ul class="contact-list">
+          <li>
+            <strong>Fine head</strong> — dense layers ending in an 11-way softmax over the canonical fine classes.
+          </li>
+          <li>
+            <strong>Coarse head</strong> — branches off the same backbone features, ending in a three-way softmax over
+            the validity categories.
+          </li>
+        </ul>
+        <p>
+          Both heads are optimized jointly with categorical cross-entropy and configurable per-head weights. Dropout and
+          L2 weight regularization mitigate overfitting; Adam / AdamW with a plateau-triggered LR schedule, and optional
+          mixed-precision training, round out the optimizer setup.
+        </p>
+      </section>
+      <section class="section" id="training">
+        <h2>Training</h2>
+        <p>
+          Implemented in TensorFlow with <code>tf.data</code> pipelines built directly from <code>metadata.csv</code>.
+          Each row loads its image via <code>out_relpath</code>, decodes to RGB, resizes to a fixed input resolution,
+          and normalizes pixel values. Augmentations (horizontal flip, mild rotation, brightness/contrast jitter) are
+          applied conservatively so small targets and label semantics survive.
+        </p>
+        <p>
+          Sample weights down-weight over-represented classes (notably <code>invalid_background</code>) and up-weight
+          under-represented valid categories. An optional flag controls whether invalid examples contribute to the
+          fine-head loss — when disabled, invalids train only the coarse head, freeing the fine head to focus on
+          examples with meaningful fine labels. Two recipes were used: end-to-end joint training from scratch, and a
+          two-stage warm-up where the coarse head trains alone before the fine head joins.
+        </p>
+        <figure class="project-figure">
+          <img
+            class="project-figure__img"
+            src="assets/projects/drone/training_curves.png"
+            alt="Training and validation loss/accuracy curves for the multi-output drone CNN across 50 epochs at 128×128 input resolution."
+            width="1000"
+            height="400"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            Training and validation curves at 128×128 input resolution. Loss and accuracy converge cleanly with no major
+            overfitting, with the LR scheduler kicking in on plateau.
+          </figcaption>
+        </figure>
+      </section>
+      <section class="section" id="results">
+        <h2>Results</h2>
+        <p class="section-intro">
+          Held-out test set: 27,362 samples across 11 fine classes. Naïve single-class baselines reach 23.5% (fine) and
+          34.5% (coarse), so both heads must learn real structure to be useful.
+        </p>
+        <ul class="metrics-grid">
+          <li class="metric">
+            <span class="metric__value">87.1%</span>
+            <span class="metric__label">Fine accuracy</span>
+            <span class="metric__hint">11-class softmax — vs. 23.5% baseline</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">91.3%</span>
+            <span class="metric__label">Coarse accuracy</span>
+            <span class="metric__hint">3-way valid/invalid — vs. 34.5% baseline</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">0.836</span>
+            <span class="metric__label">Fine macro F1</span>
+            <span class="metric__hint">Precision 0.857 / Recall 0.821</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">0.913</span>
+            <span class="metric__label">Coarse weighted F1</span>
+            <span class="metric__hint">Precision 0.913 / Recall 0.913</span>
+          </li>
+        </ul>
+        <h3 class="subsection-title">Fine confusion matrix</h3>
+        <p class="subsection-intro">
+          Test set confusion matrix for the 11-class fine head. Strong diagonal dominance — most off-diagonal mass
+          clusters on visually similar pairs (soldier / civilian, random_animal / bird, rock_debris /
+          invalid_background).
+        </p>
+        <figure class="project-figure">
+          <img
+            class="project-figure__img"
+            src="assets/projects/drone/final_confusion_fine.png"
+            alt="Fine-head confusion matrix across 11 classes — civilian_vehicle, tank_av, aerial_landscape, cloud_blanksky, tree_shrub, flying_target, bird, random_animal, civilian, soldier, rock_debris."
+            width="800"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            Held-out test set, 27,362 samples. Diagonal dominance confirms the 87.1% headline accuracy; the brightest
+            off-diagonals match the qualitative error patterns documented in the writeup.
+          </figcaption>
+        </figure>
+        <h3 class="subsection-title">Per-class precision</h3>
+        <p class="subsection-intro">
+          The fine head is strongest on visually distinct categories (vehicles, landscape) and weakest where classes
+          share appearance (soldier / civilian, random animal / bird, rock debris / background).
+        </p>
+        <div class="results-tableWrap">
+          <table class="results-table">
+            <caption>
+              Fine head — test precision per class
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Class</th>
+                <th scope="col">Precision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>civilian_vehicle</td>
+                <td>0.9538</td>
+              </tr>
+              <tr>
+                <td>tank_av</td>
+                <td>0.9426</td>
+              </tr>
+              <tr>
+                <td>aerial_landscape</td>
+                <td>0.9306</td>
+              </tr>
+              <tr>
+                <td>cloud_blanksky</td>
+                <td>0.9174</td>
+              </tr>
+              <tr>
+                <td>tree_shrub</td>
+                <td>0.8885</td>
+              </tr>
+              <tr>
+                <td>flying_target</td>
+                <td>0.8629</td>
+              </tr>
+              <tr>
+                <td>bird</td>
+                <td>0.8123</td>
+              </tr>
+              <tr>
+                <td>random_animal</td>
+                <td>0.8027</td>
+              </tr>
+              <tr>
+                <td>civilian</td>
+                <td>0.7882</td>
+              </tr>
+              <tr>
+                <td>soldier</td>
+                <td>0.7730</td>
+              </tr>
+              <tr>
+                <td>rock_debris</td>
+                <td>0.7547</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="results-tableWrap">
+          <table class="results-table">
+            <caption>
+              Coarse head — test precision per class
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Class</th>
+                <th scope="col">Precision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>invalid_nontarget</td>
+                <td>0.9277</td>
+              </tr>
+              <tr>
+                <td>valid</td>
+                <td>0.9165</td>
+              </tr>
+              <tr>
+                <td>invalid_background</td>
+                <td>0.8941</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section" id="errors">
+        <h2>Error analysis</h2>
+        <p class="section-intro">Confusion matrices and qualitative review highlight three recurring failure modes.</p>
+        <ul class="contact-list">
+          <li>
+            <strong>Borderline crops</strong> — segmentation masks that mix target and background pixels. When
+            background dominates the crop, the classifier defaults to an invalid label even when part of a target is
+            visible.
+          </li>
+          <li>
+            <strong>Small or occluded targets</strong> — distant or partially blocked objects provide too few pixels for
+            confident fine-class prediction.
+          </li>
+          <li>
+            <strong>Visually similar classes</strong> — soldier vs. civilian, bird vs. random_animal, and
+            invalid_nontarget vs. invalid_background account for most off-diagonal confusion-matrix mass.
+          </li>
+        </ul>
+        <h3 class="subsection-title">Input resolution trade-off</h3>
+        <p>
+          Bumping inputs from 64×64 to 128×128 significantly improved both fine and coarse accuracy; 256×256 added very
+          little. For offline classification, 128×128 is the sweet spot. For the live video pipeline, lower-resolution
+          crops actually helped — they kept the YOLO + CNN loop closer to real time and improved detection of small,
+          distant targets thanks to the larger effective receptive field.
+        </p>
+      </section>
+      <section class="section" id="utilization">
+        <h2>Real-time utilization</h2>
+        <p>
+          The deployment program runs against video files (with webcam and live drone feed as future targets). YOLO
+          produces per-frame instance masks; each mask is cropped from the source frame, resized to the CNN's input
+          size, and normalized identically to training. Only the coarse head is consulted in the live overlay — the
+          operational question is "valid target?", and the three-way decision is fast and easy to render:
+        </p>
+        <ul class="contact-list">
+          <li><strong>valid</strong> — green overlay, optionally annotated with the fine-class label.</li>
+          <li><strong>invalid_nontarget</strong> — red overlay, signalling a real object that is not the target.</li>
+          <li><strong>invalid_background</strong> — suppressed entirely.</li>
+        </ul>
+        <p>
+          Optional frame skipping keeps throughput up. Decoupling detection from classification means a newer YOLO model
+          can drop in without touching the CNN, and adding new fine classes only requires retraining the classifier.
+        </p>
+        <figure class="project-figure">
+          <video
+            class="project-video"
+            src="assets/projects/drone/overlay_demo.mp4"
+            controls
+            preload="metadata"
+            playsinline
+            width="640"
+            height="360"
+            aria-label="Live drone target detection demo — YOLO segmentation with CNN coarse-head overlays (green for valid targets, red for invalid_nontarget) on aerial footage."
+          >
+            Your browser does not support embedded video. Use the link below to view the demo.
+          </video>
+          <figcaption>
+            Live overlay demo — YOLO segmentation drives per-frame crops; the coarse head colors each detection valid
+            (green) or invalid_nontarget (red), and ignores invalid_background. Lower-resolution CNN input crops (32×32
+            in this run) keep the loop close to real time without sacrificing detection of small distant targets.
+            <span class="project-figure__fallback"
+              >Prefer the longer demo?
+              <a href="assets/projects/drone/overlay_demo_long.mp4">Download the extended cut</a> (≈7 MB).</span
+            >
+          </figcaption>
+        </figure>
+      </section>
+      <section class="section" id="limitations">
+        <h2>Limitations &amp; future work</h2>
+        <ul class="contact-list">
+          <li>
+            <strong>Data coverage</strong> — performance is bounded by the diversity of the unified training set. Drone
+            altitude, camera angle, lighting, and environmental context all affect generalization.
+          </li>
+          <li>
+            <strong>Small targets</strong> — objects that occupy only a handful of pixels remain the hardest case.
+          </li>
+          <li>
+            <strong>No temporal smoothing</strong> — the live overlay treats each frame independently, so detections on
+            borderline crops can flicker between coarse labels across consecutive frames.
+          </li>
+          <li>
+            <strong>Next directions</strong> — temporal modelling across consecutive frames, backbones pretrained on
+            aerial imagery, active-learning loops fed by uncertain detections, and lightweight backbones
+            (MobileNet-class) for constrained hardware.
+          </li>
+        </ul>
+      </section>
+      <section class="section" id="links">
+        <h2>Links</h2>
+        <p class="section-intro">Dataset, full writeup, and source.</p>
+        <p>
+          <a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/fpv-images" rel="noopener" target="_blank"
+            >View on Kaggle</a
+          >
+          <a
+            class="btn btn-sm btn-ghost"
+            href="https://docs.google.com/document/d/1U_3uNBDcOX55h1ZSNn_pcUpBKPVT5tdFH6aje8d4m5E/edit?usp=drive_link"
+            rel="noopener"
+            target="_blank"
+            >Full report</a
+          >
+        </p>
+      </section>
+      <nav class="next-project" aria-label="Next project">
+        <a class="next-project__card" href="star-catalog.html">
+          <span class="next-project__label">Next project</span>
+          <span class="next-project__title">Star Cataloguing Deep Learning Model →</span>
+        </a>
+      </nav>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <nav aria-label="Site navigation" class="footer-nav">
+          <a href="index.html#about">About</a>
+          <a href="index.html#projects">Projects</a>
+          <a href="index.html#resume">Resume</a>
+          <a href="index.html#coursework">Coursework</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="#top">Top</a>
+        </nav>
+        <p class="footer-copy">© Logan M Edwards</p>
+      </div>
+    </footer>
+  </body>
 </html>

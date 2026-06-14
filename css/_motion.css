@@ -58,17 +58,22 @@ body::after {
   background-image:
     /* --- Milky Way: center dense, disperses outward (SAFE shapes only) --- */
     url("../assets/milky-way.svg"),
-
-    /* Near stars */
-    url("../assets/stars-near.svg"),
-
+    /* Near stars */ url("../assets/stars-near.svg"),
     /* Nebula glows */
-    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.10), transparent 64%),
+    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.1), transparent 64%),
     radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.08), transparent 64%);
 
   background-repeat: no-repeat, repeat, no-repeat, no-repeat;
-  background-size: cover, 900px 600px, auto, auto;
-  background-position: center, 0 0, 0 0, 0 0;
+  background-size:
+    cover,
+    900px 600px,
+    auto,
+    auto;
+  background-position:
+    center,
+    0 0,
+    0 0,
+    0 0;
 
   opacity: 0.28;
   mix-blend-mode: screen;
@@ -90,22 +95,31 @@ body::before {
   z-index: 3;
 
   background-image:
-    radial-gradient(1200px 520px at 20% 0%,
-      rgba(60, 200, 255, 0.10),
+    radial-gradient(
+      1200px 520px at 20% 0%,
+      rgba(60, 200, 255, 0.1),
       rgba(80, 140, 255, 0.05),
-      rgba(0,0,0,0) 66%),
-    radial-gradient(1100px 520px at 80% 0%,
+      rgba(0, 0, 0, 0) 66%
+    ),
+    radial-gradient(
+      1100px 520px at 80% 0%,
       rgba(140, 90, 255, 0.08),
       rgba(80, 180, 255, 0.04),
-      rgba(0,0,0,0) 68%),
-
+      rgba(0, 0, 0, 0) 68%
+    ),
     url("../assets/noise.svg");
 
   background-repeat: no-repeat, no-repeat, repeat;
-  background-size: auto, auto, 200px 200px;
-  background-position: 0% 0%, 0% 0%, 0% 0%;
+  background-size:
+    auto,
+    auto,
+    200px 200px;
+  background-position:
+    0% 0%,
+    0% 0%,
+    0% 0%;
 
-  opacity: 0.10;
+  opacity: 0.1;
   filter: blur(0.2px);
   mix-blend-mode: normal;
 
@@ -122,27 +136,61 @@ body > * {
    PARALLAX ANIMATIONS
    ========================================================= */
 @media (prefers-reduced-motion: no-preference) {
-  html::before { animation: driftFar 110s linear infinite; }
-  html::after  { animation: driftMid 80s linear infinite; }
-  body::after  { animation: driftNear 44s linear infinite; }
-  body::before { animation: auroraSweep 30s ease-in-out infinite; }
+  html::before {
+    animation: driftFar 110s linear infinite;
+  }
+  html::after {
+    animation: driftMid 80s linear infinite;
+  }
+  body::after {
+    animation: driftNear 44s linear infinite;
+  }
+  body::before {
+    animation: auroraSweep 30s ease-in-out infinite;
+  }
 }
 
 @keyframes driftFar {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-26px, 10px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-26px, 10px, 0);
+  }
 }
 @keyframes driftMid {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-40px, 16px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-40px, 16px, 0);
+  }
 }
 @keyframes driftNear {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-60px, 24px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-60px, 24px, 0);
+  }
 }
 @keyframes auroraSweep {
-  0%   { background-position: 0% 0%, 0% 0%, 0% 0%; }
-  50%  { background-position: 6% 0%, -6% 0%, 0% 0%; }
-  100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+  0% {
+    background-position:
+      0% 0%,
+      0% 0%,
+      0% 0%;
+  }
+  50% {
+    background-position:
+      6% 0%,
+      -6% 0%,
+      0% 0%;
+  }
+  100% {
+    background-position:
+      0% 0%,
+      0% 0%,
+      0% 0%;
+  }
 }
-

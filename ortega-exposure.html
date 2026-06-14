@@ -1,170 +1,209 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <title>Ortega Telescope Exposure Time Calculator | Logan M Edwards</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <!-- Reuse the site-wide style and favicon assets so this page matches the rest of the portfolio -->
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
-  <link rel="icon" sizes="32x32" type="image/png" href="favicon-32.png"/>
-  <link rel="icon" sizes="16x16" type="image/png" href="favicon-16.png"/>
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
-  <link rel="manifest" href="site.webmanifest"/>
-  <link rel="canonical" href="https://www.loganmedwardsastrophy.com/ortega-exposure.html"/>
-  <link rel="preconnect" href="https://gc.zgo.at" crossorigin/>
-  <meta name="theme-color" content="#0b0c10"/>
-  <meta name="color-scheme" content="dark"/>
-  <meta name="description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source: solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR."/>
-  <meta property="og:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards"/>
-  <meta property="og:description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://www.loganmedwardsastrophy.com/ortega-exposure.html"/>
-  <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards"/>
-  <meta name="twitter:description" content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."/>
-  <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg"/>
-  <meta name="author" content="Logan M Edwards"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"/>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Ortega Telescope Exposure Time Calculator",
-    "description": "Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source available for download. Solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR.",
-    "applicationCategory": "EducationalApplication",
-    "browserRequirements": "Requires JavaScript",
-    "isAccessibleForFree": true,
-    "operatingSystem": "Cross-platform",
-    "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
-    "url": "https://www.loganmedwardsastrophy.com/ortega-exposure.html",
-    "image": "https://www.loganmedwardsastrophy.com/og.jpg"
-  }
-  </script>
-  <script async crossorigin="anonymous" data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count" integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi" src="https://gc.zgo.at/count.js"></script>
-  <script defer src="site.js"></script>
-  <script defer src="ortega-exposure.js"></script>
-</head>
-<body data-mark-visited="ortega-exposure" class="project-page--amber">
-  <header class="site-header" id="top">
-    <div class="container header-content">
-      <h1 class="site-title">Ortega Telescope Exposure Time Calculator</h1>
-      <p class="site-tagline">Mini project page • Logan M Edwards</p>
-      <!-- Back link to return to the home page -->
-      <p class="open-to"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
-    </div>
-  </header>
-  <main class="container">
-    <nav class="section-nav" aria-label="Sections on this page">
-      <a href="#summary">Summary</a>
-      <a href="#overview">Overview</a>
-      <a href="#calculate">Calculate</a>
-      <a href="#highlights">Highlights</a>
-      <a href="#source">Source</a>
-    </nav>
-    <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
-      <p class="tl-dr__label">At a glance</p>
-      <ul class="metrics-grid metrics-grid--compact">
-        <li class="metric">
-          <span class="metric__value">5</span>
-          <span class="metric__label">Johnson–Cousins filters</span>
-        </li>
-        <li class="metric">
-          <span class="metric__value">5</span>
-          <span class="metric__label">Lunar-age tables (0–14 d)</span>
-        </li>
-        <li class="metric">
-          <span class="metric__value">SNR</span>
-          <span class="metric__label">Closed-form quadratic solve</span>
-        </li>
-      </ul>
-      <p class="tl-dr__line">Field-ready exposure-time calculator. Derives integration time from sky brightness, seeing, target magnitude, and target SNR. Try it below, or download the original Python source.</p>
-    </aside>
-    <section class="section" id="overview">
-      <h2>Overview</h2>
-      <p class="section-intro">
-        This lightweight tool estimates the optimal exposure time for observations with the Ortega telescope.
-        Taking into account sky brightness, seeing conditions, the desired signal‑to‑noise ratio and target magnitude,
-        it provides a recommended integration time to achieve high‑quality imaging without saturating the detector.
-        Originally a Colab Python script for quick field calculations during observing runs — now also runs live in the browser below.
-      </p>
-    </section>
-    <section class="section" id="calculate">
-      <h2>Calculate</h2>
-      <form id="etc-form" class="etc-form" aria-label="Exposure time calculator">
-        <div class="etc-grid">
-          <label class="etc-field">
-            <span class="etc-label">Seeing (arcsec)</span>
-            <input type="number" name="seeing" min="0.1" max="10" step="0.05" value="1.25" required/>
-          </label>
-          <label class="etc-field">
-            <span class="etc-label">Lunar age</span>
-            <select name="lunarAge">
-              <option value="0">0 days (new moon)</option>
-              <option value="3">3 days</option>
-              <option value="7" selected>7 days</option>
-              <option value="10">10 days</option>
-              <option value="14">14 days (full moon)</option>
-            </select>
-          </label>
-          <label class="etc-field">
-            <span class="etc-label">Filter</span>
-            <select name="filter">
-              <option value="U">U (3656 Å)</option>
-              <option value="B">B (4353 Å)</option>
-              <option value="V">V (5477 Å)</option>
-              <option value="R">R (6349 Å)</option>
-              <option value="I" selected>I (8797 Å)</option>
-            </select>
-          </label>
-          <label class="etc-field">
-            <span class="etc-label">Target SNR</span>
-            <input type="number" name="snr" min="1" step="1" value="125" required/>
-          </label>
-          <label class="etc-field">
-            <span class="etc-label">Star magnitude</span>
-            <input type="number" name="mag" step="0.1" value="19.7" required/>
-          </label>
-        </div>
-      </form>
-      <div class="etc-result" aria-live="polite">
-        <p class="etc-result__label">Recommended exposure</p>
-        <p class="etc-result__primary">
-          <span class="etc-result__value" id="etc-result-time">—</span>
-          <span class="etc-result__friendly" id="etc-result-friendly"></span>
-        </p>
-        <dl class="etc-result__details">
-          <div><dt>Sky background</dt><dd><span id="etc-result-sky">—</span> counts/pix/s</dd></div>
-          <div><dt>Star count rate</dt><dd><span id="etc-result-star">—</span> counts/s</dd></div>
-          <div><dt>Observed magnitude</dt><dd><span id="etc-result-magobs">—</span> (airmass 1)</dd></div>
-          <div><dt>Sky brightness</dt><dd><span id="etc-result-skymag">—</span> mag/arcsec²</dd></div>
-          <div><dt>Seeing disk</dt><dd><span id="etc-result-seeingpix">—</span> pix</dd></div>
-        </dl>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ortega Telescope Exposure Time Calculator | Logan M Edwards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Reuse the site-wide style and favicon assets so this page matches the rest of the portfolio -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" sizes="32x32" type="image/png" href="favicon-32.png" />
+    <link rel="icon" sizes="16x16" type="image/png" href="favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="canonical" href="https://www.loganmedwardsastrophy.com/ortega-exposure.html" />
+    <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
+    <meta name="theme-color" content="#0b0c10" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source: solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR."
+    />
+    <meta property="og:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards" />
+    <meta
+      property="og:description"
+      content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.loganmedwardsastrophy.com/ortega-exposure.html" />
+    <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ortega Telescope Exposure Time Calculator | Logan M Edwards" />
+    <meta
+      name="twitter:description"
+      content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."
+    />
+    <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta name="author" content="Logan M Edwards" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Ortega Telescope Exposure Time Calculator",
+        "description": "Interactive in-browser exposure-time calculator for the Ortega telescope, with the original Python source available for download. Solves the SNR quadratic from sky brightness, seeing, target magnitude, and desired SNR.",
+        "applicationCategory": "EducationalApplication",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "operatingSystem": "Cross-platform",
+        "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
+        "url": "https://www.loganmedwardsastrophy.com/ortega-exposure.html",
+        "image": "https://www.loganmedwardsastrophy.com/og.jpg"
+      }
+    </script>
+    <script
+      async
+      crossorigin="anonymous"
+      data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count"
+      integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi"
+      src="https://gc.zgo.at/count.js"
+    ></script>
+    <script defer src="site.js"></script>
+    <script defer src="ortega-exposure.js"></script>
+  </head>
+  <body data-mark-visited="ortega-exposure" class="project-page--amber">
+    <header class="site-header" id="top">
+      <div class="container header-content">
+        <h1 class="site-title">Ortega Telescope Exposure Time Calculator</h1>
+        <p class="site-tagline">Mini project page • Logan M Edwards</p>
+        <!-- Back link to return to the home page -->
+        <p class="open-to"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
       </div>
-      <noscript>
-        <p class="etc-noscript">Enable JavaScript to use the calculator, or
-          <a href="ortega-exposure.py" download>download the original Python source</a>.</p>
-      </noscript>
-    </section>
-    <section class="section" id="highlights">
-      <h2>Key highlights</h2>
-      <p class="section-intro">A quick snapshot of the most important features and design goals.</p>
-      <ul class="contact-list">
-        <li>Implements standard photometric exposure formulas with customizable parameters.</li>
-        <li>Accounts for seeing, sky background and telescope/instrument throughput.</li>
-        <li>Outputs both recommended single‑frame exposure and total integration time.</li>
-        <li>Simple Python script with clear documentation for future expansion or GUI integration.</li>
-      </ul>
-    </section>
-    <section class="section" id="source">
-      <h2>Source</h2>
-      <details id="etc-source" class="source-viewer source-viewer--amber">
-        <summary>View original Python source (<code>ortega-exposure.py</code>)</summary>
-        <!-- Source is inlined here so crawlers and noscript visitors see the
+    </header>
+    <main class="container">
+      <nav class="section-nav" aria-label="Sections on this page">
+        <a href="#summary">Summary</a>
+        <a href="#overview">Overview</a>
+        <a href="#calculate">Calculate</a>
+        <a href="#highlights">Highlights</a>
+        <a href="#source">Source</a>
+      </nav>
+      <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+        <p class="tl-dr__label">At a glance</p>
+        <ul class="metrics-grid metrics-grid--compact">
+          <li class="metric">
+            <span class="metric__value">5</span>
+            <span class="metric__label">Johnson–Cousins filters</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">5</span>
+            <span class="metric__label">Lunar-age tables (0–14 d)</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">SNR</span>
+            <span class="metric__label">Closed-form quadratic solve</span>
+          </li>
+        </ul>
+        <p class="tl-dr__line">
+          Field-ready exposure-time calculator. Derives integration time from sky brightness, seeing, target magnitude,
+          and target SNR. Try it below, or download the original Python source.
+        </p>
+      </aside>
+      <section class="section" id="overview">
+        <h2>Overview</h2>
+        <p class="section-intro">
+          This lightweight tool estimates the optimal exposure time for observations with the Ortega telescope. Taking
+          into account sky brightness, seeing conditions, the desired signal‑to‑noise ratio and target magnitude, it
+          provides a recommended integration time to achieve high‑quality imaging without saturating the detector.
+          Originally a Colab Python script for quick field calculations during observing runs — now also runs live in
+          the browser below.
+        </p>
+      </section>
+      <section class="section" id="calculate">
+        <h2>Calculate</h2>
+        <form id="etc-form" class="etc-form" aria-label="Exposure time calculator">
+          <div class="etc-grid">
+            <label class="etc-field">
+              <span class="etc-label">Seeing (arcsec)</span>
+              <input type="number" name="seeing" min="0.1" max="10" step="0.05" value="1.25" required />
+            </label>
+            <label class="etc-field">
+              <span class="etc-label">Lunar age</span>
+              <select name="lunarAge">
+                <option value="0">0 days (new moon)</option>
+                <option value="3">3 days</option>
+                <option value="7" selected>7 days</option>
+                <option value="10">10 days</option>
+                <option value="14">14 days (full moon)</option>
+              </select>
+            </label>
+            <label class="etc-field">
+              <span class="etc-label">Filter</span>
+              <select name="filter">
+                <option value="U">U (3656 Å)</option>
+                <option value="B">B (4353 Å)</option>
+                <option value="V">V (5477 Å)</option>
+                <option value="R">R (6349 Å)</option>
+                <option value="I" selected>I (8797 Å)</option>
+              </select>
+            </label>
+            <label class="etc-field">
+              <span class="etc-label">Target SNR</span>
+              <input type="number" name="snr" min="1" step="1" value="125" required />
+            </label>
+            <label class="etc-field">
+              <span class="etc-label">Star magnitude</span>
+              <input type="number" name="mag" step="0.1" value="19.7" required />
+            </label>
+          </div>
+        </form>
+        <div class="etc-result" aria-live="polite">
+          <p class="etc-result__label">Recommended exposure</p>
+          <p class="etc-result__primary">
+            <span class="etc-result__value" id="etc-result-time">—</span>
+            <span class="etc-result__friendly" id="etc-result-friendly"></span>
+          </p>
+          <dl class="etc-result__details">
+            <div>
+              <dt>Sky background</dt>
+              <dd><span id="etc-result-sky">—</span> counts/pix/s</dd>
+            </div>
+            <div>
+              <dt>Star count rate</dt>
+              <dd><span id="etc-result-star">—</span> counts/s</dd>
+            </div>
+            <div>
+              <dt>Observed magnitude</dt>
+              <dd><span id="etc-result-magobs">—</span> (airmass 1)</dd>
+            </div>
+            <div>
+              <dt>Sky brightness</dt>
+              <dd><span id="etc-result-skymag">—</span> mag/arcsec²</dd>
+            </div>
+            <div>
+              <dt>Seeing disk</dt>
+              <dd><span id="etc-result-seeingpix">—</span> pix</dd>
+            </div>
+          </dl>
+        </div>
+        <noscript>
+          <p class="etc-noscript">
+            Enable JavaScript to use the calculator, or
+            <a href="ortega-exposure.py" download>download the original Python source</a>.
+          </p>
+        </noscript>
+      </section>
+      <section class="section" id="highlights">
+        <h2>Key highlights</h2>
+        <p class="section-intro">A quick snapshot of the most important features and design goals.</p>
+        <ul class="contact-list">
+          <li>Implements standard photometric exposure formulas with customizable parameters.</li>
+          <li>Accounts for seeing, sky background and telescope/instrument throughput.</li>
+          <li>Outputs both recommended single‑frame exposure and total integration time.</li>
+          <li>Simple Python script with clear documentation for future expansion or GUI integration.</li>
+        </ul>
+      </section>
+      <section class="section" id="source">
+        <h2>Source</h2>
+        <details id="etc-source" class="source-viewer source-viewer--amber">
+          <summary>View original Python source (<code>ortega-exposure.py</code>)</summary>
+          <!-- Source is inlined here so crawlers and noscript visitors see the
              actual code. Keep this in sync with ortega-exposure.py at the repo root. -->
-        <div class="source-viewer__body">
-          <pre><code class="source-viewer__code"># -*- coding: utf-8 -*-
+          <div class="source-viewer__body">
+            <pre><code class="source-viewer__code"># -*- coding: utf-8 -*-
 # NOTE: ortega-exposure.html inlines this source in its &lt;details&gt; source viewer
 # so search engines and noscript visitors see it. Keep the two in sync.
 """Exposure Time Calculator
@@ -245,31 +284,31 @@ print("The exposure time is",np.round(exp_time)[0], "seconds") #rounds the expos
 print(N15_back)
 print(Chosen_age)
 </code></pre>
+          </div>
+        </details>
+        <div class="source-viewer__links" aria-label="Source actions">
+          <a class="btn btn-sm btn-ghost" href="ortega-exposure.py" download>Download ortega-exposure.py</a>
         </div>
-      </details>
-      <div class="source-viewer__links" aria-label="Source actions">
-        <a class="btn btn-sm btn-ghost" href="ortega-exposure.py" download>Download ortega-exposure.py</a>
-      </div>
-    </section>
-    <nav class="next-project" aria-label="Next project">
-      <a class="next-project__card" href="blackjack-game.html">
-        <span class="next-project__label">Next project</span>
-        <span class="next-project__title">Simple Blackjack Game →</span>
-      </a>
-    </nav>
-  </main>
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <nav aria-label="Site navigation" class="footer-nav">
-        <a href="index.html#about">About</a>
-        <a href="index.html#projects">Projects</a>
-        <a href="index.html#resume">Resume</a>
-        <a href="index.html#coursework">Coursework</a>
-        <a href="index.html#contact">Contact</a>
-        <a href="#top">Top</a>
+      </section>
+      <nav class="next-project" aria-label="Next project">
+        <a class="next-project__card" href="blackjack-game.html">
+          <span class="next-project__label">Next project</span>
+          <span class="next-project__title">Simple Blackjack Game →</span>
+        </a>
       </nav>
-      <p class="footer-copy">© Logan M Edwards</p>
-    </div>
-  </footer>
-</body>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <nav aria-label="Site navigation" class="footer-nav">
+          <a href="index.html#about">About</a>
+          <a href="index.html#projects">Projects</a>
+          <a href="index.html#resume">Resume</a>
+          <a href="index.html#coursework">Coursework</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="#top">Top</a>
+        </nav>
+        <p class="footer-copy">© Logan M Edwards</p>
+      </div>
+    </footer>
+  </body>
 </html>

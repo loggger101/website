@@ -13,9 +13,19 @@
   // ---------------------------------------------------------------
   var SUITS = ["Spades", "Clubs", "Hearts", "Diamonds"];
   var RANKS = [
-    ["2", 2], ["3", 3], ["4", 4], ["5", 5], ["6", 6],
-    ["7", 7], ["8", 8], ["9", 9], ["10", 10],
-    ["Jack", 10], ["Queen", 10], ["King", 10], ["Ace", 11]
+    ["2", 2],
+    ["3", 3],
+    ["4", 4],
+    ["5", 5],
+    ["6", 6],
+    ["7", 7],
+    ["8", 8],
+    ["9", 9],
+    ["10", 10],
+    ["Jack", 10],
+    ["Queen", 10],
+    ["King", 10],
+    ["Ace", 11],
   ];
 
   function makeDeck() {
@@ -32,7 +42,9 @@
     var copy = deck.slice();
     for (var i = copy.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
-      var tmp = copy[i]; copy[i] = copy[j]; copy[j] = tmp;
+      var tmp = copy[i];
+      copy[i] = copy[j];
+      copy[j] = tmp;
     }
     return copy;
   }
@@ -52,7 +64,15 @@
   }
 
   function fmtHand(hand) {
-    return "[" + hand.map(function (c) { return "'" + c.name + "'"; }).join(", ") + "]";
+    return (
+      "[" +
+      hand
+        .map(function (c) {
+          return "'" + c.name + "'";
+        })
+        .join(", ") +
+      "]"
+    );
   }
 
   // Expose pure logic for Node tests. Browser builds skip this and continue
@@ -62,7 +82,7 @@
       makeDeck: makeDeck,
       shuffle: shuffle,
       handTotal: handTotal,
-      fmtHand: fmtHand
+      fmtHand: fmtHand,
     };
     return;
   }
@@ -88,7 +108,7 @@
     playerHand: [],
     dealerHand: [],
     insurance: 0,
-    phase: "welcome"
+    phase: "welcome",
   };
 
   // ---------------------------------------------------------------
@@ -110,8 +130,12 @@
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  function setStatus(text) { statusEl.textContent = text || ""; }
-  function clearControls() { controlsEl.innerHTML = ""; }
+  function setStatus(text) {
+    statusEl.textContent = text || "";
+  }
+  function clearControls() {
+    controlsEl.innerHTML = "";
+  }
 
   function makeButton(label, handler, opts) {
     opts = opts || {};
@@ -173,21 +197,27 @@
     refreshStatus();
     appendLine("Welcome to the Casino!");
     appendLine("Would you like to play a game?");
-    makeYesNo(function () {
-      appendLine("Good Choice");
-      divider();
-      startBetting();
-    }, function () {
-      // Matches the Python: the elif is logically always true, so the
-      // game proceeds either way after this snark.
-      appendLine("We Dont Need Your Permission");
-      divider();
-      startBetting();
-    });
+    makeYesNo(
+      function () {
+        appendLine("Good Choice");
+        divider();
+        startBetting();
+      },
+      function () {
+        // Matches the Python: the elif is logically always true, so the
+        // game proceeds either way after this snark.
+        appendLine("We Dont Need Your Permission");
+        divider();
+        startBetting();
+      },
+    );
   }
 
   function startBetting() {
-    if (state.cash <= 0) { showGameOver(); return; }
+    if (state.cash <= 0) {
+      showGameOver();
+      return;
+    }
     state.phase = "betting";
     state.bet = 0;
     state.deck = shuffle(makeDeck());
@@ -246,13 +276,16 @@
       return;
     }
     appendLine("would you like to try again?");
-    makeYesNo(function () {
-      divider();
-      startBetting();
-    }, function () {
-      appendLine("Then go leach off of someone else you freeloader!");
-      showGameOver();
-    });
+    makeYesNo(
+      function () {
+        divider();
+        startBetting();
+      },
+      function () {
+        appendLine("Then go leach off of someone else you freeloader!");
+        showGameOver();
+      },
+    );
   }
 
   function dealHands() {
@@ -277,20 +310,23 @@
     state.phase = "insurance";
     appendLine("Dealer has an Ace!");
     appendLine("Would you like Insurance?");
-    makeYesNo(function () {
-      if (state.cash >= state.bet / 2) {
-        state.cash -= state.bet / 2;
-        appendLine("You have paid $" + (state.bet / 2) + " for insurance.");
-        state.insurance = 1;
-        refreshStatus();
-      } else {
-        appendLine("You don't have enough money for insurance.");
-      }
-      offerDoubleDown();
-    }, function () {
-      appendLine("You have chosen not to take insurance.");
-      offerDoubleDown();
-    });
+    makeYesNo(
+      function () {
+        if (state.cash >= state.bet / 2) {
+          state.cash -= state.bet / 2;
+          appendLine("You have paid $" + state.bet / 2 + " for insurance.");
+          state.insurance = 1;
+          refreshStatus();
+        } else {
+          appendLine("You don't have enough money for insurance.");
+        }
+        offerDoubleDown();
+      },
+      function () {
+        appendLine("You have chosen not to take insurance.");
+        offerDoubleDown();
+      },
+    );
   }
 
   function offerDoubleDown() {
@@ -298,15 +334,18 @@
     if (state.cash >= state.bet * 2 && state.insurance === 0) {
       state.phase = "doubledown";
       appendLine("Would you like to double down?");
-      makeYesNo(function () {
-        state.bet *= 2;
-        appendLine("Your new bet is $" + state.bet);
-        refreshStatus();
-        askHitStand();
-      }, function () {
-        appendLine("Your call");
-        askHitStand();
-      });
+      makeYesNo(
+        function () {
+          state.bet *= 2;
+          appendLine("Your new bet is $" + state.bet);
+          refreshStatus();
+          askHitStand();
+        },
+        function () {
+          appendLine("Your call");
+          askHitStand();
+        },
+      );
     } else {
       askHitStand();
     }
@@ -422,14 +461,17 @@
 
     appendLine("Your current balance is: $" + state.cash);
     appendLine("Would you like to play again?");
-    makeYesNo(function () {
-      appendLine("Good Choice");
-      divider();
-      startBetting();
-    }, function () {
-      appendLine("Well goodbye for now.");
-      showGameOver();
-    });
+    makeYesNo(
+      function () {
+        appendLine("Good Choice");
+        divider();
+        startBetting();
+      },
+      function () {
+        appendLine("Well goodbye for now.");
+        showGameOver();
+      },
+    );
   }
 
   function showGameOver() {

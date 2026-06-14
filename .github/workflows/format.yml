@@ -1,0 +1,66 @@
+name: Format with Prettier
+
+# Converges the repo's HTML/CSS/JS/JSON on one style. The HTML files were a
+# mix of formatter-output and hand-indented markup; this keeps them uniform.
+#
+# On a pull request it formats the PR branch and commits the result back, so
+# the change is reviewable before it lands. On a push to main it self-heals
+# any drift. Mirrors the auto-commit pattern of the sitemap / resume-date jobs.
+#
+# No package.json — Prettier is fetched on demand via `npx`.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "**/*.html"
+      - "**/*.css"
+      - "**/*.js"
+      - "**/*.json"
+      - ".prettierrc.json"
+      - ".prettierignore"
+      - ".github/workflows/format.yml"
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+# Don't let a PR run and a main run (or two of either) race on the same ref.
+concurrency:
+  group: format-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Check out the real branch tip (not the PR merge ref) so the
+          # formatting commit can be pushed back to it.
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Prettier
+        run: npx --yes prettier@3 --write "**/*.{html,css,js,json}"
+
+      - name: Commit and push (if changed)
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Already formatted — nothing to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          git commit -m "Apply Prettier formatting"
+          git push

@@ -12,18 +12,18 @@
   // ---------------------------------------------------------------
   // Constants (from the Python source)
   // ---------------------------------------------------------------
-  var PLATE_SCALE = 0.00015625;   // rad / mm
-  var PIXEL_DIAMETER = 0.0267;    // mm / pixel
-  var READNOISE = 2.9;            // e- / pix / second
+  var PLATE_SCALE = 0.00015625; // rad / mm
+  var PIXEL_DIAMETER = 0.0267; // mm / pixel
+  var READNOISE = 2.9; // e- / pix / second
   var FILTER_NAMES = ["U", "B", "V", "R", "I"];
-  var N15_COUNT = [400, 2600, 2400, 2300, 1600];   // counts/s for a mag-15 star per filter
-  var K_LAM = [0.6, 0.4, 0.2, 0.1, 0.08];          // airmass-1 extinction per filter
+  var N15_COUNT = [400, 2600, 2400, 2300, 1600]; // counts/s for a mag-15 star per filter
+  var K_LAM = [0.6, 0.4, 0.2, 0.1, 0.08]; // airmass-1 extinction per filter
   var LUNAR_AGE_DATA = {
-    "0":  [22.0, 22.7, 21.8, 20.9, 19.9],
-    "3":  [21.5, 22.4, 21.7, 20.8, 19.9],
-    "7":  [19.9, 21.6, 21.4, 20.6, 19.7],
-    "10": [18.5, 20.7, 20.7, 20.3, 19.5],
-    "14": [17.0, 19.5, 20.0, 19.9, 19.2]
+    0: [22.0, 22.7, 21.8, 20.9, 19.9],
+    3: [21.5, 22.4, 21.7, 20.8, 19.9],
+    7: [19.9, 21.6, 21.4, 20.6, 19.7],
+    10: [18.5, 20.7, 20.7, 20.3, 19.5],
+    14: [17.0, 19.5, 20.0, 19.9, 19.2],
   };
 
   // ---------------------------------------------------------------
@@ -36,7 +36,7 @@
     if (!chosenAge) return null;
 
     // seeing arcsec → degrees → radians → pixels (same chain as the Python)
-    var seeingPix = (inputs.seeing / 60 / 60 / 57.3) / (PLATE_SCALE * PIXEL_DIAMETER);
+    var seeingPix = inputs.seeing / 60 / 60 / 57.3 / (PLATE_SCALE * PIXEL_DIAMETER);
 
     var skyMag = chosenAge[idx];
     var skyCount = Math.pow(10, (skyMag - 15) / -2.5) * N15_COUNT[idx];
@@ -59,7 +59,7 @@
       skyCount: skyCount,
       starCount: starCount,
       magObs: magObs,
-      skyMag: skyMag
+      skyMag: skyMag,
     };
   }
 
@@ -105,7 +105,7 @@
       lunarAge: form.elements.lunarAge.value,
       filter: form.elements.filter.value,
       snr: parseFloat(form.elements.snr.value),
-      mag: parseFloat(form.elements.mag.value)
+      mag: parseFloat(form.elements.mag.value),
     };
   }
 
@@ -121,8 +121,13 @@
 
   function update() {
     var inputs = readInputs();
-    if (!isFinite(inputs.seeing) || !isFinite(inputs.snr) || !isFinite(inputs.mag)
-        || inputs.seeing <= 0 || inputs.snr <= 0) {
+    if (
+      !isFinite(inputs.seeing) ||
+      !isFinite(inputs.snr) ||
+      !isFinite(inputs.mag) ||
+      inputs.seeing <= 0 ||
+      inputs.snr <= 0
+    ) {
       clearResult("Enter positive numbers for seeing, SNR, and magnitude.");
       return;
     }
@@ -144,6 +149,8 @@
   form.addEventListener("change", update);
   // No submit endpoint — keep Enter from reloading the page with input
   // values appended as a query string (which would wipe the result panel).
-  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+  });
   update();
 })();
