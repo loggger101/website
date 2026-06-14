@@ -4,8 +4,8 @@
   "description": "Astronomy & Astrophysics undergraduate portfolio featuring research, deep-learning projects, and coursework.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b1020",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
   "icons": [
     {
       "src": "android-chrome-192.png",
