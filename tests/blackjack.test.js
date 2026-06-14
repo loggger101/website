@@ -30,7 +30,7 @@ test("makeDeck: returns a 52-card shoe", () => {
 
 test("makeDeck: every card name is unique", () => {
   const deck = makeDeck();
-  const names = new Set(deck.map(c => c.name));
+  const names = new Set(deck.map((c) => c.name));
   assert.equal(names.size, 52);
 });
 
@@ -43,10 +43,10 @@ test("makeDeck: 4 of each rank, 13 of each suit", () => {
     const suit = c.name.split(" of ")[1];
     bySuit[suit] = (bySuit[suit] || 0) + 1;
   }
-  for (const r of ["2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace"]) {
+  for (const r of ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]) {
     assert.equal(byRank[r], 4, `rank ${r} should appear 4 times`);
   }
-  for (const s of ["Spades","Clubs","Hearts","Diamonds"]) {
+  for (const s of ["Spades", "Clubs", "Hearts", "Diamonds"]) {
     assert.equal(bySuit[s], 13, `suit ${s} should appear 13 times`);
   }
 });
@@ -54,7 +54,7 @@ test("makeDeck: 4 of each rank, 13 of each suit", () => {
 test("makeDeck: face cards are worth 10, Ace defaults to 11", () => {
   const deck = makeDeck();
   for (const c of deck) {
-    if (["Jack","Queen","King"].includes(c.rank)) assert.equal(c.value, 10);
+    if (["Jack", "Queen", "King"].includes(c.rank)) assert.equal(c.value, 10);
     if (c.rank === "Ace") assert.equal(c.value, 11);
   }
 });
@@ -67,8 +67,8 @@ test("shuffle: preserves length and exact card set", () => {
   const shuffled = shuffle(deck);
   assert.equal(shuffled.length, deck.length);
 
-  const a = deck.map(c => c.name).sort();
-  const b = shuffled.map(c => c.name).sort();
+  const a = deck.map((c) => c.name).sort();
+  const b = shuffled.map((c) => c.name).sort();
   assert.deepEqual(b, a);
 });
 

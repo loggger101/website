@@ -38,7 +38,8 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
 | `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required** — without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`). Takes `-Variant default\|drone\|star\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the two flagship project pages use their per-project variant |
-| `.github/workflows/` | Kaggle stats refresh job and sitemap-lastmod auto-update |
+| `.prettierrc.json`, `.prettierignore` | Prettier config — 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
+| `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests, and Prettier auto-formatting |
 
 ## Conventions
 
@@ -76,6 +77,14 @@ python -m http.server 8000
 ```
 
 Then open <http://localhost:8000>.
+
+## Formatting
+
+The repo is auto-formatted with [Prettier](https://prettier.io/) — see `.prettierrc.json`. The `Format with Prettier` GitHub Action reformats every pull request (committing the result back to the branch) and self-heals `main` on push, so there's no manual step. To format locally before pushing:
+
+```sh
+npx prettier@3 --write "**/*.{html,css,js,json}"
+```
 
 ## License
 
