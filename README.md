@@ -36,6 +36,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
+| `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required** — without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`). Takes `-Variant default\|drone\|star\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the two flagship project pages use their per-project variant |
 | `.github/workflows/` | Kaggle stats refresh job and sitemap-lastmod auto-update |
 
