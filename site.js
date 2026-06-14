@@ -25,9 +25,7 @@
   }
 
   function ensureRel(a) {
-    var rel = (a.getAttribute("rel") || "")
-      .split(/\s+/)
-      .filter(Boolean);
+    var rel = (a.getAttribute("rel") || "").split(/\s+/).filter(Boolean);
 
     if (!rel.includes("noopener")) rel.push("noopener");
     if (!rel.includes("noreferrer")) rel.push("noreferrer");
@@ -57,10 +55,12 @@
   function formatCompactNumber(n) {
     if (typeof n !== "number" || !isFinite(n)) return null;
     try {
-      return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+      return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(
+        n,
+      );
     } catch (e) {
-      if (n >= 1e6) return (Math.round((n / 1e6) * 10) / 10) + "M";
-      if (n >= 1e3) return (Math.round((n / 1e3) * 10) / 10) + "k";
+      if (n >= 1e6) return Math.round((n / 1e6) * 10) / 10 + "M";
+      if (n >= 1e3) return Math.round((n / 1e3) * 10) / 10 + "k";
       return String(n);
     }
   }
@@ -75,7 +75,7 @@
         return r.json();
       })
       .then(function (payload) {
-        var datasets = (payload && payload.datasets) ? payload.datasets : {};
+        var datasets = payload && payload.datasets ? payload.datasets : {};
         els.forEach(function (el) {
           var slug = el.getAttribute("data-kaggle-dataset") || "";
           var item = datasets[slug];
@@ -102,7 +102,11 @@
           el.textContent = parts.join(" • ");
           el.setAttribute(
             "title",
-            "Kaggle: " + (isFinite(views) ? views : 0) + " views, " + (isFinite(downloads) ? downloads : 0) + " downloads"
+            "Kaggle: " +
+              (isFinite(views) ? views : 0) +
+              " views, " +
+              (isFinite(downloads) ? downloads : 0) +
+              " downloads",
           );
         });
       })
@@ -151,7 +155,9 @@
         })
         .finally(function () {
           if (submitBtn) submitBtn.disabled = false;
-          window.setTimeout(function () { setStatus(""); }, 6000);
+          window.setTimeout(function () {
+            setStatus("");
+          }, 6000);
         });
     });
   }
@@ -163,7 +169,9 @@
   function markSubpageVisited() {
     var key = document.body && document.body.dataset && document.body.dataset.markVisited;
     if (!key) return;
-    try { localStorage.setItem("projectIconUsed:" + key, "1"); } catch (e) {}
+    try {
+      localStorage.setItem("projectIconUsed:" + key, "1");
+    } catch (e) {}
   }
 
   // Track which project icons the user has already opened so the twinkle
@@ -174,7 +182,9 @@
       var id = link.dataset.project || "unknown";
       var key = "projectIconUsed:" + id;
       var used = false;
-      try { used = localStorage.getItem(key) === "1"; } catch (e) {}
+      try {
+        used = localStorage.getItem(key) === "1";
+      } catch (e) {}
       link.classList.toggle("is-unvisited", !used);
       link.classList.toggle("is-visited", used);
     }
@@ -182,21 +192,29 @@
     document.querySelectorAll(".project-icon-link").forEach(function (link) {
       if (!link.dataset.project) return;
       applyVisitedState(link);
-      link.addEventListener("click", function () {
-        var id = link.dataset.project || "unknown";
-        try { localStorage.setItem("projectIconUsed:" + id, "1"); } catch (e) {}
-        applyVisitedState(link);
-      }, { passive: true });
+      link.addEventListener(
+        "click",
+        function () {
+          var id = link.dataset.project || "unknown";
+          try {
+            localStorage.setItem("projectIconUsed:" + id, "1");
+          } catch (e) {}
+          applyVisitedState(link);
+        },
+        { passive: true },
+      );
     });
   }
-
 
   document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
 
     function safeCall(fn) {
-      try { if (typeof fn === "function") fn(); }
-      catch (e) { console.error(e); }
+      try {
+        if (typeof fn === "function") fn();
+      } catch (e) {
+        console.error(e);
+      }
     }
     safeCall(setUpKaggleStats);
     safeCall(setUpContactForm);
