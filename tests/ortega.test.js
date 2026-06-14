@@ -15,8 +15,8 @@ const assert = require("node:assert/strict");
 const { calculate, formatDuration } = require("../ortega-exposure.js");
 
 test("ortega: default inputs reproduce the Python output (2044 s, rounded)", () => {
-  // Same parameter set the page ships with by default and the same numbers
-  // the Python source prints. ortega-exposure.py line ~217: prints 2044.
+  // Same parameter set the page ships with by default, producing the same
+  // exposure time the Python source prints at its final line (~78): 2044 s.
   const r = calculate({
     seeing: 1.25,
     lunarAge: "7",
