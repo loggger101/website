@@ -75,7 +75,7 @@ $variants = @{
     GlyphX     = 90
     GlyphY     = 200
     Title      = 'AspireCURES'
-    Subtitle   = 'Rare-disease trial matching  {0}  8 programs'
+    Subtitle   = '~25k lines  {0}  8 programs  {0}  Cloudflare Pages'
   }
 }
 

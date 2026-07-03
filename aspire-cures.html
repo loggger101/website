@@ -22,7 +22,7 @@
     <meta property="og:title" content="AspireCURES Website | Logan M Edwards" />
     <meta
       property="og:description"
-      content="End-to-end web work for AspireCURES: initial build from scratch, a full redesign, and ongoing content upkeep across eight disease programs."
+      content="End-to-end web work for AspireCURES: launch build, Squarespace-to-Cloudflare replatform, serverless registration, and an automated research feed across eight disease programs."
     />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://www.loganmedwardsastrophy.com/aspire-cures.html" />
@@ -31,7 +31,7 @@
     <meta name="twitter:title" content="AspireCURES Website | Logan M Edwards" />
     <meta
       name="twitter:description"
-      content="End-to-end web work for AspireCURES: initial build from scratch, a full redesign, and ongoing content upkeep across eight disease programs."
+      content="End-to-end web work for AspireCURES: launch build, Squarespace-to-Cloudflare replatform, serverless registration, and an automated research feed across eight disease programs."
     />
     <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og-aspire.jpg" />
     <meta name="author" content="Logan M Edwards" />
@@ -45,19 +45,11 @@
         "@type": "CreativeWork",
         "name": "AspireCURES Website",
         "headline": "AspireCURES Website",
-        "description": "Public website for AspireCURES, a platform connecting patients with clinical trials, research studies, genetic testing, and specialists for rare white matter diseases and other neurodegenerative conditions. Built from scratch, later redesigned, and maintained on an ongoing basis.",
+        "description": "Public website for AspireCURES, a platform connecting patients with clinical trials, research studies, genetic testing, and specialists for rare white matter diseases and other neurodegenerative conditions. Self-hosted static site on Cloudflare Pages with a serverless registration form and an automated research feed; built, replatformed, and maintained on an ongoing basis.",
         "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
         "url": "https://www.loganmedwardsastrophy.com/aspire-cures.html",
         "image": "https://www.loganmedwardsastrophy.com/og-aspire.jpg",
-        "keywords": [
-          "web development",
-          "healthcare",
-          "clinical trials",
-          "patient advocacy",
-          "leukodystrophy",
-          "HTML",
-          "CSS"
-        ]
+        "keywords": ["web development", "healthcare", "clinical trials", "patient advocacy", "leukodystrophy", "Cloudflare Pages", "HTML", "CSS"]
       }
     </script>
     <script
@@ -90,12 +82,16 @@
         <p class="tl-dr__label">At a glance</p>
         <ul class="metrics-grid metrics-grid--compact">
           <li class="metric">
+            <span class="metric__value">≈25k</span>
+            <span class="metric__label">Lines of code</span>
+          </li>
+          <li class="metric">
             <span class="metric__value">8</span>
             <span class="metric__label">Disease programs</span>
           </li>
           <li class="metric">
-            <span class="metric__value">2</span>
-            <span class="metric__label">Full builds (launch + redesign)</span>
+            <span class="metric__value">0</span>
+            <span class="metric__label">Squarespace scripts</span>
           </li>
           <li class="metric">
             <span class="metric__value">Live</span>
@@ -104,7 +100,8 @@
         </ul>
         <p class="tl-dr__line">
           The public web presence for AspireCURES — a patient-and-researcher matching platform for rare
-          neurodegenerative diseases. Built from scratch, later redesigned, and kept current as programs grow.
+          neurodegenerative diseases. Now a fully self-hosted static site on Cloudflare Pages: launch build,
+          Squarespace replatform, and ongoing content upkeep.
         </p>
       </aside>
       <section class="section" id="overview">
@@ -112,14 +109,16 @@
         <p class="section-intro">
           AspireCURES connects patients with eligible clinical trials, research studies, genetic testing, specialists,
           and advocacy opportunities — with a focus on rare white matter diseases and leukodystrophies. Its mission is
-          summed up by the site's own tagline: <em>“Aspire to do more. Aspire for a cure.”</em>
+          summed up by the site's own tagline: <em>“Aspire to do more. Aspire for a cure.”</em> The site is fully
+          self-hosted: a plain HTML/CSS/JS build served from Cloudflare Pages, with no framework, no build step, and no
+          third-party platform runtime in the browser.
         </p>
         <p>
-          For rare-disease communities, the distance between a diagnosis and an actionable next step is enormous: trials
-          are scattered, eligibility criteria are dense, and reliable disease information is hard to find in one place.
-          The website is the organization's front door — it has to present each disease program clearly, route patients
-          and caregivers toward registration, and stay trustworthy enough for researchers and clinicians to point people
-          at.
+          For rare-disease communities, the distance between a diagnosis and an actionable next step is enormous:
+          trials are scattered, eligibility criteria are dense, and reliable disease information is hard to find in one
+          place. The website is the organization's front door — it has to present each disease program clearly, route
+          patients and caregivers toward registration, and stay trustworthy enough for researchers and clinicians to
+          point people at.
         </p>
       </section>
       <section class="section" id="role">
@@ -127,13 +126,24 @@
         <p class="section-intro">End-to-end ownership of the site across its whole life so far.</p>
         <ul class="contact-list">
           <li>
-            <strong>Initial build</strong> — designed and built the original site from scratch, establishing the
-            information architecture, page templates, and visual identity for the organization's launch.
+            <strong>Initial build</strong> — designed and built the organization's original launch site, establishing
+            the information architecture, page templates, and visual identity.
           </li>
           <li>
-            <strong>Redesign</strong> — carried out a full overhaul of the existing site's look and structure as the
-            organization matured: cleaner navigation, a modern pale-cream visual language, and optimized imagery (WebP)
-            for faster loads.
+            <strong>Replatform &amp; independence</strong> — migrated the site off Squarespace onto Cloudflare Pages
+            with custom Perl/Bash mirror-and-customize tooling, then removed the platform runtime entirely: all
+            interactivity now runs from small vanilla-JS modules, imagery is locally served WebP, and the content
+            security policy is tightened to first-party + analytics only.
+          </li>
+          <li>
+            <strong>Serverless registration</strong> — replaced the platform form with a Cloudflare Pages Function
+            that backs up every submission to Cloudflare KV and creates a lead in Zoho CRM before handing the visitor
+            to a thank-you page.
+          </li>
+          <li>
+            <strong>Automated research feed</strong> — a twice-weekly GitHub Action pulls new papers (Europe PMC,
+            PubMed) and trials (ClinicalTrials.gov), has an AI reviewer vet and summarize each item, and renders the
+            results into the eight disease pages.
           </li>
           <li>
             <strong>Content &amp; upkeep</strong> — ongoing maintenance: writing and updating disease-program pages,
@@ -153,12 +163,13 @@
             disease, Lewy body dementia, Nasu-Hakola disease, frontotemporal dementia, and multiple sclerosis.
           </li>
           <li>
-            <strong>Registration flow</strong> — a contact/registration form that routes patients and caregivers into
-            the matching process with a personalized, patient-centered approach.
+            <strong>Registration flow</strong> — a static form posting to a serverless <code>/api/register</code>
+            endpoint that routes patients and caregivers into the matching process with a personalized,
+            patient-centered approach.
           </li>
           <li>
-            <strong>Trust &amp; compliance</strong> — clear cookie policy and analytics kept to simple traffic
-            measurement, appropriate for a health-adjacent audience.
+            <strong>Trust &amp; compliance</strong> — hand-rolled, consent-gated analytics and a clear cookie policy,
+            appropriate for a health-adjacent audience.
           </li>
         </ul>
       </section>
@@ -166,10 +177,12 @@
         <h2>Content &amp; upkeep</h2>
         <p>
           A site like this is never "done" — programs are added as new research partnerships form, and existing pages
-          need revisiting as trial availability changes. The ongoing work is editorial as much as technical: keeping
-          disease descriptions accurate and readable for families who may have just received a diagnosis, while staying
-          precise enough to be useful to clinicians. This project overlaps with my broader involvement in the
-          rare-disease advocacy space alongside the Sisters Hope Foundation.
+          need revisiting as trial availability changes. The automated research feed carries the heaviest part of that
+          load: new publications and trials land on the disease pages twice a week without manual editing. The rest of
+          the ongoing work is editorial as much as technical: keeping disease descriptions accurate and readable for
+          families who may have just received a diagnosis, while staying precise enough to be useful to clinicians.
+          This project overlaps with my broader involvement in the rare-disease advocacy space alongside the Sisters
+          Hope Foundation.
         </p>
       </section>
       <section class="section" id="links">
