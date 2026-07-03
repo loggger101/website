@@ -10,6 +10,9 @@
 .project-page--blue {
   --accent-rgb: 99, 179, 237;
 }
+.project-page--green {
+  --accent-rgb: 104, 211, 145;
+}
 .project-page--amber {
   --accent-rgb: 246, 173, 85;
 }
