@@ -6,6 +6,7 @@
 #   default  -> og.jpg          Homepage card (Logan M Edwards + tagline)
 #   drone    -> og-drone.jpg    Drone Target Identification project card (teal accent)
 #   star     -> og-star.jpg     Star Cataloguing project card (blue accent)
+#   aspire   -> og-aspire.jpg   AspireCURES Website project card (green accent)
 #
 # JPEG is used instead of PNG because the card is gradient-heavy with no
 # transparency — q=88 gives a 3-4x size reduction over PNG with no visible
@@ -22,7 +23,7 @@
 # "summary_large_image" recommended aspect ratio.
 
 param(
-  [ValidateSet('default','drone','star','all')]
+  [ValidateSet('default','drone','star','aspire','all')]
   [string] $Variant = 'default'
 )
 
@@ -64,6 +65,17 @@ $variants = @{
     GlyphY     = 190
     Title      = 'Star Cataloguing'
     Subtitle   = '84% letter top-1  {0}  98% top-2  {0}  14k samples'
+  }
+  'aspire' = @{
+    Out        = 'og-aspire.jpg'
+    AccentRgb  = @(104, 211, 145)  # green — matches .project-card--green
+    GlowRgb    = @(104, 211, 145)
+    Glyph      = [char]0x271A      # heavy Greek cross ✚
+    GlyphSize  = 220
+    GlyphX     = 90
+    GlyphY     = 200
+    Title      = 'AspireCURES'
+    Subtitle   = 'Rare-disease trial matching  {0}  8 programs'
   }
 }
 
@@ -172,7 +184,7 @@ function New-OgCard {
 # Resolve the repo-root path relative to this script.
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 
-$toRender = if ($Variant -eq 'all') { @('default','drone','star') } else { @($Variant) }
+$toRender = if ($Variant -eq 'all') { @('default','drone','star','aspire') } else { @($Variant) }
 foreach ($v in $toRender) {
   New-OgCard -Cfg $variants[$v] -RepoRoot $repoRoot
 }
