@@ -1,7 +1,7 @@
 {
   "name": "Logan M Edwards",
   "short_name": "LoganME",
-  "description": "Astronomy & Astrophysics undergraduate portfolio featuring research, deep-learning projects, and coursework.",
+  "description": "Astronomy & Astrophysics undergraduate portfolio featuring research, deep-learning projects, web development for rare-disease advocacy, and coursework.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0b0c10",
@@ -15,8 +15,13 @@
     {
       "src": "android-chrome-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
