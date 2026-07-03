@@ -3,6 +3,11 @@ name: JS port tests
 # Runs the smoke tests in tests/ against the vanilla-JS ports of the
 # Python originals (blackjack.js, ortega-exposure.js). Uses Node's built-in
 # test runner — no package.json, no npm install, no dev dependencies.
+#
+# The inline-sync job additionally guards the "keep the two in sync" comments:
+# blackjack-game.html and ortega-exposure.html inline their .py sources for
+# crawlers/noscript visitors, and nothing but this check stops the copies
+# from drifting apart.
 
 on:
   workflow_dispatch:
@@ -10,6 +15,10 @@ on:
     paths:
       - "blackjack.js"
       - "ortega-exposure.js"
+      - "blackjack.py"
+      - "ortega-exposure.py"
+      - "blackjack-game.html"
+      - "ortega-exposure.html"
       - "tests/**"
       - ".github/workflows/test.yml"
   push:
@@ -17,6 +26,10 @@ on:
     paths:
       - "blackjack.js"
       - "ortega-exposure.js"
+      - "blackjack.py"
+      - "ortega-exposure.py"
+      - "blackjack-game.html"
+      - "ortega-exposure.html"
       - "tests/**"
       - ".github/workflows/test.yml"
 
@@ -35,3 +48,64 @@ jobs:
 
       - name: Run tests
         run: node --test tests/
+
+  inline-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inlined sources match their .py files
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import difflib
+          import html
+          import re
+          import sys
+
+          PAIRS = [
+              ("blackjack-game.html", "blackjack.py"),
+              ("ortega-exposure.html", "ortega-exposure.py"),
+          ]
+
+          BLOCK_RE = re.compile(
+              r'<pre><code class="source-viewer__code">(.*?)</code></pre>',
+              re.DOTALL,
+          )
+
+          failed = False
+          for html_path, py_path in PAIRS:
+              with open(html_path, "r", encoding="utf-8") as f:
+                  page = f.read()
+              m = BLOCK_RE.search(page)
+              if not m:
+                  print(f"FAIL {html_path}: no source-viewer <pre><code> block found")
+                  failed = True
+                  continue
+
+              inlined = html.unescape(m.group(1)).rstrip("\n")
+              with open(py_path, "r", encoding="utf-8") as f:
+                  source = f.read().rstrip("\n")
+
+              if inlined == source:
+                  print(f"OK   {html_path} matches {py_path}")
+                  continue
+
+              failed = True
+              print(f"FAIL {html_path}: inlined source differs from {py_path}")
+              diff = difflib.unified_diff(
+                  source.splitlines(),
+                  inlined.splitlines(),
+                  fromfile=py_path,
+                  tofile=f"{html_path} (inlined)",
+                  lineterm="",
+              )
+              for i, line in enumerate(diff):
+                  if i > 40:
+                      print("  ... diff truncated ...")
+                      break
+                  print(f"  {line}")
+
+          sys.exit(1 if failed else 0)
+          PY
