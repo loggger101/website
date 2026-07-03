@@ -17,7 +17,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | Path | Purpose |
 |---|---|
 | `index.html` | Homepage (about, coursework, projects, resume, contact) |
-| `drone-target.html`, `star-catalog.html` | Main project detail pages |
+| `drone-target.html`, `star-catalog.html`, `aspire-cures.html` | Main project detail pages |
 | `ortega-exposure.html`, `blackjack-game.html`, `portfolio-website.html` | Mini-project detail pages |
 | `blackjack.py` | Canonical Python source for the blackjack mini-project; downloadable from the page and inlined for SEO in `blackjack-game.html` (keep them in sync) |
 | `blackjack.js` | Vanilla-JS port of `blackjack.py` that powers the in-browser game on `blackjack-game.html` |
@@ -37,7 +37,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
 | `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required** — without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
-| `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`). Takes `-Variant default\|drone\|star\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the two flagship project pages use their per-project variant |
+| `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`, `og-aspire.jpg`). Takes `-Variant default\|drone\|star\|aspire\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the flagship project pages use their per-project variant |
 | `.prettierrc.json`, `.prettierignore` | Prettier config — 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
 | `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests, and Prettier auto-formatting |
 
@@ -53,6 +53,7 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 |---|---|---|
 | `.project-card--teal` / `.project-page--teal` | Drone target identification | `79,209,197` |
 | `.project-card--blue` / `.project-page--blue` | Star cataloguing | `99,179,237` |
+| `.project-card--green` / `.project-page--green` | AspireCURES website | `104,211,145` |
 | `.mini-project-card--amber` | Ortega exposure | `246,173,85` |
 | `.mini-project-card--red` | Blackjack | `252,129,129` |
 | `.mini-project-card--purple` | Portfolio website | `183,148,244` |

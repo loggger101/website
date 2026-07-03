@@ -87,10 +87,18 @@
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* Flagship cards cap at two per row so each keeps room to breathe;
+     single column below 640px. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 0.75rem;
   list-style: none;
+}
+
+@media (max-width: 640px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .btn {
