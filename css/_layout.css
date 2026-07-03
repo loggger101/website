@@ -49,7 +49,8 @@
   color: #a0aec0;
   font-size: 0.95rem;
 }
-.open-to {
+/* Wrapper for the "← Back" / "← Home" button in subpage headers. */
+.header-back {
   color: #a0aec0;
   font-size: 0.9rem;
   margin-top: 0.2rem;
