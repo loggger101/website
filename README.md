@@ -39,7 +39,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required** — without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`, `og-aspire.jpg`). Takes `-Variant default\|drone\|star\|aspire\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the flagship project pages use their per-project variant |
 | `.prettierrc.json`, `.prettierignore` | Prettier config — 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
-| `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests, and Prettier auto-formatting |
+| `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests + inlined-source sync check, and Prettier auto-formatting |
 
 ## Conventions
 
