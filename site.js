@@ -124,6 +124,15 @@
     var status = form.querySelector(".form-status");
     var submitBtn = form.querySelector('button[type="submit"]');
 
+    // Formspree endpoint kept out of the HTML (see contact form comment) so
+    // scraper bots can't harvest it. Base64 of the form id → "mnjnwonl".
+    var ENDPOINT = "https://formspree.io/f/" + atob("bW5qbndvbmw=");
+
+    // Time-trap: bots submit near-instantly. Require a few seconds of dwell
+    // between page load and send — trivial for a human filling four fields.
+    var loadedAt = Date.now();
+    var MIN_FILL_MS = 3000;
+
     function setStatus(msg) {
       if (status) status.textContent = msg || "";
     }
@@ -131,16 +140,25 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      var action = form.getAttribute("action") || "";
-      if (!action) {
-        setStatus("Form not configured (missing action URL).");
+      // Honeypot #2: hidden "url" field. Real users never see it; bots that
+      // fill every field trip it. Feign success so the bot doesn't learn.
+      var trap = form.querySelector('[name="url"]');
+      if (trap && trap.value) {
+        setStatus("Sent! I’ll reply soon.");
+        form.reset();
+        return;
+      }
+
+      // Time-trap: drop implausibly fast submissions.
+      if (Date.now() - loadedAt < MIN_FILL_MS) {
+        setStatus("Please take a moment, then send again.");
         return;
       }
 
       if (submitBtn) submitBtn.disabled = true;
       setStatus("Sending…");
 
-      fetch(action, {
+      fetch(ENDPOINT, {
         method: "POST",
         body: new FormData(form),
         headers: { Accept: "application/json" },
