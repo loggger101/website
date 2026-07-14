@@ -628,12 +628,47 @@
 }
 
 .footer-social .contact-pill {
+  --brand: 255, 255, 255;
   font-size: 0.85rem;
   padding: 6px 12px;
+  border-color: rgba(var(--brand), 0.3);
+  background: rgba(var(--brand), 0.08);
+}
+
+.footer-social .contact-pill__icon {
+  color: rgb(var(--brand));
+}
+
+.footer-social .contact-pill:hover,
+.footer-social .contact-pill:focus-visible {
+  border-color: rgba(var(--brand), 0.7);
+  background: rgba(var(--brand), 0.16);
+  box-shadow:
+    0 0 0 1px rgba(var(--brand), 0.25),
+    0 4px 18px rgba(var(--brand), 0.3);
 }
 
 .contact-pill__icon {
   flex-shrink: 0;
+}
+
+/* Per-brand accent colors — icon tint + hover glow.
+   Scoped under .footer-social so they match the specificity of the
+   .footer-social .contact-pill fallback above and win on source order. */
+.footer-social .contact-pill--linkedin {
+  --brand: 10, 102, 194;
+}
+.footer-social .contact-pill--sistershope {
+  --brand: 209, 66, 161;
+}
+.footer-social .contact-pill--aspirecures {
+  --brand: 30, 158, 150;
+}
+.footer-social .contact-pill--github {
+  --brand: 235, 240, 246;
+}
+.footer-social .contact-pill--kaggle {
+  --brand: 32, 190, 255;
 }
 
 .contact-pill {
