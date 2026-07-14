@@ -68,13 +68,46 @@
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Primary">
+      <div class="container site-nav__inner">
+        <a class="site-nav__brand" href="#top">Logan M Edwards</a>
+        <ul class="site-nav__menu">
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#resume">Resume</a></li>
+          <li><a href="#coursework">Coursework</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
     <header class="site-header" id="top">
       <div class="container header-content">
         <h1 class="site-title">Logan M Edwards</h1>
         <p class="site-tagline">Astronomy &amp; Astrophysics • Planetary Science</p>
+        <p class="site-intro">
+          Astrophysics and planetary science undergraduate at Florida Tech applying deep learning to astronomical data —
+          and building websites for rare-disease advocacy.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#projects">View projects</a>
+          <a class="btn btn-ghost" href="Logan_Edwards_Resume_ATS.pdf" target="_blank" rel="noopener">Resume</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="hero-social" aria-label="Profiles">
+          <a class="hero-social__link" href="https://github.com/loggger101" target="_blank" rel="noopener">GitHub</a>
+          <a
+            class="hero-social__link"
+            href="https://www.linkedin.com/in/logan-edwards-shf/"
+            target="_blank"
+            rel="noopener"
+            >LinkedIn</a
+          >
+          <a class="hero-social__link" href="https://www.kaggle.com/loggger" target="_blank" rel="noopener">Kaggle</a>
+        </div>
       </div>
     </header>
-    <main class="container">
+    <main class="container" id="main">
       <section class="section" id="about">
         <h2>About</h2>
         <p>
@@ -83,6 +116,15 @@
           organizations, including AspireCURES. This site collects my projects, resume, and contact info. Please feel
           free to reach out.
         </p>
+        <ul class="skills" aria-label="Core skills and tools">
+          <li>Python</li>
+          <li>PyTorch</li>
+          <li>TensorFlow / Keras</li>
+          <li>Computer Vision</li>
+          <li>Deep Learning</li>
+          <li>HTML / CSS / JS</li>
+          <li>Cloudflare</li>
+        </ul>
       </section>
       <section class="section" id="projects">
         <h2>Projects</h2>
@@ -297,7 +339,8 @@
             </a>
             <div class="mini-project-card__content">
               <p>
-                Instrumentational code used to calculate the recommended exposure time based on cloud seeing, SNR, etc.
+                Instrumentation code that recommends an exposure time from sky brightness, seeing, and target
+                signal-to-noise for the Ortega telescope.
               </p>
             </div>
           </li>
@@ -313,7 +356,10 @@
               <h4>Simple BlackJack Game</h4>
             </a>
             <div class="mini-project-card__content">
-              <p>Extremely rudimentary college project I found interesting.</p>
+              <p>
+                An early Python coursework project — a full game loop with hit, stand, double-down, and betting logic,
+                ported to play in the browser.
+              </p>
             </div>
           </li>
           <li class="mini-project-card mini-project-card--purple">
@@ -329,7 +375,10 @@
               <h4>Portfolio Website</h4>
             </a>
             <div class="mini-project-card__content">
-              <p>Small multi-paged site coded on github as an introduction into new languages.</p>
+              <p>
+                A multi-page site built from scratch with vanilla HTML, CSS, and JavaScript — my introduction to
+                front-end web development.
+              </p>
             </div>
           </li>
         </ul>
@@ -432,6 +481,7 @@
             >Sisters Hope Foundation</a
           >
           <a class="contact-pill" href="https://www.aspirecures.com/" target="_blank" rel="noopener">AspireCURES</a>
+          <a class="contact-pill" href="https://github.com/loggger101" target="_blank" rel="noopener">GitHub</a>
           <a class="contact-pill" href="https://www.kaggle.com/loggger" target="_blank" rel="noopener">Kaggle</a>
         </div>
       </section>

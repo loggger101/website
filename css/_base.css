@@ -52,6 +52,8 @@ body {
 html {
   background: #0b0c10;
   overflow-x: hidden;
+  /* Anchor jumps clear the sticky primary nav instead of hiding under it. */
+  scroll-padding-top: 4.25rem;
 }
 
 body {
