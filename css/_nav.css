@@ -111,47 +111,6 @@
 }
 
 /* =========================================================
-   HOMEPAGE HERO — intro line, primary CTAs, profile links
-   ========================================================= */
-.site-intro {
-  margin-top: 0.7rem;
-  max-width: 60ch;
-  color: #cbd5e0;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.1rem;
-}
-
-.hero-social {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.hero-social__link {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition:
-    color 140ms ease,
-    border-color 140ms ease;
-}
-.hero-social__link:hover,
-.hero-social__link:focus-visible {
-  color: #fff;
-  border-bottom-color: rgba(99, 179, 237, 0.6);
-  outline: none;
-}
-
-/* =========================================================
    ABOUT — core skills chip row
    ========================================================= */
 .skills {
