@@ -23,13 +23,13 @@
   z-index: 0;
   background:
     radial-gradient(
-      900px 260px at 50% 100%,
-      rgba(90, 170, 255, 0.18),
-      rgba(120, 80, 255, 0.1),
+      1100px 340px at 32% 128%,
+      rgba(90, 170, 255, 0.24),
+      rgba(120, 80, 255, 0.12),
       rgba(0, 0, 0, 0) 70%
     ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 100%);
-  opacity: 0.55;
+  opacity: 0.72;
   mix-blend-mode: screen;
 }
 
@@ -39,15 +39,32 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  padding-top: 3.25rem;
+  padding-bottom: 3.5rem;
 }
 
 .site-title {
-  font-size: 1.9rem;
+  margin: 0;
+  /* Extra line-height + bottom padding keep glyph descenders (g, y) inside
+     the gradient's painted area — background-clip: text clips to the text
+     box, so a tight line-height would shear the tails off. */
+  padding-bottom: 0.16em;
+  font-size: clamp(2.15rem, 5.5vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #f7f9ff;
+  background: linear-gradient(180deg, #ffffff 0%, #c6d6f2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .site-tagline {
-  color: #a0aec0;
-  font-size: 0.95rem;
+  margin: 0;
+  color: #aeb9cc;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
 }
 /* Wrapper for the "← Back" / "← Home" button in subpage headers. */
 .header-back {
