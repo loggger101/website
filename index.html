@@ -384,9 +384,14 @@
           <h3 class="contact-formTitle">Send a message</h3>
           <p class="contact-formHint">Goes straight to my email.</p>
 
-          <form id="contact-form" class="contact-form" action="https://formspree.io/f/mnjnwonl" method="POST">
-            <!-- Honeypot: real users leave this empty; bots tend to fill every field. Formspree drops submissions where _gotcha has a value. aria-hidden hides the unlabelled input from screen readers. -->
+          <!-- The Formspree endpoint is intentionally NOT in the action attribute; site.js
+               assembles it at submit time so scraper bots that harvest form-action URLs from the
+               HTML can't POST spam to it directly. method stays POST for the (JS-off) fallback. -->
+          <form id="contact-form" class="contact-form" method="POST">
+            <!-- Honeypot #1: real users leave this empty; bots tend to fill every field. Formspree drops submissions where _gotcha has a value. aria-hidden hides the unlabelled input from screen readers. -->
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot" />
+            <!-- Honeypot #2: a tempting "url" field bots love to autofill. site.js silently drops any submission where it's non-empty (Formspree only special-cases _gotcha, so this one is checked client-side). -->
+            <input type="text" name="url" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot" />
             <div class="contact-formGrid">
               <label class="contact-field">
                 <span class="contact-fieldLabel">Name</span>
