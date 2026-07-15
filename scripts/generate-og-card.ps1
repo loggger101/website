@@ -53,7 +53,7 @@ $variants = @{
     GlyphX     = 90
     GlyphY     = 200
     Title      = 'Drone Target ID'
-    Subtitle   = '87% fine  {0}  91% coarse  {0}  27k held-out samples'
+    Subtitle   = '87% fine  {0}  91% coarse  {0}  182k samples'
   }
   'star' = @{
     Out        = 'og-star.jpg'
@@ -64,7 +64,7 @@ $variants = @{
     GlyphX     = 100
     GlyphY     = 190
     Title      = 'Star Cataloguing'
-    Subtitle   = '84% letter top-1  {0}  98% top-2  {0}  14k samples'
+    Subtitle   = '84% letter top-1  {0}  98% top-2  {0}  96k samples'
   }
   'aspire' = @{
     Out        = 'og-aspire.jpg'
