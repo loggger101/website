@@ -5,7 +5,7 @@
 /* Page-level accent: set --accent-rgb on the body for project subpages so
    the chips below can pick up a project-matching glow. Falls back to blue. */
 .project-page--teal {
-  --accent-rgb: 79, 209, 197;
+  --accent-rgb: 34, 211, 238;
 }
 .project-page--blue {
   --accent-rgb: 99, 179, 237;
