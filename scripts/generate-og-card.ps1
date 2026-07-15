@@ -6,7 +6,7 @@
 #   default  -> og.jpg          Homepage card (Logan M Edwards + tagline)
 #   drone    -> og-drone.jpg    Drone Target Identification project card (teal accent)
 #   star     -> og-star.jpg     Star Cataloguing project card (blue accent)
-#   aspire   -> og-aspire.jpg   AspireCURES Website project card (green accent)
+#   aspire   -> og-aspire.jpg   AspireCURES Website project card (teal accent)
 #
 # JPEG is used instead of PNG because the card is gradient-heavy with no
 # transparency — q=88 gives a 3-4x size reduction over PNG with no visible
@@ -68,14 +68,14 @@ $variants = @{
   }
   'aspire' = @{
     Out        = 'og-aspire.jpg'
-    AccentRgb  = @(104, 211, 145)  # green — matches .project-card--green
-    GlowRgb    = @(104, 211, 145)
+    AccentRgb  = @(30, 158, 150)   # teal — matches .project-card--green
+    GlowRgb    = @(30, 158, 150)
     Glyph      = [char]0x271A      # heavy Greek cross ✚
     GlyphSize  = 220
     GlyphX     = 90
     GlyphY     = 200
     Title      = 'AspireCURES'
-    Subtitle   = '~25k lines  {0}  8 programs  {0}  Cloudflare Pages'
+    Subtitle   = '~15k lines  {0}  8 programs  {0}  Cloudflare Pages'
   }
 }
 

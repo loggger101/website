@@ -53,7 +53,7 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 |---|---|---|
 | `.project-card--teal` / `.project-page--teal` | Drone target identification | `79,209,197` |
 | `.project-card--blue` / `.project-page--blue` | Star cataloguing | `99,179,237` |
-| `.project-card--green` / `.project-page--green` | AspireCURES website | `104,211,145` |
+| `.project-card--green` / `.project-page--green` | AspireCURES website | `30,158,150` |
 | `.mini-project-card--amber` | Ortega exposure | `246,173,85` |
 | `.mini-project-card--red` | Blackjack | `252,129,129` |
 | `.mini-project-card--purple` | Portfolio website | `183,148,244` |
