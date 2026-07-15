@@ -29,7 +29,7 @@
     <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og-star.jpg" />
     <meta
       property="og:image:alt"
-      content="Star-field card: Star Cataloguing — 84% letter top-1, 98% top-2, 96k samples, with a blue star glyph."
+      content="Star-field card: Star Cataloguing: 84% letter top-1, 98% top-2, 96k samples, with a blue star glyph."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards" />
@@ -149,20 +149,20 @@
       </section>
       <section class="section" id="pipeline">
         <h2>Pipeline</h2>
-        <p class="section-intro">Three independent stages — catalog ingestion, image builder, and classifier.</p>
+        <p class="section-intro">Three independent stages: catalog ingestion, image builder, and classifier.</p>
         <ul class="contact-list">
           <li>
-            <strong>Catalog ingestion</strong> — programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE
+            <strong>Catalog ingestion</strong>: programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE
             assemble a unified metadata table (coordinates, magnitudes, colors, effective-temperature hints, spectral
             types where present).
           </li>
           <li>
-            <strong>Image builder</strong> — fetches color cutouts, recenters and stretches them, scales toward a
+            <strong>Image builder</strong>: fetches color cutouts, recenters and stretches them, scales toward a
             magnitude-aware target peak to avoid blown cores, and rejects grayscale or low-quality frames via explicit
             quality gates.
           </li>
           <li>
-            <strong>Multi-task CNN classifier</strong> — three heads (letter, combined letter × subclass, stage) trained
+            <strong>Multi-task CNN classifier</strong>: three heads (letter, combined letter × subclass, stage) trained
             jointly. The combined head lets the model learn letter-specific subclass boundaries from a single softmax.
           </li>
         </ul>
@@ -170,7 +170,7 @@
       <section class="section" id="dataset">
         <h2>Dataset</h2>
         <p class="section-intro">
-          The raw class distribution is steeply imbalanced — K and F stars dominate; O and M are rare. The builder
+          The raw class distribution is steeply imbalanced: K and F stars dominate; O and M are rare. The builder
           applies a "curved" target distribution to soften this skew without throwing away the long tail.
         </p>
         <div class="results-tableWrap">
@@ -252,7 +252,7 @@
           </table>
         </div>
         <p class="subsection-intro">
-          Splits total 96,039 rows — slightly below the post-balancing total of 96,322 because the per-split quality
+          Splits total 96,039 rows, slightly below the post-balancing total of 96,322 because the per-split quality
           gates reject a handful of frames that survived initial balancing (corrupted decodes, missing files, or
           borderline centring).
         </p>
@@ -261,7 +261,7 @@
           <li>Minimum peak intensity and peak-to-background ratio.</li>
           <li>Maximum centroid offset from frame center.</li>
           <li>Maximum fraction of saturated pixels.</li>
-          <li>Grayscale detection — RGB channels must carry independent information.</li>
+          <li>Grayscale detection: RGB channels must carry independent information.</li>
         </ul>
       </section>
       <section class="section" id="model">
@@ -272,13 +272,13 @@
           on top:
         </p>
         <ul class="contact-list">
-          <li><strong>Letter head</strong> — softmax over the present spectral letters.</li>
+          <li><strong>Letter head</strong>: softmax over the present spectral letters.</li>
           <li>
-            <strong>Combined head</strong> — softmax over <code>letter × 10 + subclass</code>, letting the model learn
+            <strong>Combined head</strong>: softmax over <code>letter × 10 + subclass</code>, letting the model learn
             letter-specific subclass boundaries from a single classifier.
           </li>
           <li>
-            <strong>Stage head</strong> — auxiliary softmax over evolutionary stage, trained whenever stage labels are
+            <strong>Stage head</strong>: auxiliary softmax over evolutionary stage, trained whenever stage labels are
             available; not reported in the headline metrics below.
           </li>
         </ul>
@@ -303,7 +303,7 @@
             decoding="async"
           />
           <figcaption>
-            Letter-head loss and accuracy across training. The two-stage schedule is visible — Stage 1 establishes the
+            Letter-head loss and accuracy across training. The two-stage schedule is visible: Stage 1 establishes the
             backbone on the letter task alone, before Stage 2 unfreezes the full multi-task model.
           </figcaption>
         </figure>
@@ -311,7 +311,7 @@
       <section class="section" id="results">
         <h2>Results</h2>
         <p class="section-intro">
-          The letter head is the headline number — it tracks the macroscopic temperature sequence robustly. Subclass
+          The letter head is the headline number: it tracks the macroscopic temperature sequence robustly. Subclass
           resolution is harder because RGB cutouts encode color differences only coarsely. Subclass accuracy is reported
           two ways: conditional on the letter being correct (isolates the subclass head's own contribution) and overall
           (penalizes letter errors as well).
@@ -364,20 +364,20 @@
             decoding="async"
           />
           <figcaption>
-            Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M — neighbouring letters in the
-            H–R diagram — which is consistent with the model learning a smooth temperature sequence.
+            Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M, neighbouring letters in the
+            H–R diagram, which is consistent with the model learning a smooth temperature sequence.
           </figcaption>
         </figure>
       </section>
       <section class="section" id="errors">
         <h2>Error analysis</h2>
         <p class="section-intro">
-          Confusion concentrates at decision boundaries that are physically adjacent — the model is learning a smooth
+          Confusion concentrates at decision boundaries that are physically adjacent: the model is learning a smooth
           temperature sequence rather than memorizing class identities.
         </p>
         <ul class="contact-list">
           <li>
-            <strong>Letter confusion</strong> is dominated by A/F, F/G, and K/M pairs — neighboring colors in the H–R
+            <strong>Letter confusion</strong> is dominated by A/F, F/G, and K/M pairs, neighboring colors in the H–R
             diagram.
           </li>
           <li>
@@ -385,7 +385,7 @@
             primarily where the underlying subclass has few training examples.
           </li>
           <li>
-            <strong>Combined accuracy tracks letter accuracy</strong> — when the letter is right, subclass resolution is
+            <strong>Combined accuracy tracks letter accuracy</strong>: when the letter is right, subclass resolution is
             competitive; misclassified letters drag the combined number down by construction.
           </li>
         </ul>
@@ -393,7 +393,7 @@
           <img
             class="project-figure__img"
             src="assets/projects/star/confusion_matrix_combined_test.png"
-            alt="Combined letter × subclass confusion matrix — 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits."
+            alt="Combined letter × subclass confusion matrix: 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits."
             width="1600"
             height="1600"
             loading="lazy"
@@ -401,7 +401,7 @@
           />
           <figcaption>
             Combined letter × subclass confusion matrix on the test set. The block-diagonal structure shows that errors
-            cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries — the
+            cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries: the
             model has learned the temperature sequence as a continuous quantity, not a set of independent classes.
           </figcaption>
         </figure>
@@ -418,19 +418,19 @@
         <h2>Limitations &amp; future work</h2>
         <ul class="contact-list">
           <li>
-            <strong>RGB-only inputs</strong> — spectral subclass boundaries are intrinsically fuzzy in three-band
+            <strong>RGB-only inputs</strong>: spectral subclass boundaries are intrinsically fuzzy in three-band
             photometry and are confused further by interstellar reddening.
           </li>
           <li>
-            <strong>Saturation &amp; centring</strong> — performance is sensitive to data hygiene; quality gates exist,
+            <strong>Saturation &amp; centring</strong>: performance is sensitive to data hygiene; quality gates exist,
             but borderline frames still leak through.
           </li>
           <li>
-            <strong>Rare classes</strong> — O and M, even after balancing, are limited by raw availability. Targeted
+            <strong>Rare classes</strong>: O and M, even after balancing, are limited by raw availability. Targeted
             sampling or modest augmentation would help further.
           </li>
           <li>
-            <strong>Next directions</strong> — calibrated photometry, extinction estimates, NIR bands, and attention
+            <strong>Next directions</strong>: calibrated photometry, extinction estimates, NIR bands, and attention
             pooling over radial profiles are the most promising routes to sharper subclass resolution.
           </li>
         </ul>
