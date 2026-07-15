@@ -46,8 +46,8 @@ $variants = @{
   }
   'drone' = @{
     Out        = 'og-drone.jpg'
-    AccentRgb  = @(79, 209, 197)   # teal — matches .project-card--teal
-    GlowRgb    = @(79, 209, 197)
+    AccentRgb  = @(34, 211, 238)   # aqua-cyan — matches .project-card--teal
+    GlowRgb    = @(34, 211, 238)
     Glyph      = [char]0x25CE      # circled dot ◎
     GlyphSize  = 220
     GlyphX     = 90

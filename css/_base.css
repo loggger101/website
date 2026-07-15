@@ -15,7 +15,8 @@
    throughout style.css to tint icon glows, hover halos, and media-band
    gradients. Each project card carries one of these modifier classes. */
 .project-card--teal {
-  --accent-rgb: 79, 209, 197;
+  /* Drone card — aqua-cyan; kept distinct from AspireCURES's green-teal. */
+  --accent-rgb: 34, 211, 238;
 }
 .project-card--blue {
   --accent-rgb: 99, 179, 237;
