@@ -1,12 +1,12 @@
 # loganmedwardsastrophy.com
 
-Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergraduate at Florida Tech. Showcases coursework, deep-learning research projects, mini-projects, and contact info.
+Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergraduate at Florida Tech. Showcases coursework, deep-learning research projects, mini-projects, and contact info.
 
 **Live:** <https://www.loganmedwardsastrophy.com/>
 
 ## Stack
 
-- Static HTML + CSS + vanilla JS — no framework, no build step
+- Static HTML + CSS + vanilla JS: no framework, no build step
 - Hosted on GitHub Pages via the `CNAME` file
 - Contact form: [Formspree](https://formspree.io/)
 - Visitor analytics: [GoatCounter](https://www.goatcounter.com/) (privacy-respecting, no cookies)
@@ -24,7 +24,7 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `ortega-exposure.py` | Canonical Python source for the Ortega exposure-time calculator; downloadable and inlined for SEO in `ortega-exposure.html` (keep in sync) |
 | `ortega-exposure.js` | Vanilla-JS port of `ortega-exposure.py` that powers the in-browser calculator on `ortega-exposure.html` |
 | `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume section (replaces the prior Google Drive link) |
-| `style.css` | Thin entry point — `@import`s the six modules under `css/` |
+| `style.css` | Thin entry point: `@import`s the six modules under `css/` |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
 | `css/_motion.css` | Parallax star layers, aurora + noise overlay, drift keyframes |
 | `css/_layout.css` | Container, site header, footer, sections, buttons |
@@ -36,9 +36,9 @@ Personal portfolio site for Logan M Edwards — astronomy & astrophysics undergr
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
-| `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required** — without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
+| `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required**: without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`, `og-aspire.jpg`). Takes `-Variant default\|drone\|star\|aspire\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the flagship project pages use their per-project variant |
-| `.prettierrc.json`, `.prettierignore` | Prettier config — 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
+| `.prettierrc.json`, `.prettierignore` | Prettier config: 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
 | `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests + inlined-source sync check, and Prettier auto-formatting |
 
 ## Conventions
@@ -64,10 +64,10 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 
 Each project icon on the homepage twinkles until the user has visited that project's page. Two mechanisms write the "visited" flag:
 
-1. **Click on the homepage** — `site.js` `setUpProjectIconVisitedState()` writes `projectIconUsed:<slug>=1` when a project icon link is clicked.
-2. **Direct subpage visit** — each subpage declares `<body data-mark-visited="<slug>">`; `site.js` `markSubpageVisited()` reads that attribute on load and writes the same key.
+1. **Click on the homepage**: `site.js` `setUpProjectIconVisitedState()` writes `projectIconUsed:<slug>=1` when a project icon link is clicked.
+2. **Direct subpage visit**: each subpage declares `<body data-mark-visited="<slug>">`; `site.js` `markSubpageVisited()` reads that attribute on load and writes the same key.
 
-When adding a new project page, set `data-mark-visited="<slug>"` on `<body>` and `data-project="<slug>"` on the homepage icon link — same slug. The icon will pick up `.is-visited` styling automatically on the next homepage visit.
+When adding a new project page, set `data-mark-visited="<slug>"` on `<body>` and `data-project="<slug>"` on the homepage icon link: same slug. The icon will pick up `.is-visited` styling automatically on the next homepage visit.
 
 ## Local development
 
@@ -81,7 +81,7 @@ Then open <http://localhost:8000>.
 
 ## Formatting
 
-The repo is auto-formatted with [Prettier](https://prettier.io/) — see `.prettierrc.json`. The `Format with Prettier` GitHub Action reformats every pull request (committing the result back to the branch) and self-heals `main` on push, so there's no manual step. To format locally before pushing:
+The repo is auto-formatted with [Prettier](https://prettier.io/). See `.prettierrc.json`. The `Format with Prettier` GitHub Action reformats every pull request (committing the result back to the branch) and self-heals `main` on push, so there's no manual step. To format locally before pushing:
 
 ```sh
 npx prettier@3 --write "**/*.{html,css,js,json}"
@@ -89,4 +89,4 @@ npx prettier@3 --write "**/*.{html,css,js,json}"
 
 ## License
 
-MIT — see [LICENSE](LICENSE). The code is freely reusable; the page content (project descriptions, resume, photos, etc.) belongs to Logan M Edwards.
+MIT. See [LICENSE](LICENSE). The code is freely reusable; the page content (project descriptions, resume, photos, etc.) belongs to Logan M Edwards.
