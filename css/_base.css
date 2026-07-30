@@ -9,6 +9,10 @@
   --drift-overscan: 220px; /* >= max drift distance (we drift ~60px) */
   /* Default accent (matches the star card). Each project card overrides via its --<color> modifier class below. */
   --accent-rgb: 99, 179, 237;
+  /* Height of the sticky primary nav. .site-nav pins itself to this so the
+     project-page .section-nav can stack flush underneath it, and so anchor
+     jumps can be offset by a known amount. Keep the two in sync. */
+  --site-nav-h: 3.5rem;
 }
 
 /* Per-card accent palette. Used by the rgba(var(--accent-rgb), ...) rules

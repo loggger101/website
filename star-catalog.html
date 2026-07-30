@@ -25,8 +25,11 @@
       content="Multi-task CNN for stellar spectral letter and subclass: 84.3% letter top-1, 98.4% top-2 on RGB cutouts assembled from VizieR catalogs."
     />
     <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Logan M Edwards" />
     <meta property="og:url" content="https://www.loganmedwardsastrophy.com/star-catalog.html" />
     <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og-star.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
       content="Star-field card: Star Cataloguing: 84% letter top-1, 98% top-2, 96k samples, with a blue star glyph."
@@ -74,7 +77,7 @@
     ></script>
     <script defer src="site.js"></script>
   </head>
-  <body data-mark-visited="star" class="project-page--blue">
+  <body data-mark-visited="star" class="project-page project-page--blue">
     <a class="skip-link" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
@@ -152,9 +155,9 @@
         <p class="section-intro">Three independent stages: catalog ingestion, image builder, and classifier.</p>
         <ul class="contact-list">
           <li>
-            <strong>Catalog ingestion</strong>: programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE
-            assemble a unified metadata table (coordinates, magnitudes, colors, effective-temperature hints, spectral
-            types where present).
+            <strong>Catalog ingestion</strong>: programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE assemble
+            a unified metadata table (coordinates, magnitudes, colors, effective-temperature hints, spectral types where
+            present).
           </li>
           <li>
             <strong>Image builder</strong>: fetches color cutouts, recenters and stretches them, scales toward a
@@ -401,8 +404,8 @@
           />
           <figcaption>
             Combined letter × subclass confusion matrix on the test set. The block-diagonal structure shows that errors
-            cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries: the
-            model has learned the temperature sequence as a continuous quantity, not a set of independent classes.
+            cluster <em>within</em> a letter (off-by-one subclass) far more than they cross letter boundaries: the model
+            has learned the temperature sequence as a continuous quantity, not a set of independent classes.
           </figcaption>
         </figure>
       </section>
@@ -437,7 +440,7 @@
       </section>
       <section class="section" id="links">
         <h2>Links</h2>
-        <p class="section-intro">Dataset, full writeup, and source.</p>
+        <p class="section-intro">The image dataset and the full technical writeup.</p>
         <p>
           <a
             class="btn btn-sm"
