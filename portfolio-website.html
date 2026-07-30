@@ -24,8 +24,11 @@
       content="Multi-page personal portfolio built with semantic HTML, custom CSS, and lightweight JavaScript, deployed via GitHub Pages."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Logan M Edwards" />
     <meta property="og:url" content="https://www.loganmedwardsastrophy.com/portfolio-website.html" />
     <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
       content="Star-field card: Logan M Edwards, Astronomy &amp; Astrophysics • Planetary Science."
@@ -63,7 +66,7 @@
     ></script>
     <script defer src="site.js"></script>
   </head>
-  <body data-mark-visited="portfolio-website" class="project-page--purple">
+  <body data-mark-visited="portfolio-website" class="project-page project-page--purple">
     <a class="skip-link" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
@@ -103,6 +106,10 @@
             <span class="metric__label">Build steps</span>
           </li>
           <li class="metric">
+            <span class="metric__value">5</span>
+            <span class="metric__label">GitHub Actions</span>
+          </li>
+          <li class="metric">
             <span class="metric__value">GH Pages</span>
             <span class="metric__label">Static host</span>
           </li>
@@ -115,27 +122,46 @@
       <section class="section" id="overview">
         <h2>Overview</h2>
         <p class="section-intro">
-          This project represents my very first foray into building a multi‑page website from scratch. The goal was to
-          familiarise myself with core web technologies – HTML for structure, CSS for styling and basic JavaScript for
-          interactivity – while creating a clean and responsive portfolio to showcase my work. The site you’re viewing
-          now is a direct result of that learning journey.
+          This was my first attempt at building a multi-page website from scratch. The goal was to get comfortable with
+          the core technologies: HTML for structure, CSS for styling, JavaScript for behavior, by shipping something
+          real instead of working through tutorials. The site you are reading now is what that turned into. It is still
+          hand-written with no framework and no build step, but a lot more has accumulated behind it since the first
+          version.
         </p>
       </section>
       <section class="section" id="highlights">
         <h2>Key highlights</h2>
-        <p class="section-intro">Notable aspects of this mini project.</p>
+        <p class="section-intro">What the site is made of today.</p>
         <ul class="contact-list">
           <li>
-            Built with semantic HTML, custom CSS and lightweight JavaScript for smooth navigation and dynamic effects.
+            Semantic HTML throughout, with a skip link, visible keyboard focus states, and
+            <code>prefers-reduced-motion</code> guards on every animation.
           </li>
-          <li>Designed a responsive layout that adapts to desktop and mobile screens using CSS grid and flexbox.</li>
-          <li>Integrated icons, badges and custom components (e.g., cards and buttons) for a polished look.</li>
-          <li>Deployed the site using GitHub Pages, learning basic version control and workflow in the process.</li>
+          <li>
+            Responsive layouts built on CSS grid and flexbox. The stylesheet is split into seven modules that
+            <code>style.css</code> pulls together with plain <code>@import</code>, no bundler involved.
+          </li>
+          <li>
+            An animated space backdrop assembled entirely in CSS: three parallax star layers drawn as SVGs, plus aurora
+            and film-grain overlays.
+          </li>
+          <li>
+            Vanilla JavaScript for the contact form, the live Kaggle dataset counters on the homepage, and the
+            in-browser ports of the Python mini projects.
+          </li>
+          <li>
+            GitHub Actions handle the upkeep: refreshing dataset stats, stamping sitemap dates, running the port tests,
+            and auto-formatting the repo with Prettier.
+          </li>
+          <li>
+            Deployed straight from a git push to GitHub Pages on a custom domain, with a content security policy that
+            keeps scripts and styles first-party.
+          </li>
         </ul>
       </section>
       <section class="section" id="links">
         <h2>Links</h2>
-        <p class="section-intro">Primary references and artifacts for this project.</p>
+        <p class="section-intro">Every page, stylesheet, and workflow described above lives in one public repo.</p>
         <p>
           <a class="btn btn-sm" href="https://github.com/loggger101/website" rel="noopener" target="_blank"
             >View repository on GitHub</a

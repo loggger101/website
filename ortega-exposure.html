@@ -25,8 +25,11 @@
       content="Interactive in-browser exposure-time calculator for the Ortega telescope, alongside the original Python source."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Logan M Edwards" />
     <meta property="og:url" content="https://www.loganmedwardsastrophy.com/ortega-exposure.html" />
     <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
       content="Star-field card: Logan M Edwards, Astronomy &amp; Astrophysics • Planetary Science."
@@ -68,7 +71,7 @@
     <script defer src="site.js"></script>
     <script defer src="ortega-exposure.js"></script>
   </head>
-  <body data-mark-visited="ortega-exposure" class="project-page--amber">
+  <body data-mark-visited="ortega-exposure" class="project-page project-page--amber">
     <a class="skip-link" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
@@ -123,10 +126,10 @@
         <h2>Overview</h2>
         <p class="section-intro">
           This lightweight tool estimates the optimal exposure time for observations with the Ortega telescope. Taking
-          into account sky brightness, seeing conditions, the desired signal‑to‑noise ratio and target magnitude, it
-          provides a recommended integration time to achieve high‑quality imaging without saturating the detector.
-          Originally a Colab Python script for quick field calculations during observing runs, now also runs live in
-          the browser below.
+          into account sky brightness, seeing conditions, the desired signal-to-noise ratio and target magnitude, it
+          provides a recommended integration time to achieve high-quality imaging without saturating the detector.
+          Originally a Colab Python script for quick field calculations during observing runs, now also runs live in the
+          browser below.
         </p>
       </section>
       <section class="section" id="calculate">
@@ -209,7 +212,7 @@
         <ul class="contact-list">
           <li>Implements standard photometric exposure formulas with customizable parameters.</li>
           <li>Accounts for seeing, sky background and telescope/instrument throughput.</li>
-          <li>Outputs both recommended single‑frame exposure and total integration time.</li>
+          <li>Outputs both recommended single-frame exposure and total integration time.</li>
           <li>Simple Python script with clear documentation for future expansion or GUI integration.</li>
         </ul>
       </section>

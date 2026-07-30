@@ -25,8 +25,11 @@
       content="YOLO segmentation front-end + multi-output CNN classifier: 87% fine-class and 91% coarse accuracy on held-out aerial test data."
     />
     <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Logan M Edwards" />
     <meta property="og:url" content="https://www.loganmedwardsastrophy.com/drone-target.html" />
     <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og-drone.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
       content="Star-field card: Drone Target ID: 87% fine, 91% coarse, 182k samples, with a teal target glyph."
@@ -65,7 +68,7 @@
     ></script>
     <script defer src="site.js"></script>
   </head>
-  <body data-mark-visited="drone" class="project-page--teal">
+  <body data-mark-visited="drone" class="project-page project-page--teal">
     <a class="skip-link" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
@@ -185,9 +188,7 @@
           fixed-length vector that feeds both heads:
         </p>
         <ul class="contact-list">
-          <li>
-            <strong>Fine head</strong>: dense layers ending in an 11-way softmax over the canonical fine classes.
-          </li>
+          <li><strong>Fine head</strong>: dense layers ending in an 11-way softmax over the canonical fine classes.</li>
           <li>
             <strong>Coarse head</strong>: branches off the same backbone features, ending in a three-way softmax over
             the validity categories.
@@ -210,9 +211,9 @@
         <p>
           Sample weights down-weight over-represented classes (notably <code>invalid_background</code>) and up-weight
           under-represented valid categories. An optional flag controls whether invalid examples contribute to the
-          fine-head loss: when disabled, invalids train only the coarse head, freeing the fine head to focus on
-          examples with meaningful fine labels. Two recipes were used: end-to-end joint training from scratch, and a
-          two-stage warm-up where the coarse head trains alone before the fine head joins.
+          fine-head loss: when disabled, invalids train only the coarse head, freeing the fine head to focus on examples
+          with meaningful fine labels. Two recipes were used: end-to-end joint training from scratch, and a two-stage
+          warm-up where the coarse head trains alone before the fine head joins.
         </p>
         <figure class="project-figure">
           <img
@@ -376,9 +377,8 @@
         <p class="section-intro">Confusion matrices and qualitative review highlight three recurring failure modes.</p>
         <ul class="contact-list">
           <li>
-            <strong>Borderline crops</strong>: segmentation masks that mix target and background pixels. When
-            background dominates the crop, the classifier defaults to an invalid label even when part of a target is
-            visible.
+            <strong>Borderline crops</strong>: segmentation masks that mix target and background pixels. When background
+            dominates the crop, the classifier defaults to an invalid label even when part of a target is visible.
           </li>
           <li>
             <strong>Small or occluded targets</strong>: distant or partially blocked objects provide too few pixels for
@@ -445,9 +445,7 @@
             <strong>Data coverage</strong>: performance is bounded by the diversity of the unified training set. Drone
             altitude, camera angle, lighting, and environmental context all affect generalization.
           </li>
-          <li>
-            <strong>Small targets</strong>: objects that occupy only a handful of pixels remain the hardest case.
-          </li>
+          <li><strong>Small targets</strong>: objects that occupy only a handful of pixels remain the hardest case.</li>
           <li>
             <strong>No temporal smoothing</strong>: the live overlay treats each frame independently, so detections on
             borderline crops can flicker between coarse labels across consecutive frames.
@@ -461,7 +459,7 @@
       </section>
       <section class="section" id="links">
         <h2>Links</h2>
-        <p class="section-intro">Dataset, full writeup, and source.</p>
+        <p class="section-intro">The training dataset and the full technical writeup.</p>
         <p>
           <a class="btn btn-sm" href="https://www.kaggle.com/datasets/loggger/fpv-images" rel="noopener" target="_blank"
             >View on Kaggle</a

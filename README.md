@@ -24,14 +24,15 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `ortega-exposure.py` | Canonical Python source for the Ortega exposure-time calculator; downloadable and inlined for SEO in `ortega-exposure.html` (keep in sync) |
 | `ortega-exposure.js` | Vanilla-JS port of `ortega-exposure.py` that powers the in-browser calculator on `ortega-exposure.html` |
 | `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume section (replaces the prior Google Drive link) |
-| `style.css` | Thin entry point: `@import`s the six modules under `css/` |
+| `style.css` | Thin entry point: `@import`s the seven modules under `css/` |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
 | `css/_motion.css` | Parallax star layers, aurora + noise overlay, drift keyframes |
 | `css/_layout.css` | Container, site header, footer, sections, buttons |
+| `css/_nav.css` | Skip link, sticky primary nav, About skills chip row |
 | `css/_homepage-cards.css` | Project icon link + twinkle, flagship and mini cards, homepage expansions, Kaggle stats + contact form |
 | `css/_minis.css` | Blackjack and Ortega in-page playable widgets |
-| `css/_project-pages.css` | Metric grid, results table, section nav, TL;DR, next-project card, figures |
-| `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state) |
+| `css/_project-pages.css` | Metric grid, results table, sticky section nav, TL;DR, next-project card, figures |
+| `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy) |
 | `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos) |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
@@ -51,7 +52,7 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 
 | Class | Used by | Color |
 |---|---|---|
-| `.project-card--teal` / `.project-page--teal` | Drone target identification | `79,209,197` |
+| `.project-card--teal` / `.project-page--teal` | Drone target identification | `34,211,238` |
 | `.project-card--blue` / `.project-page--blue` | Star cataloguing | `99,179,237` |
 | `.project-card--green` / `.project-page--green` | AspireCURES website | `30,158,150` |
 | `.mini-project-card--amber` | Ortega exposure | `246,173,85` |
@@ -59,6 +60,12 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 | `.mini-project-card--purple` | Portfolio website | `183,148,244` |
 
 `project-card--*` is for the homepage card; `project-page--*` is for the detail page's `<body>` and propagates the same accent through the in-page nav and TL;DR card. When adding a new project, define a new modifier class (or reuse one) and apply both variants.
+
+Every detail page's `<body>` also carries the plain `project-page` class alongside its color modifier. That one is not about color: it flags "this page has a sticky in-page `.section-nav`", which is what the taller anchor `scroll-margin-top` in `css/_project-pages.css` keys off. Omit it and anchor jumps will tuck headings under the sticky bar.
+
+### Sticky nav offsets
+
+`--site-nav-h` (in `css/_base.css`) is the height of the sticky primary nav, and `.site-nav` sets `height` from it rather than deriving height from padding. The project pages' `.section-nav` pins at `top: var(--site-nav-h)` so the two bars stack flush. If the primary nav ever grows a row, change the variable, not the padding.
 
 ### Visited-icon localStorage hook
 

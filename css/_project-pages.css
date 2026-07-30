@@ -126,17 +126,44 @@
 
 /* =========================================================
    PROJECT DETAIL PAGES — IN-PAGE SECTION NAV (PILL ROW)
+
+   Pins flush under the sticky primary nav so the section list stays
+   reachable on the long pages (drone/star run to eleven sections). One
+   row always: the pills scroll sideways rather than wrapping, which
+   keeps the bar a predictable height for the scroll offsets below.
    ========================================================= */
 .section-nav {
+  position: sticky;
+  top: var(--site-nav-h);
+  z-index: 50; /* above page content; the primary nav's 60 still wins */
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.4rem;
-  margin: 1.2rem 0 0;
+  /* Bleed out to the container's padding edges so the backdrop covers the
+     full content width, then pad the same amount back in. */
+  margin: 1.2rem -1.5rem 0;
+  padding: 0.45rem 1.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  background: rgba(13, 15, 22, 0.82);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 14px 14px;
+}
+
+.section-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .section-nav a {
+  flex: none; /* never let a long label squeeze in a nowrap row */
+  white-space: nowrap;
   font-size: 0.85rem;
-  padding: 0.35rem 0.75rem;
+  /* Slightly tighter than the old wrapping row so the longest page (eleven
+     pills on drone/star) still fits one un-scrolled row at full width. */
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
   color: rgba(203, 213, 224, 0.92);
   text-decoration: none;
@@ -161,6 +188,14 @@
   transform: translateY(1px);
 }
 
+/* Section currently under the reading line. site.js sets .is-current and
+   aria-current as the page scrolls (setUpSectionNavSpy). */
+.section-nav a.is-current {
+  background: rgba(var(--accent-rgb, 99, 179, 237), 0.26);
+  border-color: rgba(var(--accent-rgb, 99, 179, 237), 0.6);
+  color: #fff;
+}
+
 /* Smooth-scroll for in-page anchors, with reduced-motion guard. */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -168,10 +203,17 @@
   }
 }
 
-/* Scroll offset so section headings clear the top edge after a jump. */
+/* Scroll offset so section headings clear the top edge after a jump. Adds to
+   html's scroll-padding-top. On project pages the sticky .section-nav sits
+   below the primary nav too, so those pages need the taller offset. */
 .section[id],
 .tl-dr[id] {
   scroll-margin-top: 1rem;
+}
+
+.project-page .section[id],
+.project-page .tl-dr[id] {
+  scroll-margin-top: 3.25rem;
 }
 
 /* =========================================================
