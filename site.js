@@ -100,14 +100,18 @@
           if (dTxt) parts.push("⬇ " + dTxt);
 
           el.textContent = parts.join(" • ");
-          el.setAttribute(
-            "title",
+
+          // The visible string is glyph shorthand ("👁 911 • ⬇ 142"), which
+          // reads as noise aloud — spell it out for assistive tech and as the
+          // hover tooltip.
+          var spelled =
             "Kaggle: " +
-              (isFinite(views) ? views : 0) +
-              " views, " +
-              (isFinite(downloads) ? downloads : 0) +
-              " downloads",
-          );
+            (isFinite(views) ? views : 0) +
+            " views, " +
+            (isFinite(downloads) ? downloads : 0) +
+            " downloads";
+          el.setAttribute("title", spelled);
+          el.setAttribute("aria-label", spelled);
         });
       })
       .catch(function () {
@@ -180,6 +184,81 @@
     });
   }
 
+  // Project subpages carry a sticky .section-nav pill row. Highlight the pill
+  // for whichever section is currently under the reading line, and keep that
+  // pill scrolled into view inside the (horizontally scrolling) bar.
+  //
+  // Deliberately position-based rather than IntersectionObserver: sections here
+  // vary wildly in height and several are shorter than the viewport, so "last
+  // section whose top has passed the line" gives a stable answer where an
+  // observer band would leave gaps.
+  function setUpSectionNavSpy() {
+    var nav = document.querySelector(".section-nav");
+    if (!nav) return;
+
+    var items = [];
+    nav.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      var target = document.getElementById(link.getAttribute("href").slice(1));
+      if (target) items.push({ link: link, target: target });
+    });
+    if (items.length < 2) return;
+
+    var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var current = null;
+    var queued = false;
+
+    function centerPill(link) {
+      if (nav.scrollWidth <= nav.clientWidth) return;
+      var left = link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2;
+      nav.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+    }
+
+    function refresh() {
+      queued = false;
+
+      // The reading line sits just under the sticky bar itself.
+      var line = nav.getBoundingClientRect().bottom + 8;
+      var active = items[0];
+      items.forEach(function (item) {
+        if (item.target.getBoundingClientRect().top <= line) active = item;
+      });
+
+      // The last section is often too short to ever reach the line, so claim it
+      // once the page is scrolled to the bottom.
+      var scroller = document.scrollingElement || document.documentElement;
+      if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) {
+        active = items[items.length - 1];
+      }
+
+      if (active === current) return;
+      if (current) {
+        current.link.classList.remove("is-current");
+        current.link.removeAttribute("aria-current");
+      }
+      active.link.classList.add("is-current");
+      // "location" rather than "page": these anchors point within this page.
+      active.link.setAttribute("aria-current", "location");
+      current = active;
+      centerPill(active.link);
+    }
+
+    function schedule() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(refresh);
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    // html carries overflow-x: hidden, which in some engines makes the root
+    // element its own scroll box instead of propagating to the viewport — in
+    // that case window never sees the event. A capture-phase listener on
+    // document catches it from whichever element actually scrolled. Both paths
+    // funnel through the same rAF gate, so double delivery costs nothing.
+    document.addEventListener("scroll", schedule, { passive: true, capture: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    refresh();
+  }
+
   // On a project subpage, mark this project as visited so the matching icon on
   // the homepage stops twinkling on next visit. The subpage declares the slug
   // via <body data-mark-visited="...">; site.js handles the localStorage write
@@ -238,5 +317,6 @@
     safeCall(setUpContactForm);
     safeCall(setUpProjectIconVisitedState);
     safeCall(markSubpageVisited);
+    safeCall(setUpSectionNavSpy);
   });
 })();
