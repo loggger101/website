@@ -67,6 +67,10 @@ Every detail page's `<body>` also carries the plain `project-page` class alongsi
 
 `--site-nav-h` (in `css/_base.css`) is the height of the sticky primary nav, and `.site-nav` sets `height` from it rather than deriving height from padding. The project pages' `.section-nav` pins at `top: var(--site-nav-h)` so the two bars stack flush. If the primary nav ever grows a row, change the variable, not the padding.
 
+### Section-nav pinned state
+
+`.section-nav` styles the **pinned** look by default (frosted tray, same tint and blur as `.site-nav` so the pair reads as one bar). `setUpSectionNavSpy()` in `site.js` adds `.is-unpinned` whenever the bar is still travelling with the page, which strips the tray back to a bare chip row, and adds `.has-spy` one frame after the first state settles so the cross-fade never runs on page load. That default direction is deliberate: with JS off the tray stays on, and body copy never scrolls visibly behind the pills.
+
 ### Visited-icon localStorage hook
 
 Each project icon on the homepage twinkles until the user has visited that project's page. Two mechanisms write the "visited" flag:
