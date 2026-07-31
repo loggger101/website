@@ -206,10 +206,15 @@
   visibility: visible;
 }
 
+/* The overlay swap is keyed to the media band link, NOT to :focus-within on
+   the card. The overlay is opaque and covers .project-card__content, so a
+   card-wide :focus-within would drop it on top of the Kaggle / Writeup chips
+   at the exact moment a keyboard user tabs to one — the focused link would
+   sit behind it (WCAG 2.4.11, Focus Not Obscured). The band link is a
+   previous sibling of .project-card__content, so ~ reaches the overlay while
+   leaving the chips' own focus alone. */
 .project-card--enhanced:hover .project-body,
-.project-card--enhanced:focus-within .project-body,
-.project-card--enhanced:focus .project-body,
-.project-card--enhanced:active .project-body {
+.project-card__media:focus-visible ~ .project-card__content .project-body {
   opacity: 0;
   visibility: hidden;
 }
@@ -231,9 +236,7 @@
 }
 
 .project-card--enhanced:hover .project-card__overlay,
-.project-card--enhanced:focus-within .project-card__overlay,
-.project-card--enhanced:focus .project-card__overlay,
-.project-card--enhanced:active .project-card__overlay {
+.project-card__media:focus-visible ~ .project-card__content .project-card__overlay {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;

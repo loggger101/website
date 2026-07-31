@@ -20,7 +20,7 @@
     />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data: https://loganmedwardsastrophy.goatcounter.com; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
     />
     <script
       async
@@ -36,7 +36,7 @@
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
         <a class="site-nav__brand" href="/">Logan M Edwards</a>
-        <ul class="site-nav__menu">
+        <ul class="site-nav__menu" role="list">
           <li><a href="/#about">About</a></li>
           <li><a href="/#projects">Projects</a></li>
           <li><a href="/#resume">Resume</a></li>
@@ -56,7 +56,7 @@
       <section class="section">
         <h2>Where to next?</h2>
         <p class="section-intro">A few places you might have been looking for:</p>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>
             <a href="/#projects">Projects</a>: drone target identification, star cataloguing, the AspireCURES website,
             mini-projects

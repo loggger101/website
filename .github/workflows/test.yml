@@ -47,7 +47,10 @@ jobs:
           node-version: "20"
 
       - name: Run tests
-        run: node --test tests/
+        # Pass the files, not the directory: `node --test tests/` resolves the
+        # bare path as a module on Node >= 22 and dies with MODULE_NOT_FOUND.
+        # A shell glob works on every Node version the repo might run on.
+        run: node --test tests/*.test.js
 
   inline-sync:
     runs-on: ubuntu-latest
