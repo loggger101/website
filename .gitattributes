@@ -1,0 +1,19 @@
+# Line endings.
+#
+# Git for Windows ships core.autocrlf=true in its *system* config, so a clone
+# on Windows gets every text file checked out with CRLF. Prettier's endOfLine
+# option defaults to "lf", which means a local `npx prettier --check` flags
+# every file in the repo as unformatted even when nothing is wrong, while the
+# Linux CI (which sees LF) reports the same files as clean. Pinning the working
+# tree to LF everywhere makes the two agree.
+#
+# Every blob in the repo is already stored LF, so this only affects checkout:
+# it does not rewrite history or change what CI sees.
+* text=auto eol=lf
+
+# Binary assets. `text=auto` already detects these by content; naming them
+# makes the intent explicit and keeps them out of textual diffs.
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.pdf binary
