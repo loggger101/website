@@ -103,7 +103,10 @@
 
           // The visible string is glyph shorthand ("👁 911 • ⬇ 142"), which
           // reads as noise aloud — spell it out for assistive tech and as the
-          // hover tooltip.
+          // hover tooltip. role="img" is what makes the label stick: aria-label
+          // is prohibited on a bare <span> (implicit role=generic) and browsers
+          // drop it, so without a naming-capable role the glyphs are all a
+          // screen reader would get.
           var spelled =
             "Kaggle: " +
             (isFinite(views) ? views : 0) +
@@ -111,6 +114,7 @@
             (isFinite(downloads) ? downloads : 0) +
             " downloads";
           el.setAttribute("title", spelled);
+          el.setAttribute("role", "img");
           el.setAttribute("aria-label", spelled);
         });
       })
