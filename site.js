@@ -189,8 +189,9 @@
   }
 
   // Project subpages carry a sticky .section-nav pill row. Highlight the pill
-  // for whichever section is currently under the reading line, and keep that
-  // pill scrolled into view inside the (horizontally scrolling) bar.
+  // for whichever section is currently under the reading line, keep that pill
+  // inside the (horizontally scrolling) bar, and flag whether the bar is
+  // currently pinned so it can drop its frosted tray while it is not.
   //
   // Deliberately position-based rather than IntersectionObserver: sections here
   // vary wildly in height and several are shorter than the viewport, so "last
@@ -208,20 +209,47 @@
     if (items.length < 2) return;
 
     var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var siteNav = document.querySelector(".site-nav");
     var current = null;
     var queued = false;
 
-    function centerPill(link) {
+    // Comfort margin at each end of the scrolling row, matched to the width of
+    // the bar's fade ramps so a pill never rests half-dissolved.
+    var EDGE = 40;
+
+    // Keep the active pill readable without yanking the row on every section
+    // change: only scroll once the pill has drifted into an end zone, and then
+    // only far enough to seat it clear of one. (Re-centring on every change,
+    // which is what this used to do, slid the row sideways continuously while
+    // the reader was scrolling.)
+    function revealPill(link) {
       if (nav.scrollWidth <= nav.clientWidth) return;
-      var left = link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2;
-      nav.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+
+      var left = link.offsetLeft - nav.scrollLeft;
+      var right = left + link.offsetWidth;
+      var target;
+
+      if (left < EDGE) target = link.offsetLeft - EDGE;
+      else if (right > nav.clientWidth - EDGE)
+        target = link.offsetLeft + link.offsetWidth - nav.clientWidth + EDGE;
+      else return;
+
+      nav.scrollTo({ left: Math.max(0, target), behavior: smooth ? "smooth" : "auto" });
     }
 
     function refresh() {
       queued = false;
 
+      var box = nav.getBoundingClientRect();
+
+      // Drop the frosted tray while the bar is still travelling with the page;
+      // it only earns its backdrop once it pins under the primary nav. 1px of
+      // slack absorbs the sub-pixel rounding of the rem-based sticky offset.
+      var pinLine = siteNav ? siteNav.getBoundingClientRect().bottom : 0;
+      nav.classList.toggle("is-unpinned", box.top > pinLine + 1);
+
       // The reading line sits just under the sticky bar itself.
-      var line = nav.getBoundingClientRect().bottom + 8;
+      var line = box.bottom + 8;
       var active = items[0];
       items.forEach(function (item) {
         if (item.target.getBoundingClientRect().top <= line) active = item;
@@ -243,7 +271,7 @@
       // "location" rather than "page": these anchors point within this page.
       active.link.setAttribute("aria-current", "location");
       current = active;
-      centerPill(active.link);
+      revealPill(active.link);
     }
 
     function schedule() {
@@ -261,6 +289,13 @@
     document.addEventListener("scroll", schedule, { passive: true, capture: true });
     window.addEventListener("resize", schedule, { passive: true });
     refresh();
+
+    // Only now let the tray cross-fade: settling the first state above would
+    // otherwise animate on a page that loads at the top, which reads as the
+    // bar flickering out from under you on arrival.
+    window.requestAnimationFrame(function () {
+      nav.classList.add("has-spy");
+    });
   }
 
   // On a project subpage, mark this project as visited so the matching icon on
