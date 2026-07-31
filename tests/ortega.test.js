@@ -4,7 +4,7 @@
    the Python source documents (rounded to the nearest second), plus a
    few invariants on the duration formatter.
 
-   Run with: `node --test tests/`
+   Run with: `node --test tests/*.test.js`
    No npm install needed — this uses Node's built-in test runner. */
 
 "use strict";

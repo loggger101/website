@@ -55,11 +55,11 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 | `.project-card--teal` / `.project-page--teal` | Drone target identification | `34,211,238` |
 | `.project-card--blue` / `.project-page--blue` | Star cataloguing | `99,179,237` |
 | `.project-card--green` / `.project-page--green` | AspireCURES website | `30,158,150` |
-| `.mini-project-card--amber` | Ortega exposure | `246,173,85` |
-| `.mini-project-card--red` | Blackjack | `252,129,129` |
-| `.mini-project-card--purple` | Portfolio website | `183,148,244` |
+| `.mini-project-card--amber` / `.project-page--amber` | Ortega exposure | `246,173,85` |
+| `.mini-project-card--red` / `.project-page--red` | Blackjack | `252,129,129` |
+| `.mini-project-card--purple` / `.project-page--purple` | Portfolio website | `183,148,244` |
 
-`project-card--*` is for the homepage card; `project-page--*` is for the detail page's `<body>` and propagates the same accent through the in-page nav and TL;DR card. When adding a new project, define a new modifier class (or reuse one) and apply both variants.
+`project-card--*` / `mini-project-card--*` is for the homepage card; `project-page--*` is for the detail page's `<body>` and propagates the same accent through the in-page nav and TL;DR card. The two families live in different files: the card modifiers in `css/_base.css`, the page modifiers in `css/_project-pages.css`. When adding a new project, define a new modifier class (or reuse one) and apply both variants.
 
 Every detail page's `<body>` also carries the plain `project-page` class alongside its color modifier. That one is not about color: it flags "this page has a sticky in-page `.section-nav`", which is what the taller anchor `scroll-margin-top` in `css/_project-pages.css` keys off. Omit it and anchor jumps will tuck headings under the sticky bar.
 
@@ -85,6 +85,16 @@ python -m http.server 8000
 ```
 
 Then open <http://localhost:8000>.
+
+## Tests
+
+`tests/` smoke-tests the vanilla-JS ports (`blackjack.js`, `ortega-exposure.js`) with Node's built-in runner — no npm install, no dev dependencies:
+
+```sh
+node --test tests/*.test.js
+```
+
+Pass the files rather than the `tests/` directory: a bare directory argument resolves as a module on Node 22+ and fails with `MODULE_NOT_FOUND`. The `JS port tests` workflow runs the same command, plus a check that the Python sources inlined into `blackjack-game.html` / `ortega-exposure.html` still match `blackjack.py` / `ortega-exposure.py`.
 
 ## Formatting
 

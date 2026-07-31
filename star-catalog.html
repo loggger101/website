@@ -44,7 +44,7 @@
     <meta name="author" content="Logan M Edwards" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data: https://loganmedwardsastrophy.goatcounter.com; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
     />
     <script type="application/ld+json">
       {
@@ -82,7 +82,7 @@
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
         <a class="site-nav__brand" href="index.html#top">Logan M Edwards</a>
-        <ul class="site-nav__menu">
+        <ul class="site-nav__menu" role="list">
           <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#projects">Projects</a></li>
           <li><a href="index.html#resume">Resume</a></li>
@@ -114,7 +114,7 @@
       </nav>
       <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
         <p class="tl-dr__label">At a glance</p>
-        <ul class="metrics-grid metrics-grid--compact">
+        <ul class="metrics-grid metrics-grid--compact" role="list">
           <li class="metric">
             <span class="metric__value">84.3%</span>
             <span class="metric__label">Letter top-1</span>
@@ -153,7 +153,7 @@
       <section class="section" id="pipeline">
         <h2>Pipeline</h2>
         <p class="section-intro">Three independent stages: catalog ingestion, image builder, and classifier.</p>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>
             <strong>Catalog ingestion</strong>: programmatic queries against Gaia DR3, HIPPARCOS, PS1, and WISE assemble
             a unified metadata table (coordinates, magnitudes, colors, effective-temperature hints, spectral types where
@@ -260,7 +260,7 @@
           borderline centring).
         </p>
         <h3 class="subsection-title">Quality gates</h3>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>Minimum peak intensity and peak-to-background ratio.</li>
           <li>Maximum centroid offset from frame center.</li>
           <li>Maximum fraction of saturated pixels.</li>
@@ -274,7 +274,7 @@
           <em>Conv → BatchNorm → ReLU</em> blocks feed global average pooling and dense layers. Three softmax heads sit
           on top:
         </p>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li><strong>Letter head</strong>: softmax over the present spectral letters.</li>
           <li>
             <strong>Combined head</strong>: softmax over <code>letter × 10 + subclass</code>, letting the model learn
@@ -319,7 +319,7 @@
           two ways: conditional on the letter being correct (isolates the subclass head's own contribution) and overall
           (penalizes letter errors as well).
         </p>
-        <ul class="metrics-grid">
+        <ul class="metrics-grid" role="list">
           <li class="metric">
             <span class="metric__value">84.3%</span>
             <span class="metric__label">Letter top-1</span>
@@ -378,7 +378,7 @@
           Confusion concentrates at decision boundaries that are physically adjacent: the model is learning a smooth
           temperature sequence rather than memorizing class identities.
         </p>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>
             <strong>Letter confusion</strong> is dominated by A/F, F/G, and K/M pairs, neighboring colors in the H–R
             diagram.
@@ -419,7 +419,7 @@
       </section>
       <section class="section" id="limitations">
         <h2>Limitations &amp; future work</h2>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>
             <strong>RGB-only inputs</strong>: spectral subclass boundaries are intrinsically fuzzy in three-band
             photometry and are confused further by interstellar reddening.

@@ -43,7 +43,7 @@
     <meta name="author" content="Logan M Edwards" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data: https://loganmedwardsastrophy.goatcounter.com; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
     />
     <script type="application/ld+json">
       {
@@ -71,7 +71,7 @@
     <nav class="site-nav" aria-label="Primary">
       <div class="container site-nav__inner">
         <a class="site-nav__brand" href="index.html#top">Logan M Edwards</a>
-        <ul class="site-nav__menu">
+        <ul class="site-nav__menu" role="list">
           <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#projects">Projects</a></li>
           <li><a href="index.html#resume">Resume</a></li>
@@ -96,7 +96,7 @@
       </nav>
       <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
         <p class="tl-dr__label">At a glance</p>
-        <ul class="metrics-grid metrics-grid--compact">
+        <ul class="metrics-grid metrics-grid--compact" role="list">
           <li class="metric">
             <span class="metric__value">Vanilla</span>
             <span class="metric__label">HTML · CSS · JS</span>
@@ -132,7 +132,7 @@
       <section class="section" id="highlights">
         <h2>Key highlights</h2>
         <p class="section-intro">What the site is made of today.</p>
-        <ul class="contact-list">
+        <ul class="contact-list" role="list">
           <li>
             Semantic HTML throughout, with a skip link, visible keyboard focus states, and
             <code>prefers-reduced-motion</code> guards on every animation.
