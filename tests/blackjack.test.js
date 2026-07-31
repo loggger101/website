@@ -3,7 +3,7 @@
    composition, shuffle invariants, and the hand-value calculator
    (especially Aces switching from 11 to 1 to avoid a bust).
 
-   Run with: `node --test tests/`
+   Run with: `node --test tests/*.test.js`
    No npm install needed — this uses Node's built-in test runner. */
 
 "use strict";

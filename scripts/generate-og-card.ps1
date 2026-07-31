@@ -16,7 +16,8 @@
 #   .\scripts\generate-og-card.ps1                  # default
 #   .\scripts\generate-og-card.ps1 -Variant drone
 #   .\scripts\generate-og-card.ps1 -Variant star
-#   .\scripts\generate-og-card.ps1 -Variant all     # regenerate all three
+#   .\scripts\generate-og-card.ps1 -Variant aspire
+#   .\scripts\generate-og-card.ps1 -Variant all     # regenerate all four
 #
 # If you tweak any of the values (size, gradient stops, fonts, copy), keep
 # the dimensions at 1200x630 to stay inside the OG / Twitter
