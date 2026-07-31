@@ -131,6 +131,14 @@
    reachable on the long pages (drone/star run to eleven sections). One
    row always: the pills scroll sideways rather than wrapping, which
    keeps the bar a predictable height for the scroll offsets below.
+
+   The frosted tray is deliberately edgeless. Its tint and blur match
+   .site-nav exactly so the pinned pair reads as one pane of glass rather
+   than two stacked bars, and a mask dissolves all three free edges — the
+   two vertical ones that would otherwise cut hard lines down the text
+   column, and the bottom one that would otherwise slice body copy on a
+   crisp border. Pills scrolling out of the row fade through the same
+   side ramps instead of being chopped mid-glyph.
    ========================================================= */
 .section-nav {
   position: sticky;
@@ -138,23 +146,57 @@
   z-index: 50; /* above page content; the primary nav's 60 still wins */
   display: flex;
   flex-wrap: nowrap;
-  gap: 0.4rem;
+  gap: 0.15rem;
   /* Bleed out to the container's padding edges so the backdrop covers the
-     full content width, then pad the same amount back in. */
+     full content width, then pad the same amount back in. The deeper bottom
+     pad reserves room for the fade ramp so it never eats into the pills. */
   margin: 1.2rem -1.5rem 0;
-  padding: 0.45rem 1.5rem;
+  padding: 0.45rem 1.5rem 0.7rem;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  background: rgba(13, 15, 22, 0.82);
+  background: rgba(13, 15, 22, 0.72);
   backdrop-filter: blur(14px) saturate(1.15);
   -webkit-backdrop-filter: blur(14px) saturate(1.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Fallback shape for engines without mask support — there the tray keeps
+     hard edges, so give it the rounded bottom it used to have. */
   border-radius: 0 0 14px 14px;
+  /* Side ramps start exactly at the padding edge, so at full width (nothing
+     scrolled) they land on empty gutter and leave every pill at full
+     strength. Intersecting the two layers fades the corners of both. */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%),
+    linear-gradient(180deg, #000 calc(100% - 11px), transparent 100%);
+  mask-image:
+    linear-gradient(90deg, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%),
+    linear-gradient(180deg, #000 calc(100% - 11px), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 .section-nav::-webkit-scrollbar {
   display: none;
+}
+
+/* Unpinned, the bar is just a chip row sitting in the page flow: no tray, no
+   blur, nothing for the eye to catch on before it is doing any work. site.js
+   toggles this as the bar meets the primary nav (setUpSectionNavSpy). The
+   default above is the pinned look on purpose — with JS off the tray stays on
+   and body copy never scrolls visibly behind the pills. */
+.section-nav.is-unpinned {
+  background: rgba(13, 15, 22, 0);
+  backdrop-filter: blur(0) saturate(1);
+  -webkit-backdrop-filter: blur(0) saturate(1);
+}
+
+/* site.js adds .has-spy one frame after it settles the first pinned state.
+   Gating the cross-fade on it keeps a page that loads at the top from
+   animating the tray away on arrival. */
+.section-nav.has-spy {
+  transition:
+    background 260ms ease,
+    backdrop-filter 260ms ease,
+    -webkit-backdrop-filter 260ms ease;
 }
 
 .section-nav a {
@@ -165,23 +207,30 @@
      pills on drone/star) still fits one un-scrolled row at full width. */
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  color: rgba(203, 213, 224, 0.92);
+  color: rgba(203, 213, 224, 0.8);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* No resting chrome: eleven outlined chips read as a wall of boxes. The
+     border stays present but transparent so gaining one on hover doesn't
+     resize the pill and shuffle the rest of the row sideways. */
+  background: transparent;
+  border: 1px solid transparent;
   transition:
-    background 140ms ease,
-    color 140ms ease,
-    border-color 140ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
     transform 120ms ease;
 }
 
 .section-nav a:hover,
 .section-nav a:focus-visible {
-  background: rgba(var(--accent-rgb, 99, 179, 237), 0.18);
+  background: rgba(var(--accent-rgb, 99, 179, 237), 0.16);
   color: #fff;
-  border-color: rgba(var(--accent-rgb, 99, 179, 237), 0.45);
-  outline: none;
+  border-color: rgba(var(--accent-rgb, 99, 179, 237), 0.34);
+}
+
+.section-nav a:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb, 99, 179, 237), 0.75);
+  outline-offset: 2px;
 }
 
 .section-nav a:active {
@@ -191,8 +240,8 @@
 /* Section currently under the reading line. site.js sets .is-current and
    aria-current as the page scrolls (setUpSectionNavSpy). */
 .section-nav a.is-current {
-  background: rgba(var(--accent-rgb, 99, 179, 237), 0.26);
-  border-color: rgba(var(--accent-rgb, 99, 179, 237), 0.6);
+  background: rgba(var(--accent-rgb, 99, 179, 237), 0.22);
+  border-color: rgba(var(--accent-rgb, 99, 179, 237), 0.5);
   color: #fff;
 }
 
