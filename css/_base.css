@@ -9,6 +9,27 @@
   --drift-overscan: 220px; /* >= max drift distance (we drift ~60px) */
   /* Default accent (matches the star card). Each project card overrides via its --<color> modifier class below. */
   --accent-rgb: 99, 179, 237;
+  /* Type scale. Eight steps, tightest at the bottom because nearly all of the
+     UI text lives between 0.78 and 1rem: the small end needs fine gradations
+     to separate a label from body copy, while the display end only needs a few
+     widely spaced sizes. Steps climb by roughly 1.09x through --fs-md, then
+     open up.
+
+     Every rem-valued font-size in the CSS resolves to one of these. Three
+     declarations deliberately stay in em and are NOT tokens, because they are
+     sized against whatever they sit inside rather than against the page:
+     .site-nav__brand::before, .source-viewer > summary::before, and inline
+     .section code. .site-title keeps its own fluid clamp() for the same
+     reason. */
+  --fs-2xs: 0.78rem;
+  --fs-xs: 0.84rem;
+  --fs-sm: 0.92rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.1rem;
+  --fs-xl: 1.4rem;
+  --fs-2xl: 1.6rem;
+  --fs-3xl: 2rem;
+
   /* Height of the sticky primary nav. .site-nav pins itself to this so the
      project-page .section-nav can stack flush underneath it, and so anchor
      jumps can be offset by a known amount. Keep the two in sync. */
