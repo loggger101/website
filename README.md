@@ -32,8 +32,8 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `css/_homepage-cards.css` | Project icon link + twinkle, flagship and mini cards, homepage expansions, Kaggle stats + contact form |
 | `css/_minis.css` | Blackjack and Ortega in-page playable widgets |
 | `css/_project-pages.css` | Metric grid, results table, sticky section nav, TL;DR, next-project card, figures |
-| `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy) |
-| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos) |
+| `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy, keyboard access for overflowing scroll boxes) |
+| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback) |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
@@ -70,6 +70,15 @@ Every detail page's `<body>` also carries the plain `project-page` class alongsi
 ### Section-nav pinned state
 
 `.section-nav` styles the **pinned** look by default (frosted tray, same tint and blur as `.site-nav` so the pair reads as one bar). `setUpSectionNavSpy()` in `site.js` adds `.is-unpinned` whenever the bar is still travelling with the page, which strips the tray back to a bare chip row, and adds `.has-spy` one frame after the first state settles so the cross-fade never runs on page load. That default direction is deliberate: with JS off the tray stays on, and body copy never scrolls visibly behind the pills.
+
+### Keyboard access for scrolling boxes
+
+A box that scrolls only answers to a pointer unless something focuses it, which leaves keyboard users unable to reach the off-screen part (WCAG 2.1.1 Keyboard). Two kinds of box here scroll, and they are handled differently on purpose:
+
+- The inlined `.py` source viewers overflow by thousands of pixels at every viewport, so their `<pre>` carries a static `tabindex="0"` / `role="region"` / `aria-label` in the markup. Being static, it still works with JS off.
+- The results tables are `width: 100%` and only spill below roughly 280px, so a static tab stop would be an empty one almost everywhere. `setUpScrollableRegions()` in `site.js` grants `tabindex` and `role` only while a `.results-tableWrap` actually overflows, and withdraws them when it stops, re-checking on resize.
+
+The `aria-label` stays in the HTML next to its table either way, so the name is authored beside the content it describes. Both boxes get a `:focus-visible` ring: a focusable element with no visible focus state is worse than one that was never focusable.
 
 ### Visited-icon localStorage hook
 

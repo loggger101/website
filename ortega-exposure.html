@@ -223,7 +223,11 @@
           <!-- Source is inlined here so crawlers and noscript visitors see the
              actual code. Keep this in sync with ortega-exposure.py at the repo root. -->
           <div class="source-viewer__body">
-            <pre><code class="source-viewer__code"># -*- coding: utf-8 -*-
+            <pre
+              tabindex="0"
+              role="region"
+              aria-label="ortega-exposure.py source code, scrollable"
+            ><code class="source-viewer__code"># -*- coding: utf-8 -*-
 # NOTE: ortega-exposure.html inlines this source in its &lt;details&gt; source viewer
 # so search engines and noscript visitors see it. Keep the two in sync.
 """Exposure Time Calculator
