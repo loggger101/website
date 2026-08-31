@@ -411,3 +411,14 @@
 .project-figure__fallback a {
   color: rgba(99, 179, 237, 1);
 }
+
+/* setUpScrollableRegions() in site.js gives a wrapper tabindex="0" for as long
+   as it actually overflows — a scroll box only a pointer can reach strands
+   keyboard users with the off-screen columns (WCAG 2.1.1). While it holds that
+   tab stop it needs a focus ring of its own; without one the stop is invisible.
+   The accent tracks the page, so this matches the .section-nav pills. */
+.results-tableWrap:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb, 99, 179, 237), 0.75);
+  outline-offset: 3px;
+  border-radius: 8px;
+}

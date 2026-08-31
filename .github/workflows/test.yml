@@ -73,7 +73,7 @@ jobs:
           ]
 
           BLOCK_RE = re.compile(
-              r'<pre><code class="source-viewer__code">(.*?)</code></pre>',
+              r'<pre[^>]*><code class="source-viewer__code">(.*?)</code></pre>',
               re.DOTALL,
           )
 
