@@ -63,6 +63,25 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 
 Every detail page's `<body>` also carries the plain `project-page` class alongside its color modifier. That one is not about color: it flags "this page has a sticky in-page `.section-nav`", which is what the taller anchor `scroll-margin-top` in `css/_project-pages.css` keys off. Omit it and anchor jumps will tuck headings under the sticky bar.
 
+### Type scale
+
+`css/_base.css` defines eight font-size tokens on `:root`, and every rem-valued `font-size` in the other modules resolves to one of them. There are no loose rem font sizes left, so a typography change is a one-line edit rather than a hunt across seven files.
+
+| Token | Size | Typical use |
+|---|---|---|
+| `--fs-2xs` | `0.78rem` | Uppercase eyebrow labels: `.tag`, `.tl-dr__label`, `.overlay-label` |
+| `--fs-xs` | `0.84rem` | Fine print: metric labels/hints, footer, `.section-nav` pills, form labels |
+| `--fs-sm` | `0.92rem` | The workhorse. Most body and UI text, tables, chips, small buttons |
+| `--fs-md` | `1rem` | Buttons, section intros, card headings, tagline |
+| `--fs-lg` | `1.1rem` | Sub-headings, `.contact-formTitle`, `.next-project__title` |
+| `--fs-xl` | `1.4rem` | `.section h2`, compact metric values |
+| `--fs-2xl` | `1.6rem` | `.metric__value`, the project icon glyph |
+| `--fs-3xl` | `2rem` | `.etc-result__value` |
+
+The steps are tight at the bottom (about 1.09x apart) because nearly all UI text lives between `0.78rem` and `1rem` and needs fine gradations there; the display end is sparse because only a couple of things use it.
+
+Four declarations deliberately stay outside the scale, and should be left that way. `.site-title` keeps a fluid `clamp()`. Three are in `em` because they size against whatever they sit inside rather than against the page: `.site-nav__brand::before`, `.source-viewer > summary::before`, and inline `.section code`. Converting those to tokens would decouple them from the text they belong to.
+
 ### Sticky nav offsets
 
 `--site-nav-h` (in `css/_base.css`) is the height of the sticky primary nav, and `.site-nav` sets `height` from it rather than deriving height from padding. The project pages' `.section-nav` pins at `top: var(--site-nav-h)` so the two bars stack flush. If the primary nav ever grows a row, change the variable, not the padding.
