@@ -33,7 +33,7 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `css/_minis.css` | Blackjack and Ortega in-page playable widgets |
 | `css/_project-pages.css` | Metric grid, results table, sticky section nav, TL;DR, next-project card, figures |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy, keyboard access for overflowing scroll boxes) |
-| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback) |
+| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback). The inline drone demo ships as both WebM/VP9 and MP4; the `<source>` order hands most browsers the smaller WebM and leaves MP4 as the fallback |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
@@ -95,9 +95,9 @@ Four declarations deliberately stay outside the scale, and should be left that w
 A box that scrolls only answers to a pointer unless something focuses it, which leaves keyboard users unable to reach the off-screen part (WCAG 2.1.1 Keyboard). Two kinds of box here scroll, and they are handled differently on purpose:
 
 - The inlined `.py` source viewers overflow by thousands of pixels at every viewport, so their `<pre>` carries a static `tabindex="0"` / `role="region"` / `aria-label` in the markup. Being static, it still works with JS off.
-- The results tables are `width: 100%` and only spill below roughly 280px, so a static tab stop would be an empty one almost everywhere. `setUpScrollableRegions()` in `site.js` grants `tabindex` and `role` only while a `.results-tableWrap` actually overflows, and withdraws them when it stops, re-checking on resize.
+- The results tables are `width: 100%` and only spill below roughly 280px, so a static tab stop would be an empty one almost everywhere. `setUpScrollableRegions()` in `site.js` grants `tabindex`, `role`, and `aria-label` only while a `.results-tableWrap` actually overflows, and withdraws them when it stops, re-checking on resize.
 
-The `aria-label` stays in the HTML next to its table either way, so the name is authored beside the content it describes. Both boxes get a `:focus-visible` ring: a focusable element with no visible focus state is worse than one that was never focusable.
+The name is authored in the HTML beside its table either way, but the tables hold it as `data-region-label` rather than `aria-label`: on a bare `<div>` (implicit `role=generic`) browsers drop `aria-label`, the same trap noted for the Kaggle glyphs in `site.js`. So the label is only promoted to a real `aria-label` at the moment the box gains the role that can carry it, and all three attributes come and go together. Both boxes get a `:focus-visible` ring: a focusable element with no visible focus state is worse than one that was never focusable.
 
 ### Visited-icon localStorage hook
 
