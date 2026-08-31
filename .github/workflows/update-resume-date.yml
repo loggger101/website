@@ -1,9 +1,12 @@
 name: Update resume date
 
-# Rewrites the "Updated <Month Year>" string in index.html's #resume section to
-# match the git mtime of Logan_Edwards_Resume_ATS.pdf. Mirrors the
-# update-sitemap.yml workflow so the displayed date can never drift from the
-# actual file commit.
+# Rewrites each "Updated <Month Year>" string in index.html's #resume section to
+# match the git mtime of the PDF it describes. Mirrors the update-sitemap.yml
+# workflow so a displayed date can never drift from the actual file commit.
+#
+# Each <p class="resume-updated"> carries a data-doc key; DOCS below maps that
+# key to its PDF. Adding a document means adding one row there and one in the
+# paths filter.
 
 on:
   workflow_dispatch:
@@ -11,6 +14,7 @@ on:
     branches: [main]
     paths:
       - "Logan_Edwards_Resume_ATS.pdf"
+      - "Logan_Edwards_CV.pdf"
 
 permissions:
   contents: write
@@ -31,43 +35,57 @@ jobs:
           # Need full history so `git log` can find the PDF's true mtime.
           fetch-depth: 0
 
-      - name: Rewrite resume-updated string in index.html
+      - name: Rewrite resume-updated strings in index.html
         run: |
           set -euo pipefail
           python - <<'PY'
           import re
           import subprocess
 
-          PDF = "Logan_Edwards_Resume_ATS.pdf"
+          # data-doc key -> the PDF whose git mtime that line reports.
+          DOCS = {
+              "resume": "Logan_Edwards_Resume_ATS.pdf",
+              "cv": "Logan_Edwards_CV.pdf",
+          }
           INDEX = "index.html"
-
-          # Git mtime of the PDF formatted as "Month Year" — matches the
-          # existing copy ("Updated June 2026").
-          date_str = subprocess.check_output(
-              ["git", "log", "-1", "--format=%cd", "--date=format:%B %Y", "--", PDF],
-              text=True,
-          ).strip()
-          if not date_str:
-              raise SystemExit(f"No commit found for {PDF}; nothing to update.")
 
           with open(INDEX, "r", encoding="utf-8") as f:
               html = f.read()
 
-          new_html, n = re.subn(
-              r'(<p class="resume-updated">)Updated [^<]+(</p>)',
-              rf"\1Updated {date_str}\2",
-              html,
-          )
+          original = html
 
-          if n == 0:
-              raise SystemExit("No <p class=\"resume-updated\"> tag found in index.html.")
+          for key, pdf in DOCS.items():
+              # Git mtime of the PDF formatted as "Month Year" - matches the
+              # existing copy ("Updated June 2026").
+              date_str = subprocess.check_output(
+                  ["git", "log", "-1", "--format=%cd", "--date=format:%B %Y", "--", pdf],
+                  text=True,
+              ).strip()
+              if not date_str:
+                  raise SystemExit(f"No commit found for {pdf}; nothing to update.")
 
-          if new_html != html:
+              # Matched on data-doc rather than on the whole tag so the two lines
+              # can never be rewritten to each other's date, and so the pattern
+              # survives any future attribute reordering.
+              html, n = re.subn(
+                  rf'(<p[^>]*data-doc="{key}"[^>]*>)Updated [^<]+(</p>)',
+                  rf"\1Updated {date_str}\2",
+                  html,
+              )
+
+              if n == 0:
+                  raise SystemExit(f'No <p ... data-doc="{key}"> tag found in {INDEX}.')
+              if n > 1:
+                  raise SystemExit(f'Expected one data-doc="{key}" tag, found {n}.')
+
+              print(f"{key}: {pdf} -> {date_str}")
+
+          if html != original:
               with open(INDEX, "w", encoding="utf-8") as f:
-                  f.write(new_html)
-              print(f"index.html: resume-updated -> {date_str}")
+                  f.write(html)
+              print("index.html updated")
           else:
-              print(f"index.html already shows {date_str}")
+              print("index.html already up to date")
           PY
 
       - name: Commit and push (if changed)
@@ -82,5 +100,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add index.html
-          git commit -m "Update resume date from PDF git mtime"
+          git commit -m "Update resume/CV dates from PDF git mtimes"
           git push

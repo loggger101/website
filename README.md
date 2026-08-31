@@ -23,7 +23,8 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `blackjack.js` | Vanilla-JS port of `blackjack.py` that powers the in-browser game on `blackjack-game.html` |
 | `ortega-exposure.py` | Canonical Python source for the Ortega exposure-time calculator; downloadable and inlined for SEO in `ortega-exposure.html` (keep in sync) |
 | `ortega-exposure.js` | Vanilla-JS port of `ortega-exposure.py` that powers the in-browser calculator on `ortega-exposure.html` |
-| `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume section (replaces the prior Google Drive link) |
+| `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume & CV section (replaces the prior Google Drive link) |
+| `Logan_Edwards_CV.pdf` | Public CV, served from the same section. Deliberately undated in the filename so the URL stays stable across updates: replace the file in place and the displayed date follows from git |
 | `style.css` | Thin entry point: `@import`s the seven modules under `css/` |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
 | `css/_motion.css` | Parallax star layers, aurora + noise overlay, drift keyframes |
@@ -40,7 +41,7 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required**: without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`, `og-aspire.jpg`). Takes `-Variant default\|drone\|star\|aspire\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the flagship project pages use their per-project variant |
 | `.prettierrc.json`, `.prettierignore` | Prettier config: 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
-| `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume-date auto-update, JS port tests + inlined-source sync check, and Prettier auto-formatting |
+| `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume/CV-date auto-update, JS port tests + inlined-source sync check, and Prettier auto-formatting |
 
 ## Conventions
 
@@ -98,6 +99,16 @@ A box that scrolls only answers to a pointer unless something focuses it, which 
 - The results tables are `width: 100%` and only spill below roughly 280px, so a static tab stop would be an empty one almost everywhere. `setUpScrollableRegions()` in `site.js` grants `tabindex`, `role`, and `aria-label` only while a `.results-tableWrap` actually overflows, and withdraws them when it stops, re-checking on resize.
 
 The name is authored in the HTML beside its table either way, but the tables hold it as `data-region-label` rather than `aria-label`: on a bare `<div>` (implicit `role=generic`) browsers drop `aria-label`, the same trap noted for the Kaggle glyphs in `site.js`. So the label is only promoted to a real `aria-label` at the moment the box gains the role that can carry it, and all three attributes come and go together. Both boxes get a `:focus-visible` ring: a focusable element with no visible focus state is worse than one that was never focusable.
+
+### Resume and CV dates
+
+The homepage's `#resume` section offers two PDFs, and neither "Updated <Month Year>" line is written by hand. `.github/workflows/update-resume-date.yml` rewrites each one from the git mtime of the PDF it describes, so a date cannot drift from the file it claims to describe.
+
+The pairing is by `data-doc`: `<p class="resume-updated" data-doc="cv">` is matched to `Logan_Edwards_CV.pdf` through the `DOCS` map in that workflow. Matching on the attribute rather than on the whole tag is what keeps the two lines from being rewritten to each other's date, and it survives any future attribute reordering.
+
+To add a third document: drop the PDF in the root, add a `data-doc` line beside its buttons, then add one row to `DOCS` and one path to the workflow's `paths:` filter. The workflow fails loudly if a `data-doc` key has no matching tag, or if a key matches more than one, so a half-finished addition cannot ship silently.
+
+Both filenames are intentionally undated. Replacing a PDF in place keeps every existing link working, and the displayed date updates itself from the commit.
 
 ### Visited-icon localStorage hook
 
