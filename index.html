@@ -398,12 +398,32 @@
         </ul>
       </section>
       <section class="section" id="resume">
-        <h2>Resume</h2>
-        <div aria-label="Resume actions" class="resume-actions" role="group">
-          <a class="btn" href="Logan_Edwards_Resume_ATS.pdf" rel="noopener" target="_blank"> View Resume </a>
-          <a class="btn btn-ghost" download href="Logan_Edwards_Resume_ATS.pdf"> Download PDF </a>
+        <h2>Resume &amp; CV</h2>
+        <p class="section-intro">
+          The resume is the short version for applications. The CV is the longer academic record: research, projects,
+          coursework, and activities.
+        </p>
+        <div class="doc-set">
+          <div class="doc">
+            <h3 class="doc__title">Resume</h3>
+            <div aria-label="Resume actions" class="resume-actions" role="group">
+              <a class="btn" href="Logan_Edwards_Resume_ATS.pdf" rel="noopener" target="_blank"> View Resume </a>
+              <a class="btn btn-ghost" download href="Logan_Edwards_Resume_ATS.pdf"> Download PDF </a>
+            </div>
+            <!-- The "Updated <Month Year>" strings are rewritten from each PDF's git
+               mtime by .github/workflows/update-resume-date.yml. data-doc is what
+               that workflow keys on, so keep it in sync when adding a document. -->
+            <p class="resume-updated" data-doc="resume">Updated July 2026</p>
+          </div>
+          <div class="doc">
+            <h3 class="doc__title">Curriculum Vitae</h3>
+            <div aria-label="CV actions" class="resume-actions" role="group">
+              <a class="btn" href="Logan_Edwards_CV.pdf" rel="noopener" target="_blank"> View CV </a>
+              <a class="btn btn-ghost" download href="Logan_Edwards_CV.pdf"> Download PDF </a>
+            </div>
+            <p class="resume-updated" data-doc="cv">Updated August 2026</p>
+          </div>
         </div>
-        <p class="resume-updated">Updated July 2026</p>
       </section>
       <section class="section" id="coursework">
         <h2>Coursework</h2>

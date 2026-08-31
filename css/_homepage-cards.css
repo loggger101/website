@@ -451,6 +451,28 @@
 }
 
 /* Resume buttons */
+/* Resume and CV sit side by side once there is room for two button rows,
+   and stack on narrow screens. 700px is where the pair of buttons in each
+   column would otherwise start wrapping. */
+.doc-set {
+  display: grid;
+  gap: 1.4rem;
+  margin-top: 0.9rem;
+}
+
+@media (min-width: 700px) {
+  .doc-set {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.doc__title {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
 .resume-actions {
   display: flex;
   flex-wrap: wrap;
