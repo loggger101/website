@@ -57,8 +57,10 @@ body {
 html {
   background: #0b0c10;
   overflow-x: hidden;
-  /* Anchor jumps clear the sticky primary nav instead of hiding under it. */
-  scroll-padding-top: 4.25rem;
+  /* Anchor jumps clear the sticky primary nav instead of hiding under it.
+     Derived from --site-nav-h rather than restated, so growing the nav moves
+     this with it; the extra 0.75rem is the breathing gap under the bar. */
+  scroll-padding-top: calc(var(--site-nav-h) + 0.75rem);
 }
 
 body {

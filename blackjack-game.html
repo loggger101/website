@@ -169,7 +169,11 @@
           <!-- Source is inlined here so crawlers and noscript visitors see the
              actual code. Keep this in sync with blackjack.py at the repo root. -->
           <div class="source-viewer__body">
-            <pre><code class="source-viewer__code"># -*- coding: utf-8 -*-
+            <pre
+              tabindex="0"
+              role="region"
+              aria-label="blackjack.py source code, scrollable"
+            ><code class="source-viewer__code"># -*- coding: utf-8 -*-
 # NOTE: blackjack-game.html inlines this source in its &lt;details&gt; source viewer
 # so search engines and noscript visitors see it. Keep the two in sync.
 """Copy of python project 1(Logan and the minions).ipynb

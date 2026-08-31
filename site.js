@@ -298,6 +298,49 @@
     });
   }
 
+  // A horizontally scrolling box that only a pointer can reach strands keyboard
+  // users with the off-screen columns (WCAG 2.1.1 Keyboard). Making it focusable
+  // fixes that, but an unconditional tabindex would also plant a tab stop on
+  // every table that fits — the common case here, since .results-table is
+  // width:100% and only spills below ~280px. So the tab stop is granted only
+  // while the box actually scrolls, and withdrawn when it stops.
+  //
+  // The label lives in the HTML next to its table; role is toggled with the
+  // tabindex because a region with no way to reach it is just noise in the
+  // landmark list. (The inlined .py source viewers overflow by thousands of
+  // pixels at every width, so those carry a static tabindex in the markup
+  // instead and keep working with JS off.)
+  function setUpScrollableRegions() {
+    var boxes = document.querySelectorAll(".results-tableWrap[aria-label]");
+    if (!boxes.length) return;
+
+    var queued = false;
+
+    function sync() {
+      queued = false;
+      boxes.forEach(function (box) {
+        // 1px of slack absorbs sub-pixel layout rounding, which otherwise
+        // flickers the tab stop on and off during a resize drag.
+        if (box.scrollWidth - box.clientWidth > 1) {
+          box.setAttribute("tabindex", "0");
+          box.setAttribute("role", "region");
+        } else {
+          box.removeAttribute("tabindex");
+          box.removeAttribute("role");
+        }
+      });
+    }
+
+    function schedule() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(sync);
+    }
+
+    window.addEventListener("resize", schedule, { passive: true });
+    sync();
+  }
+
   // On a project subpage, mark this project as visited so the matching icon on
   // the homepage stops twinkling on next visit. The subpage declares the slug
   // via <body data-mark-visited="...">; site.js handles the localStorage write
@@ -354,6 +397,7 @@
     }
     safeCall(setUpKaggleStats);
     safeCall(setUpContactForm);
+    safeCall(setUpScrollableRegions);
     safeCall(setUpProjectIconVisitedState);
     safeCall(markSubpageVisited);
     safeCall(setUpSectionNavSpy);

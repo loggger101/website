@@ -282,3 +282,11 @@
 
 /* Source viewer for this page uses the shared .source-viewer family
    defined above (see .source-viewer--amber modifier). */
+
+/* The inlined source block scrolls (max-height: 480px) and so carries
+   tabindex="0" for keyboard scrolling — same reasoning as .results-tableWrap
+   in _project-pages.css. Give the tab stop a visible ring. */
+.source-viewer__body pre:focus-visible {
+  outline: 2px solid rgba(var(--src-accent, 99, 179, 237), 0.75);
+  outline-offset: -2px;
+}
