@@ -305,13 +305,16 @@
   // width:100% and only spills below ~280px. So the tab stop is granted only
   // while the box actually scrolls, and withdrawn when it stops.
   //
-  // The label lives in the HTML next to its table; role is toggled with the
-  // tabindex because a region with no way to reach it is just noise in the
-  // landmark list. (The inlined .py source viewers overflow by thousands of
-  // pixels at every width, so those carry a static tabindex in the markup
-  // instead and keep working with JS off.)
+  // The name is authored in the HTML beside its table, but as data-region-label
+  // rather than aria-label: on a bare <div> (implicit role=generic) aria-label
+  // is dropped by browsers, exactly as noted for the Kaggle glyphs above. So
+  // the label is only promoted to a real aria-label at the moment the box also
+  // gets the role that can carry it, and all three attributes come and go
+  // together. (The inlined .py source viewers overflow by thousands of pixels
+  // at every width, so those carry a static tabindex in the markup instead and
+  // keep working with JS off.)
   function setUpScrollableRegions() {
-    var boxes = document.querySelectorAll(".results-tableWrap[aria-label]");
+    var boxes = document.querySelectorAll(".results-tableWrap[data-region-label]");
     if (!boxes.length) return;
 
     var queued = false;
@@ -324,9 +327,11 @@
         if (box.scrollWidth - box.clientWidth > 1) {
           box.setAttribute("tabindex", "0");
           box.setAttribute("role", "region");
+          box.setAttribute("aria-label", box.getAttribute("data-region-label"));
         } else {
           box.removeAttribute("tabindex");
           box.removeAttribute("role");
+          box.removeAttribute("aria-label");
         }
       });
     }

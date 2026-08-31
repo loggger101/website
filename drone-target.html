@@ -285,7 +285,7 @@
           The fine head is strongest on visually distinct categories (vehicles, landscape) and weakest where classes
           share appearance (soldier / civilian, random animal / bird, rock debris / background).
         </p>
-        <div class="results-tableWrap" aria-label="Fine head: test precision per class, scrollable table">
+        <div class="results-tableWrap" data-region-label="Fine head: test precision per class, scrollable table">
           <table class="results-table">
             <caption>
               Fine head: test precision per class
@@ -344,7 +344,7 @@
             </tbody>
           </table>
         </div>
-        <div class="results-tableWrap" aria-label="Coarse head: test precision per class, scrollable table">
+        <div class="results-tableWrap" data-region-label="Coarse head: test precision per class, scrollable table">
           <table class="results-table">
             <caption>
               Coarse head: test precision per class
@@ -417,7 +417,6 @@
         <figure class="project-figure">
           <video
             class="project-video"
-            src="assets/projects/drone/overlay_demo.mp4"
             poster="assets/projects/drone/overlay_demo_poster.jpg"
             controls
             preload="metadata"
@@ -426,6 +425,8 @@
             height="360"
             aria-label="Live drone target detection demo: YOLO segmentation with CNN coarse-head overlays (green for valid targets, red for invalid_nontarget) on aerial footage."
           >
+            <source src="assets/projects/drone/overlay_demo.webm" type="video/webm" />
+            <source src="assets/projects/drone/overlay_demo.mp4" type="video/mp4" />
             Your browser does not support embedded video. Use the link below to view the demo.
           </video>
           <figcaption>
