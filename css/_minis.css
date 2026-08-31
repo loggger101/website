@@ -12,7 +12,7 @@
 }
 
 .bj-status {
-  font-size: 0.92rem;
+  font-size: var(--fs-sm);
   color: rgba(255, 255, 255, 0.86);
   margin-bottom: 8px;
   min-height: 1.4em;
@@ -26,7 +26,7 @@
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -82,7 +82,7 @@
 .bj-noscript,
 .bj-fallback {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: var(--fs-sm);
   color: rgba(255, 255, 255, 0.78);
 }
 .bj-fallback a,
@@ -112,7 +112,7 @@
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
   color: rgba(255, 255, 255, 0.9);
   user-select: none;
   list-style: none;
@@ -151,7 +151,7 @@
   padding: 12px 14px;
   overflow: auto;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.82rem;
+  font-size: var(--fs-xs);
   line-height: 1.5;
   color: rgba(220, 235, 250, 0.92);
   max-height: 480px;
@@ -184,7 +184,7 @@
 }
 
 .etc-label {
-  font-size: 0.86rem;
+  font-size: var(--fs-xs);
   color: rgba(255, 255, 255, 0.78);
 }
 
@@ -217,7 +217,7 @@
 
 .etc-result__label {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: var(--fs-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.74);
@@ -232,7 +232,7 @@
 }
 
 .etc-result__value {
-  font-size: 2rem;
+  font-size: var(--fs-3xl);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.96);
   font-variant-numeric: tabular-nums;
@@ -240,7 +240,7 @@
 
 .etc-result__friendly {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 1rem;
+  font-size: var(--fs-md);
 }
 
 .etc-result__details {
@@ -249,7 +249,7 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   column-gap: 18px;
   row-gap: 0;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 .etc-result__details > div {
@@ -272,7 +272,7 @@
 
 .etc-noscript {
   margin-top: 0.75rem;
-  font-size: 0.92rem;
+  font-size: var(--fs-sm);
   color: rgba(255, 255, 255, 0.78);
 }
 
