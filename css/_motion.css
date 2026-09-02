@@ -168,15 +168,33 @@ body > * {
 /* =========================================================
    PARALLAX ANIMATIONS
    ========================================================= */
+/* alternate is load-bearing, not a style choice.
+   A `normal` infinite animation snaps from its `to` value back to `from` at
+   the end of every iteration. These keyframes end 14px, 30px and 60px from
+   the origin, so each layer visibly jumped back by that much once per cycle
+   -- the near one every 44 seconds, which is well within the time anyone
+   spends reading a page.
+
+   The obvious alternative, translating by exactly one tile period so the
+   repeat hides the wrap, is not affordable here: one period is 1500px on the
+   near tile, and the layer would need that much --drift-overscan, blowing up
+   the raster area of a full-viewport fixed layer. Animating
+   background-position would wrap for free but repaints every frame instead
+   of riding the compositor.
+
+   alternate costs nothing and removes the discontinuity outright: the layer
+   simply drifts back the way it came. ease-in-out brings the velocity to
+   zero at each end, so the reversal is not visible either -- at 60px over
+   44s, the fastest layer moves 1.4px per second. */
 @media (prefers-reduced-motion: no-preference) {
   html::before {
-    animation: driftGalaxy 190s linear infinite;
+    animation: driftGalaxy 190s ease-in-out infinite alternate;
   }
   html::after {
-    animation: driftFar 110s linear infinite;
+    animation: driftFar 110s ease-in-out infinite alternate;
   }
   body::after {
-    animation: driftNear 44s linear infinite;
+    animation: driftNear 44s ease-in-out infinite alternate;
   }
 }
 
@@ -232,25 +250,33 @@ body > * {
    this block and take the --sky-scroll fallback further down instead. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* Every longhand is per-animation here, so the drift keeps the
+       ease-in-out + alternate that stops it snapping back (see above) while
+       the scroll parallax stays linear and one-way. Restating the drift in
+       full is unavoidable: `animation-timeline` has to be set alongside the
+       list it applies to, and the shorthand would reset these. */
     html::before {
       animation-name: driftGalaxy, parallaxGalaxy;
       animation-duration: 190s, auto;
-      animation-timing-function: linear;
+      animation-timing-function: ease-in-out, linear;
       animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
       animation-timeline: auto, scroll(root block);
     }
     html::after {
       animation-name: driftFar, parallaxFar;
       animation-duration: 110s, auto;
-      animation-timing-function: linear;
+      animation-timing-function: ease-in-out, linear;
       animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
       animation-timeline: auto, scroll(root block);
     }
     body::after {
       animation-name: driftNear, parallaxNear;
       animation-duration: 44s, auto;
-      animation-timing-function: linear;
+      animation-timing-function: ease-in-out, linear;
       animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
       animation-timeline: auto, scroll(root block);
     }
   }
