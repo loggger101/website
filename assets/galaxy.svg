@@ -1,0 +1,207 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000' viewBox='0 0 1600 1000'>
+  <!-- Tilted spiral galaxy, Andromeda-style: warm core, tan inner disk, blue
+       outer arms, rust dust lanes, pink HII knots strung along the arms.
+
+       Three things are load-bearing and easy to break if this is edited:
+
+       1. Arms and dust are STROKED ELLIPSES, not stacked filled ones. A disk
+          seen at high inclination is a set of rings, and interleaving bright
+          rings with dark ones is what produces the alternating banding that
+          reads as spiral structure. Filled ellipses only ever give a smudge.
+       2. The dust is a luminance mask (#dust), not dark shapes painted on
+          top. The layer drawing this SVG blends with mix-blend-mode: screen,
+          and screen ignores black, so painted-on lanes are invisible.
+          Removing light from the disk's own alpha is the only thing that
+          reads as a lane.
+       3. Every filter carries an explicit region, sized to its content plus
+          blur and displacement headroom. The default -10%/120% box is too
+          tight for blurs this wide, and an oversized one is not free either:
+          filter cost scales with region area, and these regions are most of
+          what made this file expensive to rasterise.
+
+       Alpha here is deliberately conservative. Final strength is set once, in
+       css/_motion.css, so it stays tunable from one place.
+
+       This file is the SOURCE, not what the site loads. scripts/render-galaxy
+       .mjs bakes it to assets/galaxy.webp and the CSS points at that. Edit
+       here, re-run that, commit both. -->
+
+  <defs>
+    <radialGradient id='halo'>
+      <stop offset='0' stop-color='#8fa9d8' stop-opacity='0.1'/>
+      <stop offset='0.5' stop-color='#7f9dd0' stop-opacity='0.045'/>
+      <stop offset='1' stop-color='#6f8cc0' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='diskGlow'>
+      <stop offset='0' stop-color='#ffeed6' stop-opacity='0.19'/>
+      <stop offset='0.45' stop-color='#e9d3b8' stop-opacity='0.12'/>
+      <stop offset='0.8' stop-color='#b9c4de' stop-opacity='0.05'/>
+      <stop offset='1' stop-color='#9fb0d4' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='bulge'>
+      <stop offset='0' stop-color='#fff8e8' stop-opacity='0.36'/>
+      <stop offset='0.44' stop-color='#ffe9bd' stop-opacity='0.2'/>
+      <stop offset='1' stop-color='#ffd894' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='core'>
+      <stop offset='0' stop-color='#ffffff' stop-opacity='0.62'/>
+      <stop offset='0.28' stop-color='#fff5dd' stop-opacity='0.4'/>
+      <stop offset='0.62' stop-color='#ffe3ad' stop-opacity='0.15'/>
+      <stop offset='1' stop-color='#ffd894' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='compA'>
+      <stop offset='0' stop-color='#fff4e2' stop-opacity='0.5'/>
+      <stop offset='0.32' stop-color='#ffe9c6' stop-opacity='0.22'/>
+      <stop offset='1' stop-color='#ffdcaa' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='compB'>
+      <stop offset='0' stop-color='#e8e2d8' stop-opacity='0.24'/>
+      <stop offset='0.4' stop-color='#d8d0c4' stop-opacity='0.1'/>
+      <stop offset='1' stop-color='#c6bdb0' stop-opacity='0'/>
+    </radialGradient>
+
+    <filter id='knot' x='-200%' y='-200%' width='500%' height='500%'>
+      <feGaussianBlur stdDeviation='5'/>
+    </filter>
+
+    <!-- Ragged edges for the lanes and ridges.
+         A geometrically perfect ellipse is what gives away that dust was
+         drawn rather than photographed, and no amount of blur hides it: blur
+         smooths an edge without making it irregular. So the rings are pushed
+         around by a low-frequency fractal noise BEFORE they are blurred.
+
+         baseFrequency is deliberately anisotropic, several times lower across
+         the disk than along it. Isotropic noise pinches the rings into beads;
+         stretching the noise with the arms makes the warp read as the arms
+         themselves wandering, which is what they actually do.
+
+         Displacement needs headroom: at scale S a pixel can move S/2 in each
+         direction, so each region carries that on top of the usual 3-sigma
+         blur margin, or the warp clips against its own region edge. -->
+    <filter id='dustBand' filterUnits='userSpaceOnUse' x='-260' y='-140' width='2600' height='1100'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.0016 0.0055' numOctaves='2' seed='11' result='t'/>
+      <feDisplacementMap in='SourceGraphic' in2='t' scale='70' xChannelSelector='R' yChannelSelector='G'/>
+      <feGaussianBlur stdDeviation='15'/>
+    </filter>
+    <filter id='armBand' filterUnits='userSpaceOnUse' x='-260' y='-140' width='2600' height='1100'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.0014 0.0048' numOctaves='2' seed='23' result='t'/>
+      <feDisplacementMap in='SourceGraphic' in2='t' scale='55' xChannelSelector='R' yChannelSelector='G'/>
+      <feGaussianBlur stdDeviation='17'/>
+    </filter>
+
+    <!-- Dust rings. White keeps the disk, black removes it.
+         Centres are nudged a few px apart and every ring is dashed, with the
+         pattern sized against that ring's own perimeter (noted per line) and
+         no two patterns in phase. Unbroken concentric rings read as a printed
+         target; broken ones read as dust. Round caps plus the blur soften
+         each arc's ends so the breaks look like thinning, not cuts. -->
+    <mask id='dust' maskUnits='userSpaceOnUse' x='-700' y='-500' width='3200' height='2000'>
+      <rect x='-700' y='-500' width='3200' height='2000' fill='#ffffff'/>
+      <g fill='none' stroke='#000000' stroke-linecap='round' filter='url(#dustBand)'>
+        <ellipse cx='1004' cy='402' rx='415' ry='116' stroke-width='28' stroke-opacity='0.56'
+                 stroke-dasharray='430 120 260 190 640 163' stroke-dashoffset='70'/><!-- ~1803 -->
+        <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='46' stroke-opacity='0.82'
+                 stroke-dasharray='880 130 520 200 730 148' stroke-dashoffset='310'/><!-- ~2608 -->
+        <ellipse cx='998' cy='404' rx='785' ry='219' stroke-width='40' stroke-opacity='0.72'
+                 stroke-dasharray='700 210 1080 170 990 260' stroke-dashoffset='140'/><!-- ~3410 -->
+        <ellipse cx='1026' cy='398' rx='960' ry='268' stroke-width='32' stroke-opacity='0.5'
+                 stroke-dasharray='1240 260 700 320 1350 300' stroke-dashoffset='620'/><!-- ~4170 -->
+        <ellipse cx='1006' cy='403' rx='1120' ry='312' stroke-width='24' stroke-opacity='0.32'
+                 stroke-dasharray='900 380 1560 340 1300 384' stroke-dashoffset='210'/><!-- ~4864 -->
+      </g>
+    </mask>
+  </defs>
+
+  <!-- The leading translate pushes the core into the upper-right so it clears
+       the page's content column, leaving the disk to sweep diagonally down
+       across it. 24 degrees matches the reference's tilt. -->
+  <g transform='translate(230 10) rotate(24 1010 400) translate(1010 400) scale(0.84) translate(-1010 -400)'>
+    <ellipse cx='1010' cy='400' rx='1230' ry='440' fill='url(#halo)'/>
+
+    <g mask='url(#dust)'>
+      <ellipse cx='1010' cy='400' rx='1000' ry='296' fill='url(#diskGlow)'/>
+
+      <!-- Arm ridges, warm at the centre and cooling outward: the inner disk
+           is old red-giant light, the outer arms are young blue stars.
+           Dashed on their own patterns, out of phase with the dust rings
+           above, so bright and dark segments never line up. -->
+      <g fill='none' stroke-linecap='round' filter='url(#armBand)'>
+        <ellipse cx='1010' cy='400' rx='340' ry='96' stroke='#ffdcae'
+                 stroke-width='60' stroke-opacity='0.2'
+                 stroke-dasharray='520 90 410 130 200 129' stroke-dashoffset='240'/><!-- ~1479 -->
+        <ellipse cx='1004' cy='404' rx='500' ry='140' stroke='#ffd2a2'
+                 stroke-width='70' stroke-opacity='0.19'
+                 stroke-dasharray='690 140 480 170 550 143' stroke-dashoffset='90'/><!-- ~2173 -->
+        <ellipse cx='1024' cy='396' rx='690' ry='192' stroke='#ffe2c6'
+                 stroke-width='78' stroke-opacity='0.155'
+                 stroke-dasharray='900 190 640 230 810 226' stroke-dashoffset='430'/><!-- ~2996 -->
+        <ellipse cx='1000' cy='403' rx='880' ry='245' stroke='#bad2ff'
+                 stroke-width='76' stroke-opacity='0.15'
+                 stroke-dasharray='1150 240 830 280 1042 280' stroke-dashoffset='180'/><!-- ~3822 -->
+        <ellipse cx='1030' cy='398' rx='1045' ry='292' stroke='#a3c1ff'
+                 stroke-width='64' stroke-opacity='0.1'
+                 stroke-dasharray='1400 330 990 360 1130 330' stroke-dashoffset='700'/><!-- ~4540 -->
+      </g>
+    </g>
+
+    <!-- Core rides above the dust: it outshines the lane that crosses it. -->
+    <ellipse cx='1010' cy='400' rx='300' ry='112' fill='url(#bulge)'/>
+    <ellipse cx='1010' cy='400' rx='150' ry='72' fill='url(#core)'/>
+
+    <!-- Warm scatter inside the lanes. Backlit dust glows faintly rather than
+         reading as clean black, and under screen this is the only way in. -->
+    <g fill='none' stroke='#7c4426' stroke-linecap='round' filter='url(#dustBand)' stroke-opacity='0.075'>
+      <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='36'
+               stroke-dasharray='880 130 520 200 730 148' stroke-dashoffset='310'/>
+      <ellipse cx='998' cy='404' rx='785' ry='219' stroke-width='32'
+               stroke-dasharray='700 210 1080 170 990 260' stroke-dashoffset='140'/>
+      <ellipse cx='1004' cy='402' rx='415' ry='116' stroke-width='22' stroke-opacity='0.5'
+               stroke-dasharray='430 120 260 190 640 163' stroke-dashoffset='70'/>
+    </g>
+
+    <!-- HII regions: the pink star-forming knots strung along the arms. Their
+         positions are sampled off the r=690 and r=880 ridges above, so they
+         sit on the arms instead of floating in empty sky. Brightness and size
+         vary widely on purpose: evenly matched knots read as a bead string. -->
+    <g filter='url(#knot)' fill='#ff8fa6'>
+      <ellipse cx='1453' cy='558' rx='14' ry='7' opacity='0.26'/>
+      <ellipse cx='935' cy='599' rx='9' ry='5' opacity='0.13'/>
+      <ellipse cx='458' cy='529' rx='12' ry='6' opacity='0.22'/>
+      <ellipse cx='306' cy='442' rx='7' ry='4' opacity='0.1'/>
+      <ellipse cx='333' cy='332' rx='11' ry='6' opacity='0.17'/>
+      <ellipse cx='628' cy='230' rx='15' ry='7' opacity='0.24'/>
+      <ellipse cx='1184' cy='206' rx='8' ry='4' opacity='0.12'/>
+      <ellipse cx='1545' cy='266' rx='10' ry='5' opacity='0.15'/>
+      <ellipse cx='1258' cy='640' rx='13' ry='6' opacity='0.2'/>
+      <ellipse cx='587' cy='621' rx='8' ry='4' opacity='0.11'/>
+      <ellipse cx='363' cy='226' rx='10' ry='5' opacity='0.14'/>
+      <ellipse cx='885' cy='152' rx='12' ry='6' opacity='0.19'/>
+      <ellipse cx='1460' cy='183' rx='7' ry='4' opacity='0.1'/>
+    </g>
+
+    <!-- Blue OB associations on the same ridges: broader and dimmer than the
+         HII knots, so they read as hazy patches rather than as point sources. -->
+    <g filter='url(#knot)' fill='#d8e6ff'>
+      <ellipse cx='1184' cy='206' rx='34' ry='13' opacity='0.1'/>
+      <ellipse cx='628' cy='230' rx='28' ry='11' opacity='0.085'/>
+      <ellipse cx='935' cy='599' rx='36' ry='14' opacity='0.09'/>
+      <ellipse cx='458' cy='529' rx='26' ry='10' opacity='0.07'/>
+      <ellipse cx='885' cy='152' rx='40' ry='15' opacity='0.08'/>
+      <ellipse cx='1258' cy='640' rx='30' ry='12' opacity='0.075'/>
+      <ellipse cx='1460' cy='183' rx='24' ry='10' opacity='0.06'/>
+    </g>
+  </g>
+<!-- Companions, as Andromeda has M32 and M110. Deliberately outside the
+       disk group: they take none of its rotation, scale or dust mask, which
+       both keeps their placement predictable and is what makes them read as
+       separate objects rather than as knots in an arm. The near one is small,
+       round and concentrated; the far one is bigger, fainter and elongated. -->
+  <ellipse cx='1286' cy='627' rx='34' ry='28' fill='url(#compA)' filter='url(#knot)'/>
+  <ellipse cx='435' cy='679' rx='48' ry='19' fill='url(#compB)' filter='url(#knot)'
+           transform='rotate(-18 435 679)'/>
+</svg>

@@ -14,6 +14,7 @@
 # Binary assets. `text=auto` already detects these by content; naming them
 # makes the intent explicit and keeps them out of textual diffs.
 *.png binary
+*.webp binary
 *.jpg binary
 *.mp4 binary
 *.pdf binary

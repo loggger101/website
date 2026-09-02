@@ -1,8 +1,35 @@
 /* =========================================================
-   PARALLAX STAR LAYERS (3 depths)
+   PARALLAX SKY LAYERS (4 depths, back to front)
+
+     html::before   galaxy + deep nebula   slowest   z-index 4
+     html::after    far stars                        z-index 5
+     body::after    mid + near stars       fastest   z-index 6
+     body::before   dither overlay         static    z-index 7
+
+   Every layer sits above 3 and below 10. That is not cosmetic. body carries
+   an opaque background-color, body is a positioned element, and these four
+   are positioned siblings competing with it in the root stacking context --
+   so any layer at z-index 0 or 1 paints behind body's background and is
+   simply never seen. Content is pinned to z-index 10 further down, which is
+   the ceiling these have to stay under.
+
+   Depth order is also drift order: the further away a layer is meant to be,
+   the less it moves. The galaxy is the most distant object on the page, so
+   it drifts least. (It used to ride the near-star layer, which made the one
+   thing at effective infinity the fastest-moving element on screen.)
+
+   Every layer is position: fixed and inset by --drift-overscan so the drift
+   never pulls an edge into view.
    ========================================================= */
 
-/* Far stars */
+/* Galaxy + the deep nebula wash it sits in.
+
+   The galaxy is a baked raster, not the SVG that produced it. galaxy.svg is
+   still the source and still in assets/, but rasterising it live measured
+   ~2.7s in a software rasteriser -- against 55ms for a trivial gradient SVG
+   -- because of its large blurs and turbulence displacement. That is paid per
+   visitor and scales with device pixel ratio. scripts/render-galaxy.mjs bakes
+   it; edit the SVG, re-run that, commit both. */
 html::before {
   content: "";
   position: fixed;
@@ -11,19 +38,40 @@ html::before {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 0;
+  z-index: 4;
 
-  background-image: url("../assets/stars-far.svg");
-  background-repeat: repeat;
-  background-size: 1400px 900px;
+  background-image:
+    url("../assets/galaxy.webp"),
+    /* Cool wash off the galaxy's blue outer arms */
+    radial-gradient(1100px 760px at 76% 26%, rgba(96, 142, 224, 0.09), transparent 66%),
+    /* Warm counter-glow from the core, thrown down-left along the disk */
+    radial-gradient(900px 640px at 40% 62%, rgba(190, 132, 88, 0.05), transparent 68%);
 
-  opacity: 0.17;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: cover, auto, auto;
+  /* Anchored on the core rather than centred, so the core is what survives
+     cover's crop. Only the horizontal half does much work: on a portrait
+     viewport cover scales to the height and leaves no vertical slack for the
+     41% to act on, while the horizontal crop is severe. Keep both in step
+     with the core's position in galaxy.svg -- the leading translate there
+     moves it, and the baked WebP moves with it. */
+  background-position:
+    77% 41%,
+    0 0,
+    0 0;
+
+  /* Low, and deliberately so. The reference reads as deep space because it is
+     mostly black; a galaxy bright enough to admire on its own flattens into
+     fog behind body copy and takes the sky's contrast with it. */
+  opacity: 0.68;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
-/* Mid stars */
+/* Far stars — dense and dim. */
 html::after {
   content: "";
   position: fixed;
@@ -32,19 +80,27 @@ html::after {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 1;
+  z-index: 5;
 
-  background-image: url("../assets/stars-mid.svg");
+  background-image: url("../assets/stars-far.svg");
   background-repeat: repeat;
-  background-size: 1200px 800px;
+  background-size: 1400px 900px;
 
-  opacity: 0.17;
+  /* The star SVGs carry their own per-star alpha, so these layer opacities
+     stay high; dimming happens per star, which is what preserves the
+     magnitude spread instead of flattening every star to the same grey. */
+  opacity: 0.55;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
-/* Near layer: SAFE Milky Way (center-dense) + near stars + nebula */
+/* Mid + near stars. Two tiles on one layer: sharing a compositor layer keeps
+   the drift on transform (cheap) rather than background-position (a repaint
+   every frame), and the depth cue that actually reads is the size and
+   brightness difference between the tiles, not their relative speed. */
 body::after {
   content: "";
   position: fixed;
@@ -53,77 +109,54 @@ body::after {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 2;
+  z-index: 6;
 
-  background-image:
-    /* --- Milky Way: center dense, disperses outward (SAFE shapes only) --- */
-    url("../assets/milky-way.svg"),
-    /* Near stars */ url("../assets/stars-near.svg"),
-    /* Nebula glows */
-    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.1), transparent 64%),
-    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.08), transparent 64%);
-
-  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+  background-image: url("../assets/stars-near.svg"), url("../assets/stars-mid.svg");
+  background-repeat: repeat, repeat;
   background-size:
-    cover,
-    900px 600px,
-    auto,
-    auto;
+    1500px 1000px,
+    1200px 800px;
   background-position:
-    center,
-    0 0,
     0 0,
     0 0;
 
-  opacity: 0.28;
+  opacity: 0.7;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
 /* =========================================================
-   AURORA + VERY SUBTLE NOISE
-   ========================================================= */
+   DITHER
+   =========================================================
+   Deep-space gradients are the worst case for 8-bit colour: a wash that
+   crosses only a handful of luminance levels over a whole screen renders as
+   visible contour bands. A per-pixel noise overlay breaks the contours into
+   dispersed pixels, which the eye integrates back into a smooth gradient.
+
+   Two details matter. It blends with overlay, not screen, because a dither
+   has to perturb around the existing value rather than only ever add to it.
+   And it must not be blurred or scaled — smoothing the noise destroys the
+   dither and leaves the banding it was there to hide. */
 body::before {
   content: "";
   position: fixed;
-
-  /* IMPORTANT: overscan so drift never reveals edges */
-  inset: calc(-1 * var(--drift-overscan));
+  inset: 0;
 
   pointer-events: none;
-  z-index: 3;
+  z-index: 7;
 
-  background-image:
-    radial-gradient(
-      1200px 520px at 20% 0%,
-      rgba(60, 200, 255, 0.1),
-      rgba(80, 140, 255, 0.05),
-      rgba(0, 0, 0, 0) 66%
-    ),
-    radial-gradient(
-      1100px 520px at 80% 0%,
-      rgba(140, 90, 255, 0.08),
-      rgba(80, 180, 255, 0.04),
-      rgba(0, 0, 0, 0) 68%
-    ),
-    url("../assets/noise.svg");
+  background-image: url("../assets/noise.svg");
+  background-repeat: repeat;
+  background-size: 200px 200px;
 
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-size:
-    auto,
-    auto,
-    200px 200px;
-  background-position:
-    0% 0%,
-    0% 0%,
-    0% 0%;
-
-  opacity: 0.1;
-  filter: blur(0.2px);
-  mix-blend-mode: normal;
-
-  will-change: transform, background-position;
+  /* Enough to break contours, not enough to read as grain on its own. Under
+     overlay on a near-black backdrop this lands around +/-3 levels, which is
+     a few times an 8-bit contour step and still invisible as texture. */
+  opacity: 0.16;
+  mix-blend-mode: overlay;
 }
 
 /* Keep all content above visuals */
@@ -135,35 +168,50 @@ body > * {
 /* =========================================================
    PARALLAX ANIMATIONS
    ========================================================= */
+/* alternate is load-bearing, not a style choice.
+   A `normal` infinite animation snaps from its `to` value back to `from` at
+   the end of every iteration. These keyframes end 14px, 30px and 60px from
+   the origin, so each layer visibly jumped back by that much once per cycle
+   -- the near one every 44 seconds, which is well within the time anyone
+   spends reading a page.
+
+   The obvious alternative, translating by exactly one tile period so the
+   repeat hides the wrap, is not affordable here: one period is 1500px on the
+   near tile, and the layer would need that much --drift-overscan, blowing up
+   the raster area of a full-viewport fixed layer. Animating
+   background-position would wrap for free but repaints every frame instead
+   of riding the compositor.
+
+   alternate costs nothing and removes the discontinuity outright: the layer
+   simply drifts back the way it came. ease-in-out brings the velocity to
+   zero at each end, so the reversal is not visible either -- at 60px over
+   44s, the fastest layer moves 1.4px per second. */
 @media (prefers-reduced-motion: no-preference) {
   html::before {
-    animation: driftFar 110s linear infinite;
+    animation: driftGalaxy 190s ease-in-out infinite alternate;
   }
   html::after {
-    animation: driftMid 80s linear infinite;
+    animation: driftFar 110s ease-in-out infinite alternate;
   }
   body::after {
-    animation: driftNear 44s linear infinite;
-  }
-  body::before {
-    animation: auroraSweep 30s ease-in-out infinite;
+    animation: driftNear 44s ease-in-out infinite alternate;
   }
 }
 
+@keyframes driftGalaxy {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-14px, 5px, 0);
+  }
+}
 @keyframes driftFar {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-26px, 10px, 0);
-  }
-}
-@keyframes driftMid {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-40px, 16px, 0);
+    transform: translate3d(-30px, 11px, 0);
   }
 }
 @keyframes driftNear {
@@ -174,23 +222,133 @@ body > * {
     transform: translate3d(-60px, 24px, 0);
   }
 }
-@keyframes auroraSweep {
-  0% {
-    background-position:
-      0% 0%,
-      0% 0%,
-      0% 0%;
+
+/* =========================================================
+   SCROLL PARALLAX (progressive enhancement)
+   =========================================================
+   Every sky layer is position: fixed, so on its own the sky is perfectly
+   still while the page scrolls — a wallpaper behind moving content rather
+   than something the page moves through. Tying a small vertical offset to
+   scroll progress restores that, with the nearest layer travelling furthest.
+
+   Two things make this composable rather than a rewrite:
+
+   - The drift keyframes above animate `transform`; these animate the
+     independent `translate` property. Two animations on the SAME property
+     do not blend — the later one in the list simply wins — so the drift
+     would have been cancelled had both used `transform`.
+   - scroll() maps 0-100% across the whole scrollable range, so the travel
+     below is a total, not a rate. Long project pages move the sky more
+     slowly per pixel scrolled than the homepage does, which is the right
+     way round: it keeps the total excursion bounded no matter the page.
+
+   That bound matters, because this shares --drift-overscan (220px) with the
+   drift: 104px of parallax plus 24px of drift on the near layer stays inside
+   it, so no edge is ever pulled into view.
+
+   Engines without scroll-driven animations (Firefox, at time of writing) skip
+   this block and take the --sky-scroll fallback further down instead. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Every longhand is per-animation here, so the drift keeps the
+       ease-in-out + alternate that stops it snapping back (see above) while
+       the scroll parallax stays linear and one-way. Restating the drift in
+       full is unavoidable: `animation-timeline` has to be set alongside the
+       list it applies to, and the shorthand would reset these. */
+    html::before {
+      animation-name: driftGalaxy, parallaxGalaxy;
+      animation-duration: 190s, auto;
+      animation-timing-function: ease-in-out, linear;
+      animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
+      animation-timeline: auto, scroll(root block);
+    }
+    html::after {
+      animation-name: driftFar, parallaxFar;
+      animation-duration: 110s, auto;
+      animation-timing-function: ease-in-out, linear;
+      animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
+      animation-timeline: auto, scroll(root block);
+    }
+    body::after {
+      animation-name: driftNear, parallaxNear;
+      animation-duration: 44s, auto;
+      animation-timing-function: ease-in-out, linear;
+      animation-iteration-count: infinite, 1;
+      animation-direction: alternate, normal;
+      animation-timeline: auto, scroll(root block);
+    }
   }
-  50% {
-    background-position:
-      6% 0%,
-      -6% 0%,
-      0% 0%;
+}
+
+/* Only a `to` frame: the implicit `from` is the layer's own untranslated
+   position, so these read as "travel this far over the whole page". */
+@keyframes parallaxGalaxy {
+  to {
+    translate: 0 -26px;
   }
-  100% {
-    background-position:
-      0% 0%,
-      0% 0%,
-      0% 0%;
+}
+@keyframes parallaxFar {
+  to {
+    translate: 0 -54px;
+  }
+}
+@keyframes parallaxNear {
+  to {
+    translate: 0 -104px;
+  }
+}
+
+/* =========================================================
+   SCROLL PARALLAX FALLBACK (no scroll-driven animations)
+   =========================================================
+   Firefox has no animation-timeline yet, so the block above never applies
+   there and the sky would go back to being a static wallpaper. Here the same
+   offsets are driven by --sky-scroll, a 0..1 progress value that site.js
+   writes on <html> from a passive scroll listener.
+
+   Registering the property matters for more than tidiness. It gives a real
+   initial value, so the calc() below stays valid — and therefore the layers
+   stay put — on any page where the script is blocked, fails, or simply has
+   not run yet. Registration also types the value as a number, which lets the
+   engine treat updates as a cheap animated substitution rather than
+   re-parsing an arbitrary token stream on every scroll frame.
+
+   site.js feature-detects with the same CSS.supports() query this @supports
+   rule uses, so exactly one of the two mechanisms is ever live. */
+@property --sky-scroll {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@supports not (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html::before {
+      translate: 0 calc(var(--sky-scroll, 0) * -26px);
+    }
+    html::after {
+      translate: 0 calc(var(--sky-scroll, 0) * -54px);
+    }
+    body::after {
+      translate: 0 calc(var(--sky-scroll, 0) * -104px);
+    }
+  }
+}
+
+/* =========================================================
+   FORCED COLOURS
+   =========================================================
+   In forced-colours mode the OS palette replaces the page's, and these four
+   layers are pure decoration sitting between that palette and the content.
+   Leaving them up risks tinting a background the user specifically asked to
+   be flat. Nothing here carries meaning, so drop all of it. */
+@media (forced-colors: active) {
+  html::before,
+  html::after,
+  body::before,
+  body::after {
+    display: none;
   }
 }

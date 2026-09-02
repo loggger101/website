@@ -1,0 +1,87 @@
+/* =========================================================
+   PRINT
+   =========================================================
+   The site is light-on-dark, and browsers do not print background colours by
+   default. Without this, every page printed #f5f5f5 body copy onto white
+   paper — perfectly legible on screen, effectively blank on paper.
+
+   The fix is to invert to ink-on-paper rather than to force the dark theme
+   through with print-color-adjust. Forcing it would flood a full-bleed black
+   page and spend a cartridge reproducing a decorative star field, which is
+   the one part of this design that carries no information.
+
+   Imported last so it wins specificity ties, though the resets still use
+   !important: much of the site sets colour from deeply specific selectors,
+   and a print sheet that half-applies is worse than none. */
+
+@page {
+  margin: 18mm 16mm;
+}
+
+@media print {
+  /* Ink on paper. */
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* The title paints its glyphs with a clipped gradient and hides the real
+     colour behind -webkit-text-fill-color: transparent. Resetting `color`
+     alone still prints nothing at all. */
+  .site-title {
+    background: none !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+
+  /* Decoration and screen-only chrome. The sky layers would mostly vanish
+     anyway once backgrounds are dropped, but they are removed explicitly so
+     they cannot contribute stray blend artefacts to a print raster. */
+  html::before,
+  html::after,
+  body::before,
+  body::after,
+  .site-header::before,
+  .skip-link,
+  .site-nav,
+  .section-nav {
+    display: none !important;
+  }
+
+  /* With every fill gone, borders are the only thing left holding the
+     grouped blocks together. */
+  .project-card,
+  .mini-project-card,
+  .contact-formCard,
+  .metric {
+    border: 1px solid #999 !important;
+  }
+
+  /* Keep a block and its heading on one sheet. */
+  .project-card,
+  .mini-project-card,
+  .contact-formCard,
+  .metric,
+  figure,
+  table {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  /* A printed link is a dead end unless it carries its destination. Absolute
+     ones only: in-page anchors would print as noise, and so would the mailto
+     already spelled out next to it. */
+  .section a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+}
