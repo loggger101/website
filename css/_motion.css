@@ -219,7 +219,8 @@ body > * {
    drift: 104px of parallax plus 24px of drift on the near layer stays inside
    it, so no edge is ever pulled into view.
 
-   Unsupported browsers drop the whole @supports block and keep the drift. */
+   Engines without scroll-driven animations (Firefox, at time of writing) skip
+   this block and take the --sky-scroll fallback further down instead. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     html::before {
@@ -261,5 +262,58 @@ body > * {
 @keyframes parallaxNear {
   to {
     translate: 0 -104px;
+  }
+}
+
+/* =========================================================
+   SCROLL PARALLAX FALLBACK (no scroll-driven animations)
+   =========================================================
+   Firefox has no animation-timeline yet, so the block above never applies
+   there and the sky would go back to being a static wallpaper. Here the same
+   offsets are driven by --sky-scroll, a 0..1 progress value that site.js
+   writes on <html> from a passive scroll listener.
+
+   Registering the property matters for more than tidiness. It gives a real
+   initial value, so the calc() below stays valid — and therefore the layers
+   stay put — on any page where the script is blocked, fails, or simply has
+   not run yet. Registration also types the value as a number, which lets the
+   engine treat updates as a cheap animated substitution rather than
+   re-parsing an arbitrary token stream on every scroll frame.
+
+   site.js feature-detects with the same CSS.supports() query this @supports
+   rule uses, so exactly one of the two mechanisms is ever live. */
+@property --sky-scroll {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@supports not (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html::before {
+      translate: 0 calc(var(--sky-scroll, 0) * -26px);
+    }
+    html::after {
+      translate: 0 calc(var(--sky-scroll, 0) * -54px);
+    }
+    body::after {
+      translate: 0 calc(var(--sky-scroll, 0) * -104px);
+    }
+  }
+}
+
+/* =========================================================
+   FORCED COLOURS
+   =========================================================
+   In forced-colours mode the OS palette replaces the page's, and these four
+   layers are pure decoration sitting between that palette and the content.
+   Leaving them up risks tinting a background the user specifically asked to
+   be flat. Nothing here carries meaning, so drop all of it. */
+@media (forced-colors: active) {
+  html::before,
+  html::after,
+  body::before,
+  body::after {
+    display: none;
   }
 }
