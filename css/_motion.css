@@ -22,7 +22,14 @@
    never pulls an edge into view.
    ========================================================= */
 
-/* Galaxy + the deep nebula wash it sits in. */
+/* Galaxy + the deep nebula wash it sits in.
+
+   The galaxy is a baked raster, not the SVG that produced it. galaxy.svg is
+   still the source and still in assets/, but rasterising it live measured
+   ~2.3s in a software rasteriser -- against 55ms for a trivial gradient SVG
+   -- because of its large blurs and turbulence displacement. That is paid per
+   visitor and scales with device pixel ratio. scripts/render-galaxy.mjs bakes
+   it; edit the SVG, re-run that, commit both. */
 html::before {
   content: "";
   position: fixed;
@@ -34,7 +41,7 @@ html::before {
   z-index: 4;
 
   background-image:
-    url("../assets/galaxy.svg"),
+    url("../assets/galaxy.webp"),
     /* Cool wash off the galaxy's blue outer arms */
     radial-gradient(1100px 760px at 76% 26%, rgba(96, 142, 224, 0.09), transparent 66%),
     /* Warm counter-glow from the core, thrown down-left along the disk */

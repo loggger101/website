@@ -46,14 +46,48 @@
       <stop offset='1' stop-color='#ffd894' stop-opacity='0'/>
     </radialGradient>
 
-    <filter id='wide' filterUnits='userSpaceOnUse' x='-300' y='-160' width='2760' height='1120'>
-      <feGaussianBlur stdDeviation='34'/>
-    </filter>
+<radialGradient id='compA'>
+      <stop offset='0' stop-color='#fff4e2' stop-opacity='0.5'/>
+      <stop offset='0.32' stop-color='#ffe9c6' stop-opacity='0.22'/>
+      <stop offset='1' stop-color='#ffdcaa' stop-opacity='0'/>
+    </radialGradient>
+
+    <radialGradient id='compB'>
+      <stop offset='0' stop-color='#e8e2d8' stop-opacity='0.24'/>
+      <stop offset='0.4' stop-color='#d8d0c4' stop-opacity='0.1'/>
+      <stop offset='1' stop-color='#c6bdb0' stop-opacity='0'/>
+    </radialGradient>
+
     <filter id='band' filterUnits='userSpaceOnUse' x='-300' y='-160' width='2760' height='1120'>
       <feGaussianBlur stdDeviation='16'/>
     </filter>
     <filter id='knot' x='-200%' y='-200%' width='500%' height='500%'>
       <feGaussianBlur stdDeviation='5'/>
+    </filter>
+
+    <!-- Ragged edges for the lanes and ridges.
+         A geometrically perfect ellipse is what gives away that dust was
+         drawn rather than photographed, and no amount of blur hides it: blur
+         smooths an edge without making it irregular. So the rings are pushed
+         around by a low-frequency fractal noise BEFORE they are blurred.
+
+         baseFrequency is deliberately anisotropic, several times lower across
+         the disk than along it. Isotropic noise pinches the rings into beads;
+         stretching the noise with the arms makes the warp read as the arms
+         themselves wandering, which is what they actually do.
+
+         Displacement needs headroom: at scale S a pixel can move S/2 in each
+         direction, so these regions are inset further than the plain blur
+         filters above, or the warp would clip against its own region. -->
+    <filter id='dustBand' filterUnits='userSpaceOnUse' x='-260' y='-140' width='2600' height='1100'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.0016 0.0055' numOctaves='2' seed='11' result='t'/>
+      <feDisplacementMap in='SourceGraphic' in2='t' scale='70' xChannelSelector='R' yChannelSelector='G'/>
+      <feGaussianBlur stdDeviation='15'/>
+    </filter>
+    <filter id='armBand' filterUnits='userSpaceOnUse' x='-260' y='-140' width='2600' height='1100'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.0014 0.0048' numOctaves='2' seed='23' result='t'/>
+      <feDisplacementMap in='SourceGraphic' in2='t' scale='55' xChannelSelector='R' yChannelSelector='G'/>
+      <feGaussianBlur stdDeviation='17'/>
     </filter>
 
     <!-- Dust rings. White keeps the disk, black removes it.
@@ -64,7 +98,7 @@
          each arc's ends so the breaks look like thinning, not cuts. -->
     <mask id='dust' maskUnits='userSpaceOnUse' x='-700' y='-500' width='3200' height='2000'>
       <rect x='-700' y='-500' width='3200' height='2000' fill='#ffffff'/>
-      <g fill='none' stroke='#000000' stroke-linecap='round' filter='url(#band)'>
+      <g fill='none' stroke='#000000' stroke-linecap='round' filter='url(#dustBand)'>
         <ellipse cx='1004' cy='402' rx='415' ry='116' stroke-width='28' stroke-opacity='0.56'
                  stroke-dasharray='430 120 260 190 640 163' stroke-dashoffset='70'/><!-- ~1803 -->
         <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='46' stroke-opacity='0.82'
@@ -86,13 +120,13 @@
     <ellipse cx='1010' cy='400' rx='1230' ry='440' fill='url(#halo)'/>
 
     <g mask='url(#dust)'>
-      <ellipse cx='1010' cy='400' rx='1000' ry='296' fill='url(#diskGlow)' filter='url(#wide)'/>
+      <ellipse cx='1010' cy='400' rx='1000' ry='296' fill='url(#diskGlow)'/>
 
       <!-- Arm ridges, warm at the centre and cooling outward: the inner disk
            is old red-giant light, the outer arms are young blue stars.
            Dashed on their own patterns, out of phase with the dust rings
            above, so bright and dark segments never line up. -->
-      <g fill='none' stroke-linecap='round' filter='url(#band)'>
+      <g fill='none' stroke-linecap='round' filter='url(#armBand)'>
         <ellipse cx='1010' cy='400' rx='340' ry='96' stroke='#ffdcae'
                  stroke-width='60' stroke-opacity='0.2'
                  stroke-dasharray='520 90 410 130 200 129' stroke-dashoffset='240'/><!-- ~1479 -->
@@ -112,12 +146,12 @@
     </g>
 
     <!-- Core rides above the dust: it outshines the lane that crosses it. -->
-    <ellipse cx='1010' cy='400' rx='300' ry='112' fill='url(#bulge)' filter='url(#band)'/>
+    <ellipse cx='1010' cy='400' rx='300' ry='112' fill='url(#bulge)'/>
     <ellipse cx='1010' cy='400' rx='150' ry='72' fill='url(#core)'/>
 
     <!-- Warm scatter inside the lanes. Backlit dust glows faintly rather than
          reading as clean black, and under screen this is the only way in. -->
-    <g fill='none' stroke='#7c4426' stroke-linecap='round' filter='url(#band)' stroke-opacity='0.075'>
+    <g fill='none' stroke='#7c4426' stroke-linecap='round' filter='url(#dustBand)' stroke-opacity='0.075'>
       <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='36'
                stroke-dasharray='880 130 520 200 730 148' stroke-dashoffset='310'/>
       <ellipse cx='998' cy='404' rx='785' ry='219' stroke-width='32'
@@ -158,4 +192,12 @@
       <ellipse cx='1460' cy='183' rx='24' ry='10' opacity='0.06'/>
     </g>
   </g>
+<!-- Companions, as Andromeda has M32 and M110. Deliberately outside the
+       disk group: they take none of its rotation, scale or dust mask, which
+       both keeps their placement predictable and is what makes them read as
+       separate objects rather than as knots in an arm. The near one is small,
+       round and concentrated; the far one is bigger, fainter and elongated. -->
+  <ellipse cx='1286' cy='627' rx='34' ry='28' fill='url(#compA)' filter='url(#knot)'/>
+  <ellipse cx='435' cy='679' rx='48' ry='19' fill='url(#compB)' filter='url(#knot)'
+           transform='rotate(-18 435 679)'/>
 </svg>
