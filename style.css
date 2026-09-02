@@ -5,11 +5,12 @@
    pull from /css/_*.css. Each split file preserves the section banner
    comments from before the split so blame still reads cleanly.
 
-   Order matters: _base.css must come first so its CSS custom properties
-   and html/body rules are in scope for everything that follows.
+   Order matters at both ends: _base.css must come first so its CSS custom
+   properties and html/body rules are in scope for everything that follows,
+   and _print.css must come last so its resets win specificity ties.
 
    No build step — this is plain CSS @import. Older browsers serialize
-   the requests, which is fine for a 6-file fan-out; HTTP/2 (which GitHub
+   the requests, which is fine for an 8-file fan-out; HTTP/2 (which GitHub
    Pages serves) multiplexes them. */
 
 @import url("css/_base.css");
@@ -19,3 +20,4 @@
 @import url("css/_homepage-cards.css");
 @import url("css/_minis.css");
 @import url("css/_project-pages.css");
+@import url("css/_print.css");

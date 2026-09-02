@@ -10,8 +10,20 @@
 .site-header {
   position: relative;
   overflow: hidden;
-  background: #14161f;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* Translucent AND fading out, rather than a flat slab with a rule under it.
+     Opaque cut the sky in half; flat-translucent still ended it on a hard
+     horizontal line directly under the title, which is the one edge on the
+     page the eye lands on first. Fading the panel to nothing lets a single
+     sky run the whole length of the page, while the darker top keeps the
+     title legible where the title actually sits. The rule goes with it: a
+     1px line drawn across open sky reads as a seam, not as structure. */
+  background: linear-gradient(
+    180deg,
+    rgba(13, 15, 23, 0.78) 0%,
+    rgba(13, 15, 23, 0.66) 46%,
+    rgba(13, 15, 23, 0.3) 82%,
+    rgba(13, 15, 23, 0) 100%
+  );
 }
 
 /* Header “glow horizon” */
