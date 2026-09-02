@@ -47,7 +47,7 @@ html::before {
      in step with the core's position in galaxy.svg -- the leading translate
      in that file moves it. */
   background-position:
-    77% 26%,
+    77% 41%,
     0 0,
     0 0;
 
@@ -57,7 +57,9 @@ html::before {
   opacity: 0.68;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
 /* Far stars — dense and dim. */
@@ -81,7 +83,9 @@ html::after {
   opacity: 0.55;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
 /* Mid + near stars. Two tiles on one layer: sharing a compositor layer keeps
@@ -101,7 +105,7 @@ body::after {
   background-image: url("../assets/stars-near.svg"), url("../assets/stars-mid.svg");
   background-repeat: repeat, repeat;
   background-size:
-    900px 600px,
+    1500px 1000px,
     1200px 800px;
   background-position:
     0 0,
@@ -110,7 +114,9 @@ body::after {
   opacity: 0.7;
   mix-blend-mode: screen;
 
-  will-change: transform;
+  /* Both are animated: transform by the drift, translate by the scroll
+     parallax. Naming only one leaves the other off the compositor. */
+  will-change: transform, translate;
 }
 
 /* =========================================================
@@ -137,8 +143,10 @@ body::before {
   background-repeat: repeat;
   background-size: 200px 200px;
 
-  /* Enough to break contours, not enough to read as grain on its own. */
-  opacity: 0.3;
+  /* Enough to break contours, not enough to read as grain on its own. Under
+     overlay on a near-black backdrop this lands around +/-3 levels, which is
+     a few times an 8-bit contour step and still invisible as texture. */
+  opacity: 0.16;
   mix-blend-mode: overlay;
 }
 
@@ -185,5 +193,73 @@ body > * {
   }
   to {
     transform: translate3d(-60px, 24px, 0);
+  }
+}
+
+/* =========================================================
+   SCROLL PARALLAX (progressive enhancement)
+   =========================================================
+   Every sky layer is position: fixed, so on its own the sky is perfectly
+   still while the page scrolls — a wallpaper behind moving content rather
+   than something the page moves through. Tying a small vertical offset to
+   scroll progress restores that, with the nearest layer travelling furthest.
+
+   Two things make this composable rather than a rewrite:
+
+   - The drift keyframes above animate `transform`; these animate the
+     independent `translate` property. Two animations on the SAME property
+     do not blend — the later one in the list simply wins — so the drift
+     would have been cancelled had both used `transform`.
+   - scroll() maps 0-100% across the whole scrollable range, so the travel
+     below is a total, not a rate. Long project pages move the sky more
+     slowly per pixel scrolled than the homepage does, which is the right
+     way round: it keeps the total excursion bounded no matter the page.
+
+   That bound matters, because this shares --drift-overscan (220px) with the
+   drift: 104px of parallax plus 24px of drift on the near layer stays inside
+   it, so no edge is ever pulled into view.
+
+   Unsupported browsers drop the whole @supports block and keep the drift. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html::before {
+      animation-name: driftGalaxy, parallaxGalaxy;
+      animation-duration: 190s, auto;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite, 1;
+      animation-timeline: auto, scroll(root block);
+    }
+    html::after {
+      animation-name: driftFar, parallaxFar;
+      animation-duration: 110s, auto;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite, 1;
+      animation-timeline: auto, scroll(root block);
+    }
+    body::after {
+      animation-name: driftNear, parallaxNear;
+      animation-duration: 44s, auto;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite, 1;
+      animation-timeline: auto, scroll(root block);
+    }
+  }
+}
+
+/* Only a `to` frame: the implicit `from` is the layer's own untranslated
+   position, so these read as "travel this far over the whole page". */
+@keyframes parallaxGalaxy {
+  to {
+    translate: 0 -26px;
+  }
+}
+@keyframes parallaxFar {
+  to {
+    translate: 0 -54px;
+  }
+}
+@keyframes parallaxNear {
+  to {
+    translate: 0 -104px;
   }
 }

@@ -27,7 +27,7 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `Logan_Edwards_CV.pdf` | Public CV, served from the same section. Deliberately undated in the filename so the URL stays stable across updates: replace the file in place and the displayed date follows from git |
 | `style.css` | Thin entry point: `@import`s the seven modules under `css/` |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
-| `css/_motion.css` | The four fixed sky layers (galaxy, far stars, mid + near stars, dither overlay), their z-order and their drift keyframes. The z-index range 4-7 is load-bearing: `body` has an opaque `background-color` and is a positioned sibling, so a layer below 4 paints behind it and is never seen, while content sits at 10 |
+| `css/_motion.css` | The four fixed sky layers (galaxy, far stars, mid + near stars, dither overlay), their z-order, their drift keyframes, and the scroll-linked parallax layered on top of the drift. The z-index range 4-7 is load-bearing: `body` has an opaque `background-color` and is a positioned sibling, so a layer below 4 paints behind it and is never seen, while content sits at 10. The drift animates `transform` and the scroll parallax animates `translate`, deliberately: two animations on the same property do not blend, the later one just wins |
 | `css/_layout.css` | Container, site header, footer, sections, buttons |
 | `css/_nav.css` | Skip link, sticky primary nav, About skills chip row |
 | `css/_homepage-cards.css` | Project icon link + twinkle, flagship and mini cards, homepage expansions, Kaggle stats + contact form |
