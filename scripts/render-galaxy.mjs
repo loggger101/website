@@ -7,7 +7,7 @@
  *
  * Why bake it at all: galaxy.svg leans on large Gaussian blurs plus a
  * turbulence displacement, and measured in a software rasteriser it costs
- * about 2.3 seconds to rasterise at the size `background-size: cover` asks
+ * about 2.7 seconds to rasterise at the size `background-size: cover` asks
  * for on a 1440x900 screen — against 55ms for a trivial gradient SVG. That
  * cost is paid per visitor, scales with device pixel ratio (a 3x phone asks
  * for MORE pixels than a desktop), and buys nothing dynamic: the image never

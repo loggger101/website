@@ -422,8 +422,9 @@
       progress = Math.min(1, Math.max(0, progress));
 
       // Writing an inherited custom property on the root invalidates style
-      // for everything under it, so skip writes the layers cannot show. A
-      // thousandth of the travel is well under a tenth of a pixel.
+      // for everything under it, so skip writes the layers cannot show. Three
+      // decimals is about a tenth of a pixel on the fastest layer, which
+      // travels 104px, and less on the two slower ones.
       var next = progress.toFixed(3);
       if (next === last) return;
       last = next;

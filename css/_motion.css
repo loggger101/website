@@ -26,7 +26,7 @@
 
    The galaxy is a baked raster, not the SVG that produced it. galaxy.svg is
    still the source and still in assets/, but rasterising it live measured
-   ~2.3s in a software rasteriser -- against 55ms for a trivial gradient SVG
+   ~2.7s in a software rasteriser -- against 55ms for a trivial gradient SVG
    -- because of its large blurs and turbulence displacement. That is paid per
    visitor and scales with device pixel ratio. scripts/render-galaxy.mjs bakes
    it; edit the SVG, re-run that, commit both. */
@@ -49,10 +49,12 @@ html::before {
 
   background-repeat: no-repeat, no-repeat, no-repeat;
   background-size: cover, auto, auto;
-  /* Anchored on the core rather than centred: cover crops hard on portrait
-     viewports, and this is the point that has to survive the crop. Keep this
-     in step with the core's position in galaxy.svg -- the leading translate
-     in that file moves it. */
+  /* Anchored on the core rather than centred, so the core is what survives
+     cover's crop. Only the horizontal half does much work: on a portrait
+     viewport cover scales to the height and leaves no vertical slack for the
+     41% to act on, while the horizontal crop is severe. Keep both in step
+     with the core's position in galaxy.svg -- the leading translate there
+     moves it, and the baked WebP moves with it. */
   background-position:
     77% 41%,
     0 0,
