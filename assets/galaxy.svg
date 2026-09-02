@@ -65,15 +65,15 @@
     <mask id='dust' maskUnits='userSpaceOnUse' x='-700' y='-500' width='3200' height='2000'>
       <rect x='-700' y='-500' width='3200' height='2000' fill='#ffffff'/>
       <g fill='none' stroke='#000000' stroke-linecap='round' filter='url(#band)'>
-        <ellipse cx='1004' cy='402' rx='415' ry='116' stroke-width='26' stroke-opacity='0.4'
+        <ellipse cx='1004' cy='402' rx='415' ry='116' stroke-width='28' stroke-opacity='0.56'
                  stroke-dasharray='430 120 260 190 640 163' stroke-dashoffset='70'/><!-- ~1803 -->
-        <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='44' stroke-opacity='0.62'
+        <ellipse cx='1018' cy='396' rx='600' ry='168' stroke-width='46' stroke-opacity='0.82'
                  stroke-dasharray='880 130 520 200 730 148' stroke-dashoffset='310'/><!-- ~2608 -->
-        <ellipse cx='998' cy='404' rx='785' ry='219' stroke-width='38' stroke-opacity='0.52'
+        <ellipse cx='998' cy='404' rx='785' ry='219' stroke-width='40' stroke-opacity='0.72'
                  stroke-dasharray='700 210 1080 170 990 260' stroke-dashoffset='140'/><!-- ~3410 -->
-        <ellipse cx='1026' cy='398' rx='960' ry='268' stroke-width='30' stroke-opacity='0.36'
+        <ellipse cx='1026' cy='398' rx='960' ry='268' stroke-width='32' stroke-opacity='0.5'
                  stroke-dasharray='1240 260 700 320 1350 300' stroke-dashoffset='620'/><!-- ~4170 -->
-        <ellipse cx='1006' cy='403' rx='1120' ry='312' stroke-width='22' stroke-opacity='0.22'
+        <ellipse cx='1006' cy='403' rx='1120' ry='312' stroke-width='24' stroke-opacity='0.32'
                  stroke-dasharray='900 380 1560 340 1300 384' stroke-dashoffset='210'/><!-- ~4864 -->
       </g>
     </mask>
@@ -82,7 +82,7 @@
   <!-- The leading translate pushes the core into the upper-right so it clears
        the page's content column, leaving the disk to sweep diagonally down
        across it. 24 degrees matches the reference's tilt. -->
-  <g transform='translate(230 -140) rotate(24 1010 400) translate(1010 400) scale(0.84) translate(-1010 -400)'>
+  <g transform='translate(230 10) rotate(24 1010 400) translate(1010 400) scale(0.84) translate(-1010 -400)'>
     <ellipse cx='1010' cy='400' rx='1230' ry='440' fill='url(#halo)'/>
 
     <g mask='url(#dust)'>
@@ -94,19 +94,19 @@
            above, so bright and dark segments never line up. -->
       <g fill='none' stroke-linecap='round' filter='url(#band)'>
         <ellipse cx='1010' cy='400' rx='340' ry='96' stroke='#ffdcae'
-                 stroke-width='60' stroke-opacity='0.17'
+                 stroke-width='60' stroke-opacity='0.2'
                  stroke-dasharray='520 90 410 130 200 129' stroke-dashoffset='240'/><!-- ~1479 -->
         <ellipse cx='1004' cy='404' rx='500' ry='140' stroke='#ffd2a2'
-                 stroke-width='70' stroke-opacity='0.16'
+                 stroke-width='70' stroke-opacity='0.19'
                  stroke-dasharray='690 140 480 170 550 143' stroke-dashoffset='90'/><!-- ~2173 -->
         <ellipse cx='1024' cy='396' rx='690' ry='192' stroke='#ffe2c6'
-                 stroke-width='78' stroke-opacity='0.13'
+                 stroke-width='78' stroke-opacity='0.155'
                  stroke-dasharray='900 190 640 230 810 226' stroke-dashoffset='430'/><!-- ~2996 -->
         <ellipse cx='1000' cy='403' rx='880' ry='245' stroke='#bad2ff'
-                 stroke-width='76' stroke-opacity='0.13'
+                 stroke-width='76' stroke-opacity='0.15'
                  stroke-dasharray='1150 240 830 280 1042 280' stroke-dashoffset='180'/><!-- ~3822 -->
         <ellipse cx='1030' cy='398' rx='1045' ry='292' stroke='#a3c1ff'
-                 stroke-width='64' stroke-opacity='0.085'
+                 stroke-width='64' stroke-opacity='0.1'
                  stroke-dasharray='1400 330 990 360 1130 330' stroke-dashoffset='700'/><!-- ~4540 -->
       </g>
     </g>

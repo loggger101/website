@@ -59,7 +59,10 @@ function pickColor(rand) {
   return PALETTE[PALETTE.length - 1].hex;
 }
 
-const round = (n, places = 2) => Number(n.toFixed(places));
+/* Coordinates only ever need a tenth of a pixel; radii are sub-pixel, so they
+   keep two places. Trimming precision is most of why these files stay small
+   even at a couple of thousand stars. */
+const round = (n, places = 1) => Number(n.toFixed(places));
 
 /* One layer's worth of stars.
  *
@@ -69,12 +72,18 @@ const round = (n, places = 2) => Number(n.toFixed(places));
  * real field has.
  *
  * `glowFrom` is the brightness above which a star also gets a soft halo.
- * Set it above 1 to disable halos for the layer entirely. */
+ * Set it above 1 to disable halos for the layer entirely.
+ *
+ * Bright stars get a round halo and nothing else. Diffraction spikes were
+ * tried and dropped: the reference is wide-field photography, where bright
+ * stars are round, and at any believable threshold a tile carries only one or
+ * two flared stars — which then repeat in a regular grid across the viewport
+ * and give the tiling away. */
 function buildLayer({ width, height, count, radius, alpha, gamma, glowFrom, glowScale, seed }) {
   const rand = rng(seed);
   const body = [];
   const glow = [];
-  const usedGradients = new Set();
+  const usedHalo = new Set();
 
   for (let i = 0; i < count; i++) {
     const x = rand() * width;
@@ -85,7 +94,7 @@ function buildLayer({ width, height, count, radius, alpha, gamma, glowFrom, glow
     const hex = pickColor(rand);
     const hasGlow = brightness >= glowFrom;
     const halo = hasGlow ? r * glowScale : 0;
-    if (hasGlow) usedGradients.add(hex);
+    if (hasGlow) usedHalo.add(hex);
 
     /* Redraw anything whose ink crosses a tile edge on the far side, so the
        repeat is seamless. Reach is the larger of the halo and the disc. */
@@ -99,18 +108,18 @@ function buildLayer({ width, height, count, radius, alpha, gamma, glowFrom, glow
         const cy = round(y + dy);
         if (hasGlow) {
           glow.push(
-            `<circle cx='${cx}' cy='${cy}' r='${round(halo)}' fill='url(#h${hex.slice(1)})'/>`,
+            `<circle cx='${cx}' cy='${cy}' r='${round(halo, 2)}' fill='url(#h${hex.slice(1)})'/>`,
           );
         }
         body.push(
-          `<circle cx='${cx}' cy='${cy}' r='${round(r)}' fill='${hex}' fill-opacity='${round(o)}'/>`,
+          `<circle cx='${cx}' cy='${cy}' r='${round(r, 2)}' fill='${hex}' fill-opacity='${round(o, 2)}'/>`,
         );
       }
     }
   }
 
   /* One halo gradient per color actually used, so the defs block stays small. */
-  const defs = [...usedGradients]
+  const defs = [...usedHalo]
     .sort()
     .map(
       (hex) =>
@@ -134,15 +143,19 @@ function buildLayer({ width, height, count, radius, alpha, gamma, glowFrom, glow
 
 /* Three depths. Far is dense and dim, near is sparse and bright; the size and
    opacity ranges are what sell the parallax as depth rather than as three
-   copies of the same field sliding at different speeds. */
+   copies of the same field sliding at different speeds.
+
+   The counts are high because the reference photography is: a real field is
+   thousands of faint points, and a sparse one reads as scattered dots on a
+   gradient. They are affordable because these files gzip to a few KB. */
 const LAYERS = [
   {
     file: "stars-far.svg",
     width: 1400,
     height: 900,
-    count: 520,
+    count: 1250,
     radius: [0.3, 0.8],
-    alpha: [0.22, 0.7],
+    alpha: [0.2, 0.66],
     gamma: 3.2,
     glowFrom: 2, // no halos this far out
     glowScale: 0,
@@ -152,19 +165,23 @@ const LAYERS = [
     file: "stars-mid.svg",
     width: 1200,
     height: 800,
-    count: 265,
+    count: 480,
     radius: [0.4, 1.15],
-    alpha: [0.28, 0.85],
+    alpha: [0.26, 0.82],
     gamma: 2.8,
     glowFrom: 0.91,
     glowScale: 4,
     seed: SEED + 1,
   },
   {
+    /* Biggest tile of the three despite being the sparsest. Its stars are
+       the brightest and most individually recognisable, so this is the layer
+       whose repeat the eye catches first, and a longer period buys more here
+       than more stars would. */
     file: "stars-near.svg",
-    width: 900,
-    height: 600,
-    count: 110,
+    width: 1500,
+    height: 1000,
+    count: 390,
     radius: [0.5, 1.7],
     alpha: [0.34, 1],
     gamma: 2.4,
