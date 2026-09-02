@@ -1,8 +1,28 @@
 /* =========================================================
-   PARALLAX STAR LAYERS (3 depths)
+   PARALLAX SKY LAYERS (4 depths, back to front)
+
+     html::before   galaxy + deep nebula   slowest   z-index 4
+     html::after    far stars                        z-index 5
+     body::after    mid + near stars       fastest   z-index 6
+     body::before   dither overlay         static    z-index 7
+
+   Every layer sits above 3 and below 10. That is not cosmetic. body carries
+   an opaque background-color, body is a positioned element, and these four
+   are positioned siblings competing with it in the root stacking context --
+   so any layer at z-index 0 or 1 paints behind body's background and is
+   simply never seen. Content is pinned to z-index 10 further down, which is
+   the ceiling these have to stay under.
+
+   Depth order is also drift order: the further away a layer is meant to be,
+   the less it moves. The galaxy is the most distant object on the page, so
+   it drifts least. (It used to ride the near-star layer, which made the one
+   thing at effective infinity the fastest-moving element on screen.)
+
+   Every layer is position: fixed and inset by --drift-overscan so the drift
+   never pulls an edge into view.
    ========================================================= */
 
-/* Far stars */
+/* Galaxy + the deep nebula wash it sits in. */
 html::before {
   content: "";
   position: fixed;
@@ -11,19 +31,36 @@ html::before {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 0;
+  z-index: 4;
 
-  background-image: url("../assets/stars-far.svg");
-  background-repeat: repeat;
-  background-size: 1400px 900px;
+  background-image:
+    url("../assets/galaxy.svg"),
+    /* Cool wash off the galaxy's blue outer arms */
+    radial-gradient(1100px 760px at 76% 26%, rgba(96, 142, 224, 0.09), transparent 66%),
+    /* Warm counter-glow from the core, thrown down-left along the disk */
+    radial-gradient(900px 640px at 40% 62%, rgba(190, 132, 88, 0.05), transparent 68%);
 
-  opacity: 0.17;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: cover, auto, auto;
+  /* Anchored on the core rather than centred: cover crops hard on portrait
+     viewports, and this is the point that has to survive the crop. Keep this
+     in step with the core's position in galaxy.svg -- the leading translate
+     in that file moves it. */
+  background-position:
+    77% 26%,
+    0 0,
+    0 0;
+
+  /* Low, and deliberately so. The reference reads as deep space because it is
+     mostly black; a galaxy bright enough to admire on its own flattens into
+     fog behind body copy and takes the sky's contrast with it. */
+  opacity: 0.68;
   mix-blend-mode: screen;
 
   will-change: transform;
 }
 
-/* Mid stars */
+/* Far stars — dense and dim. */
 html::after {
   content: "";
   position: fixed;
@@ -32,19 +69,25 @@ html::after {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 1;
+  z-index: 5;
 
-  background-image: url("../assets/stars-mid.svg");
+  background-image: url("../assets/stars-far.svg");
   background-repeat: repeat;
-  background-size: 1200px 800px;
+  background-size: 1400px 900px;
 
-  opacity: 0.17;
+  /* The star SVGs carry their own per-star alpha, so these layer opacities
+     stay high; dimming happens per star, which is what preserves the
+     magnitude spread instead of flattening every star to the same grey. */
+  opacity: 0.55;
   mix-blend-mode: screen;
 
   will-change: transform;
 }
 
-/* Near layer: SAFE Milky Way (center-dense) + near stars + nebula */
+/* Mid + near stars. Two tiles on one layer: sharing a compositor layer keeps
+   the drift on transform (cheap) rather than background-position (a repaint
+   every frame), and the depth cue that actually reads is the size and
+   brightness difference between the tiles, not their relative speed. */
 body::after {
   content: "";
   position: fixed;
@@ -53,77 +96,50 @@ body::after {
   inset: calc(-1 * var(--drift-overscan));
 
   pointer-events: none;
-  z-index: 2;
+  z-index: 6;
 
-  background-image:
-    /* --- Milky Way: center dense, disperses outward (SAFE shapes only) --- */
-    url("../assets/milky-way.svg"),
-    /* Near stars */ url("../assets/stars-near.svg"),
-    /* Nebula glows */
-    radial-gradient(900px 600px at 18% 22%, rgba(90, 160, 255, 0.1), transparent 64%),
-    radial-gradient(700px 520px at 82% 68%, rgba(120, 80, 255, 0.08), transparent 64%);
-
-  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+  background-image: url("../assets/stars-near.svg"), url("../assets/stars-mid.svg");
+  background-repeat: repeat, repeat;
   background-size:
-    cover,
     900px 600px,
-    auto,
-    auto;
+    1200px 800px;
   background-position:
-    center,
-    0 0,
     0 0,
     0 0;
 
-  opacity: 0.28;
+  opacity: 0.7;
   mix-blend-mode: screen;
 
   will-change: transform;
 }
 
 /* =========================================================
-   AURORA + VERY SUBTLE NOISE
-   ========================================================= */
+   DITHER
+   =========================================================
+   Deep-space gradients are the worst case for 8-bit colour: a wash that
+   crosses only a handful of luminance levels over a whole screen renders as
+   visible contour bands. A per-pixel noise overlay breaks the contours into
+   dispersed pixels, which the eye integrates back into a smooth gradient.
+
+   Two details matter. It blends with overlay, not screen, because a dither
+   has to perturb around the existing value rather than only ever add to it.
+   And it must not be blurred or scaled — smoothing the noise destroys the
+   dither and leaves the banding it was there to hide. */
 body::before {
   content: "";
   position: fixed;
-
-  /* IMPORTANT: overscan so drift never reveals edges */
-  inset: calc(-1 * var(--drift-overscan));
+  inset: 0;
 
   pointer-events: none;
-  z-index: 3;
+  z-index: 7;
 
-  background-image:
-    radial-gradient(
-      1200px 520px at 20% 0%,
-      rgba(60, 200, 255, 0.1),
-      rgba(80, 140, 255, 0.05),
-      rgba(0, 0, 0, 0) 66%
-    ),
-    radial-gradient(
-      1100px 520px at 80% 0%,
-      rgba(140, 90, 255, 0.08),
-      rgba(80, 180, 255, 0.04),
-      rgba(0, 0, 0, 0) 68%
-    ),
-    url("../assets/noise.svg");
+  background-image: url("../assets/noise.svg");
+  background-repeat: repeat;
+  background-size: 200px 200px;
 
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-size:
-    auto,
-    auto,
-    200px 200px;
-  background-position:
-    0% 0%,
-    0% 0%,
-    0% 0%;
-
-  opacity: 0.1;
-  filter: blur(0.2px);
-  mix-blend-mode: normal;
-
-  will-change: transform, background-position;
+  /* Enough to break contours, not enough to read as grain on its own. */
+  opacity: 0.3;
+  mix-blend-mode: overlay;
 }
 
 /* Keep all content above visuals */
@@ -137,33 +153,30 @@ body > * {
    ========================================================= */
 @media (prefers-reduced-motion: no-preference) {
   html::before {
-    animation: driftFar 110s linear infinite;
+    animation: driftGalaxy 190s linear infinite;
   }
   html::after {
-    animation: driftMid 80s linear infinite;
+    animation: driftFar 110s linear infinite;
   }
   body::after {
     animation: driftNear 44s linear infinite;
   }
-  body::before {
-    animation: auroraSweep 30s ease-in-out infinite;
-  }
 }
 
+@keyframes driftGalaxy {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-14px, 5px, 0);
+  }
+}
 @keyframes driftFar {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-26px, 10px, 0);
-  }
-}
-@keyframes driftMid {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-40px, 16px, 0);
+    transform: translate3d(-30px, 11px, 0);
   }
 }
 @keyframes driftNear {
@@ -172,25 +185,5 @@ body > * {
   }
   to {
     transform: translate3d(-60px, 24px, 0);
-  }
-}
-@keyframes auroraSweep {
-  0% {
-    background-position:
-      0% 0%,
-      0% 0%,
-      0% 0%;
-  }
-  50% {
-    background-position:
-      6% 0%,
-      -6% 0%,
-      0% 0%;
-  }
-  100% {
-    background-position:
-      0% 0%,
-      0% 0%,
-      0% 0%;
   }
 }

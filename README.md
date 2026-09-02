@@ -27,18 +27,19 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `Logan_Edwards_CV.pdf` | Public CV, served from the same section. Deliberately undated in the filename so the URL stays stable across updates: replace the file in place and the displayed date follows from git |
 | `style.css` | Thin entry point: `@import`s the seven modules under `css/` |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
-| `css/_motion.css` | Parallax star layers, aurora + noise overlay, drift keyframes |
+| `css/_motion.css` | The four fixed sky layers (galaxy, far stars, mid + near stars, dither overlay), their z-order and their drift keyframes. The z-index range 4-7 is load-bearing: `body` has an opaque `background-color` and is a positioned sibling, so a layer below 4 paints behind it and is never seen, while content sits at 10 |
 | `css/_layout.css` | Container, site header, footer, sections, buttons |
 | `css/_nav.css` | Skip link, sticky primary nav, About skills chip row |
 | `css/_homepage-cards.css` | Project icon link + twinkle, flagship and mini cards, homepage expansions, Kaggle stats + contact form |
 | `css/_minis.css` | Blackjack and Ortega in-page playable widgets |
 | `css/_project-pages.css` | Metric grid, results table, sticky section nav, TL;DR, next-project card, figures |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy, keyboard access for overflowing scroll boxes) |
-| `assets/` | Parallax SVGs (stars-far/mid/near, milky-way, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback). The inline drone demo ships as both WebM/VP9 and MP4; the `<source>` order hands most browsers the smaller WebM and leaves MP4 as the fallback |
+| `assets/` | Parallax SVGs (stars-far/mid/near, galaxy, noise) and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback). The inline drone demo ships as both WebM/VP9 and MP4; the `<source>` order hands most browsers the smaller WebM and leaves MP4 as the fallback |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
 | `.nojekyll` | Empty marker that disables Jekyll on GitHub Pages. **Required**: without it Jekyll strips every underscore-prefixed file from the build, which would 404 all of `css/_*.css` and leave the site unstyled. Do not delete |
+| `scripts/generate-starfield.mjs` | Regenerates `assets/stars-{far,mid,near}.svg`. Run with `node scripts/generate-starfield.mjs`. Seeded, so a re-run reproduces the committed files byte for byte; change `SEED` or a layer's knobs to reroll the sky. Stars near a tile edge are redrawn on the opposite side so the repeat stays seamless |
 | `scripts/generate-og-card.ps1` | Regenerates the 1200×630 social-share cards (`og.jpg`, `og-drone.jpg`, `og-star.jpg`, `og-aspire.jpg`). Takes `-Variant default\|drone\|star\|aspire\|all`. Outputs JPEG at quality 88 (~50 KB each). The homepage and mini-project pages use `og.jpg`; the flagship project pages use their per-project variant |
 | `.prettierrc.json`, `.prettierignore` | Prettier config: 2-space indent, 100-col (120 for HTML); ignores the auto-generated `data/kaggle_stats.json` and binary assets |
 | `.github/workflows/` | Kaggle stats refresh, sitemap-lastmod & resume/CV-date auto-update, JS port tests + inlined-source sync check, and Prettier auto-formatting |
