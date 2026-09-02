@@ -13,11 +13,18 @@
           and screen ignores black, so painted-on lanes are invisible.
           Removing light from the disk's own alpha is the only thing that
           reads as a lane.
-       3. Every filter carries an explicit region. The default -10%/120% box
-          clips wide Gaussian blurs and leaves hard rectangular seams.
+       3. Every filter carries an explicit region, sized to its content plus
+          blur and displacement headroom. The default -10%/120% box is too
+          tight for blurs this wide, and an oversized one is not free either:
+          filter cost scales with region area, and these regions are most of
+          what made this file expensive to rasterise.
 
        Alpha here is deliberately conservative. Final strength is set once, in
-       css/_motion.css, so it stays tunable from one place. -->
+       css/_motion.css, so it stays tunable from one place.
+
+       This file is the SOURCE, not what the site loads. scripts/render-galaxy
+       .mjs bakes it to assets/galaxy.webp and the CSS points at that. Edit
+       here, re-run that, commit both. -->
 
   <defs>
     <radialGradient id='halo'>
@@ -46,7 +53,7 @@
       <stop offset='1' stop-color='#ffd894' stop-opacity='0'/>
     </radialGradient>
 
-<radialGradient id='compA'>
+    <radialGradient id='compA'>
       <stop offset='0' stop-color='#fff4e2' stop-opacity='0.5'/>
       <stop offset='0.32' stop-color='#ffe9c6' stop-opacity='0.22'/>
       <stop offset='1' stop-color='#ffdcaa' stop-opacity='0'/>
@@ -58,9 +65,6 @@
       <stop offset='1' stop-color='#c6bdb0' stop-opacity='0'/>
     </radialGradient>
 
-    <filter id='band' filterUnits='userSpaceOnUse' x='-300' y='-160' width='2760' height='1120'>
-      <feGaussianBlur stdDeviation='16'/>
-    </filter>
     <filter id='knot' x='-200%' y='-200%' width='500%' height='500%'>
       <feGaussianBlur stdDeviation='5'/>
     </filter>
@@ -77,8 +81,8 @@
          themselves wandering, which is what they actually do.
 
          Displacement needs headroom: at scale S a pixel can move S/2 in each
-         direction, so these regions are inset further than the plain blur
-         filters above, or the warp would clip against its own region. -->
+         direction, so each region carries that on top of the usual 3-sigma
+         blur margin, or the warp clips against its own region edge. -->
     <filter id='dustBand' filterUnits='userSpaceOnUse' x='-260' y='-140' width='2600' height='1100'>
       <feTurbulence type='fractalNoise' baseFrequency='0.0016 0.0055' numOctaves='2' seed='11' result='t'/>
       <feDisplacementMap in='SourceGraphic' in2='t' scale='70' xChannelSelector='R' yChannelSelector='G'/>
