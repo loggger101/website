@@ -390,6 +390,71 @@
     });
   }
 
+  /* Scroll parallax for the background sky layers, for engines without CSS
+     scroll-driven animations (Firefox, at time of writing).
+
+     Where animation-timeline: scroll() exists we do nothing at all and let
+     CSS run it off the compositor. Here we publish scroll progress as
+     --sky-scroll on <html>, and css/_motion.css turns it into the same
+     per-layer offsets under a matching `@supports not` rule — so the two
+     mechanisms can never both be live. */
+  function setUpSkyParallax() {
+    var supportsNative =
+      window.CSS &&
+      typeof window.CSS.supports === "function" &&
+      window.CSS.supports("animation-timeline", "scroll()");
+    if (supportsNative) return;
+
+    var root = document.documentElement;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var queued = false;
+    var last = null;
+
+    function apply() {
+      queued = false;
+      if (reduceMotion.matches) return;
+
+      // clientHeight, not innerHeight: it is the scrollport the scrollable
+      // range is actually measured against, so progress reaches exactly 1
+      // at the bottom instead of stopping a scrollbar's width short.
+      var max = root.scrollHeight - root.clientHeight;
+      var progress = max > 0 ? window.scrollY / max : 0;
+      progress = Math.min(1, Math.max(0, progress));
+
+      // Writing an inherited custom property on the root invalidates style
+      // for everything under it, so skip writes the layers cannot show. A
+      // thousandth of the travel is well under a tenth of a pixel.
+      var next = progress.toFixed(3);
+      if (next === last) return;
+      last = next;
+      root.style.setProperty("--sky-scroll", next);
+    }
+
+    function schedule() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(apply);
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+
+    // Turning reduced motion on mid-session should park the sky, not freeze
+    // it wherever it happened to be.
+    if (typeof reduceMotion.addEventListener === "function") {
+      reduceMotion.addEventListener("change", function () {
+        if (reduceMotion.matches) {
+          last = null;
+          root.style.removeProperty("--sky-scroll");
+        } else {
+          schedule();
+        }
+      });
+    }
+
+    apply();
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     setUpExternalLinks();
 
@@ -406,5 +471,6 @@
     safeCall(setUpProjectIconVisitedState);
     safeCall(markSubpageVisited);
     safeCall(setUpSectionNavSpy);
+    safeCall(setUpSkyParallax);
   });
 })();
