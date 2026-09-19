@@ -17,7 +17,7 @@
     <meta name="color-scheme" content="dark" />
     <meta
       name="description"
-      content="Catalog-driven deep-learning pipeline that classifies stars from RGB cutouts: 84.3% letter top-1 (O/B/A/F/G/K/M), 98.4% top-2, plus subclass digit prediction. Built on Gaia DR3, HIPPARCOS, PS1, and WISE."
+      content="Catalog-driven deep-learning pipeline that classifies stars from RGB cutouts: 84.3% letter top-1 (B/A/F/G/K/M), 98.4% top-2, plus subclass digit prediction. Built on Gaia DR3, HIPPARCOS, PS1, and WISE."
     />
     <meta property="og:title" content="Star Cataloguing Deep Learning Model | Logan M Edwards" />
     <meta
@@ -52,7 +52,7 @@
         "@type": "CreativeWork",
         "name": "Star Cataloguing Deep Learning Model",
         "headline": "Star Cataloguing Deep Learning Model",
-        "description": "Multi-task CNN that classifies stars by spectral letter (O, B, A, F, G, K, M) and subclass digit (0-9) from RGB cutouts. Catalogs queried via VizieR (Gaia DR3, HIPPARCOS, PS1, WISE); images sourced from Pan-STARRS with graceful fallbacks. Reaches 84.3% letter top-1 / 98.4% top-2 accuracy.",
+        "description": "Multi-task CNN that classifies stars by spectral letter (B, A, F, G, K, M) and subclass digit (0-9) from RGB cutouts. Catalogs queried via VizieR (Gaia DR3, HIPPARCOS, PS1, WISE); images sourced from Pan-STARRS with graceful fallbacks. Reaches 84.3% letter top-1 / 98.4% top-2 accuracy.",
         "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
         "url": "https://www.loganmedwardsastrophy.com/star-catalog.html",
         "image": "https://www.loganmedwardsastrophy.com/og-star.jpg",
@@ -128,12 +128,12 @@
             <span class="metric__label">Samples used</span>
           </li>
           <li class="metric">
-            <span class="metric__value">7 / 70</span>
+            <span class="metric__value">6 / 60</span>
             <span class="metric__label">Letter / combined classes</span>
           </li>
         </ul>
         <p class="tl-dr__line">
-          Multi-task CNN over Pan-STARRS RGB cutouts for spectral letter (O/B/A/F/G/K/M) and subclass digit. Full
+          Multi-task CNN over Pan-STARRS RGB cutouts for spectral letter (B/A/F/G/K/M) and subclass digit. Full
           pipeline, results, and error analysis below.
         </p>
       </aside>
@@ -141,8 +141,9 @@
         <h2>Overview</h2>
         <p class="section-intro">
           A catalog-driven deep-learning pipeline that classifies stars from RGB image cutouts. The model predicts the
-          Morgan–Keenan spectral letter (O, B, A, F, G, K, M) and the subclass digit (0–9 within the predicted letter)
-          from photometric imagery alone.
+          Morgan–Keenan spectral letter and the subclass digit (0–9 within the predicted letter) from photometric
+          imagery alone. O is the rarest class by a wide margin and does not appear in the trained model's label set, so
+          the letter head reported here resolves six classes: B, A, F, G, K, M.
         </p>
         <p>
           Inputs are constructed by querying VizieR catalogs for coordinates, magnitudes, colors, and spectral hints,
@@ -174,7 +175,9 @@
         <h2>Dataset</h2>
         <p class="section-intro">
           The raw class distribution is steeply imbalanced: K and F stars dominate; O and M are rare. The builder
-          applies a "curved" target distribution to soften this skew without throwing away the long tail.
+          applies a "curved" target distribution to soften this skew without throwing away the long tail. Even after
+          balancing, O remains two orders of magnitude smaller than K, and it does not appear in the label set the
+          reported model was trained against — the letter metrics below are six-class.
         </p>
         <div class="results-tableWrap" data-region-label="Letter class counts, scrollable table">
           <table class="results-table">
@@ -323,7 +326,7 @@
           <li class="metric">
             <span class="metric__value">84.3%</span>
             <span class="metric__label">Letter top-1</span>
-            <span class="metric__hint">7-class softmax (O, B, A, F, G, K, M)</span>
+            <span class="metric__hint">6-class softmax (B, A, F, G, K, M)</span>
           </li>
           <li class="metric">
             <span class="metric__value">98.4%</span>
@@ -353,14 +356,14 @@
         </ul>
         <h3 class="subsection-title">Letter confusion matrix</h3>
         <p class="subsection-intro">
-          Test set letter-head confusion across the seven spectral classes. The diagonal dominates as expected; what
+          Test set letter-head confusion across the six spectral classes the model resolves. The diagonal dominates as expected; what
           little off-diagonal mass exists is concentrated on adjacent letters in the temperature sequence.
         </p>
         <figure class="project-figure">
           <img
             class="project-figure__img"
             src="assets/projects/star/confusion_matrix_letters_test.png"
-            alt="7-class spectral letter confusion matrix (O, B, A, F, G, K, M) on the held-out test set."
+            alt="6-class spectral letter confusion matrix (B, A, F, G, K, M) on the held-out test set."
             width="1200"
             height="1000"
             loading="lazy"
@@ -396,7 +399,7 @@
           <img
             class="project-figure__img"
             src="assets/projects/star/confusion_matrix_combined_test.png"
-            alt="Combined letter × subclass confusion matrix: 70 effective classes spread across O, B, A, F, G, K, M letters and 0–9 subclass digits."
+            alt="Combined letter × subclass confusion matrix: 60 effective classes spread across B, A, F, G, K, M letters and 0–9 subclass digits."
             width="1600"
             height="1600"
             loading="lazy"
