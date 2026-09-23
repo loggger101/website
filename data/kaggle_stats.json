@@ -3,8 +3,8 @@
     "loggger/fpv-images": {
       "sourceUrl": "https://www.kaggle.com/datasets/loggger/fpv-images",
       "title": "Multi-class FPV Images (Drone Targeting Training)",
-      "totalDownloads": 155,
-      "totalViews": 1098
+      "totalDownloads": 156,
+      "totalViews": 1099
     },
     "loggger/star-image-bundles": {
       "sourceUrl": "https://www.kaggle.com/datasets/loggger/star-image-bundles",
@@ -13,5 +13,5 @@
       "totalViews": 220
     }
   },
-  "updatedAt": "2026-09-22T21:15:22Z"
+  "updatedAt": "2026-09-23T04:40:53Z"
 }
