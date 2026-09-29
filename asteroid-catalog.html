@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Asteroid Catalog Project | Logan M Edwards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" sizes="32x32" type="image/png" href="favicon-32.png" />
+    <link rel="icon" sizes="16x16" type="image/png" href="favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="canonical" href="https://www.loganmedwardsastrophy.com/asteroid-catalog.html" />
+    <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
+    <meta name="theme-color" content="#0b0c10" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="A merged, provenance-tagged catalog of about 1.57 million known asteroids: JPL SBDB, SsODNet, NEOWISE and MP3C cross-matched body by body, held to physical limits, and published as frozen releases."
+    />
+    <meta property="og:title" content="Asteroid Catalog Project | Logan M Edwards" />
+    <meta
+      property="og:description"
+      content="A merged, provenance-tagged catalog of about 1.57 million known asteroids from four public surveys, published as frozen releases."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Logan M Edwards" />
+    <meta property="og:url" content="https://www.loganmedwardsastrophy.com/asteroid-catalog.html" />
+    <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Star-field card: Logan M Edwards, Astronomy &amp; Astrophysics • Planetary Science."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Asteroid Catalog Project | Logan M Edwards" />
+    <meta
+      name="twitter:description"
+      content="A merged, provenance-tagged catalog of about 1.57 million known asteroids from four public surveys, published as frozen releases."
+    />
+    <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta name="author" content="Logan M Edwards" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data: https://loganmedwardsastrophy.goatcounter.com; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Asteroid Catalog",
+        "description": "A merged, provenance-tagged catalog of about 1.57 million known asteroids: JPL SBDB, SsODNet, NEOWISE and MP3C cross-matched body by body, validated against physical limits, and enriched with a cited composition estimate per taxonomy class.",
+        "creator": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
+        "url": "https://www.loganmedwardsastrophy.com/asteroid-catalog.html",
+        "sameAs": "https://github.com/loggger101/AsteroidCatalog",
+        "image": "https://www.loganmedwardsastrophy.com/og.jpg",
+        "keywords": ["asteroids", "minor planets", "catalog", "taxonomy", "Python", "JPL SBDB", "NEOWISE"]
+      }
+    </script>
+    <script
+      async
+      crossorigin="anonymous"
+      data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count"
+      integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi"
+      src="https://gc.zgo.at/count.js"
+    ></script>
+    <script defer src="site.js"></script>
+  </head>
+  <body data-mark-visited="asteroid-catalog" class="project-page project-page--indigo">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Primary">
+      <div class="container site-nav__inner">
+        <a class="site-nav__brand" href="index.html#top">Logan M Edwards</a>
+        <ul class="site-nav__menu" role="list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#resume">Resume</a></li>
+          <li><a href="index.html#coursework">Coursework</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <header class="site-header" id="top">
+      <div class="container header-content">
+        <h1 class="site-title">Asteroid Catalog</h1>
+        <p class="site-tagline">Mini project page • Logan M Edwards</p>
+        <p class="header-back"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
+      </div>
+    </header>
+    <main class="container" id="main">
+      <nav class="section-nav" aria-label="Sections on this page">
+        <a href="#summary">Summary</a>
+        <a href="#overview">Overview</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#highlights">Highlights</a>
+        <a href="#links">Links</a>
+      </nav>
+      <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+        <p class="tl-dr__label">At a glance</p>
+        <ul class="metrics-grid metrics-grid--compact" role="list">
+          <li class="metric">
+            <span class="metric__value">1.57M</span>
+            <span class="metric__label">Asteroids, one row each</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">4</span>
+            <span class="metric__label">Public surveys merged</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">9.5%</span>
+            <span class="metric__label">With a measured diameter</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">8</span>
+            <span class="metric__label">Frozen data releases</span>
+          </li>
+        </ul>
+        <p class="tl-dr__line">
+          One merged table of the known asteroids. Four public surveys are cross-matched body by body, checked against
+          physical limits, and given a cited composition estimate for each taxonomy class. Every value records which
+          survey it came from.
+        </p>
+      </aside>
+      <section class="section" id="overview">
+        <h2>Overview</h2>
+        <p class="section-intro">
+          This started as the first stage of <code>economicspace</code>, my asteroid-mining profitability pipeline,
+          which needs to know what every asteroid is, how big it is, and what it is made of. Nothing in the catalog
+          knows what a mine is, though, and a merged asteroid table with honest provenance is useful to anyone doing
+          population statistics or target selection, so I split it out as its own Python package. Each build is
+          published as a frozen release: a gzipped CSV and a Parquet file of the same rows, plus a manifest with
+          checksums. A result can name the exact release it used, which matters because JPL adds bodies every day and no
+          two live builds are the same length. My asteroid-belt paper analysis runs on one of these releases.
+        </p>
+      </section>
+      <section class="section" id="pipeline">
+        <h2>Pipeline</h2>
+        <p class="section-intro">A build runs five stages, and every rejected row is logged with its reason.</p>
+        <div class="results-tableWrap" data-region-label="Catalog build stages, scrollable table">
+          <table class="results-table">
+            <caption>
+              Build stages
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Stage</th>
+                <th scope="col">What happens</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fetch</td>
+                <td>JPL SBDB, IMCCE SsODNet, NEOWISE V2.0 and MP3C</td>
+              </tr>
+              <tr>
+                <td>Merge</td>
+                <td>Every row re-keyed onto JPL's designation for that body, duplicates combined, sources tagged</td>
+              </tr>
+              <tr>
+                <td>Derive</td>
+                <td>A diameter from absolute magnitude and an estimated albedo for bodies nobody has measured</td>
+              </tr>
+              <tr>
+                <td>Validate</td>
+                <td>Quality gates and physical limits, with every rejection counted</td>
+              </tr>
+              <tr>
+                <td>Enrich</td>
+                <td>Bulk density, mass fractions and mineral phases per spectral class</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section" id="highlights">
+        <h2>Key highlights</h2>
+        <p class="section-intro">The parts that took the most care.</p>
+        <ul class="contact-list" role="list">
+          <li>
+            <strong>Provenance on every value.</strong> Diameter, albedo, H, mass and rotation period each carry the
+            survey that supplied them, how many surveys report one, their spread, and whether they agree. Agreement is
+            not treated as independent confirmation: for diameters, most catalogs are quoting the same NEOWISE fit.
+          </li>
+          <li>
+            <strong>Derived sizes are labelled as derived.</strong> Only about one body in ten has a measured diameter.
+            The rest are sized from absolute magnitude and the median albedo of similar bodies, by spectral class or
+            orbital population, and every such row is flagged so it can be filtered out.
+          </li>
+          <li>
+            <strong>Nothing physically impossible is published.</strong> A survey's mass is refused if it gives the body
+            an impossible bulk density for its class. The release before that rule listed 1686 De Sitter at 495 g/cm³,
+            over sixty times the density of iron.
+          </li>
+          <li>
+            <strong>Cited composition.</strong> Each Bus-DeMeo class has a bulk density, four mass fractions and a
+            mineral breakdown, with each value tied to meteorite and spacecraft sources where they exist. The fractions
+            deliberately do not sum to one: the residual is what the literature does not resolve.
+          </li>
+          <li>
+            <strong>A release gate that refuses bad builds.</strong> Publishing fails if any survey comes back short,
+            the catalog shrinks against the previous release, or any row breaks a physical limit. Releases are never
+            overwritten.
+          </li>
+          <li>
+            <strong>Tests built from real failures.</strong> The offline suite runs each bug that once cost a release,
+            such as a designation regex that read <code>2024 BX1</code> as <code>2024</code>, and a float-typed merge
+            key that silently matched zero NEOWISE rows.
+          </li>
+        </ul>
+      </section>
+      <section class="section" id="links">
+        <h2>Links</h2>
+        <p class="section-intro">
+          The package, its tests and every release are public. Figures on this page are from release
+          <code>data-2026-09-29c</code> (1,568,882 bodies, 149,718 with a measured diameter, data contract 1.8.1).
+        </p>
+        <p>
+          <a class="btn btn-sm" href="https://github.com/loggger101/AsteroidCatalog" rel="noopener" target="_blank"
+            >View repository on GitHub</a
+          >
+          <a
+            class="btn btn-sm btn-ghost"
+            href="https://github.com/loggger101/AsteroidCatalog/releases"
+            rel="noopener"
+            target="_blank"
+            >Browse data releases</a
+          >
+        </p>
+      </section>
+      <nav class="next-project" aria-label="Next project">
+        <a class="next-project__card" href="general-research.html">
+          <span class="next-project__label">Next project</span>
+          <span class="next-project__title">General Research Library →</span>
+        </a>
+      </nav>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <nav aria-label="Site navigation" class="footer-nav">
+          <a href="index.html#about">About</a>
+          <a href="index.html#projects">Projects</a>
+          <a href="index.html#resume">Resume</a>
+          <a href="index.html#coursework">Coursework</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="#top">Top</a>
+        </nav>
+        <p class="footer-copy">© Logan M Edwards</p>
+      </div>
+    </footer>
+  </body>
+</html>
