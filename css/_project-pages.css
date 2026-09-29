@@ -22,6 +22,15 @@
 .project-page--purple {
   --accent-rgb: 183, 148, 244;
 }
+.project-page--indigo {
+  --accent-rgb: 129, 140, 248;
+}
+.project-page--gold {
+  --accent-rgb: 246, 213, 92;
+}
+.project-page--lime {
+  --accent-rgb: 163, 230, 53;
+}
 
 .metrics-grid {
   display: grid;
