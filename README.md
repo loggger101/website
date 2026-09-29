@@ -17,8 +17,8 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | Path | Purpose |
 |---|---|
 | `index.html` | Homepage (about, coursework, projects, resume, contact) |
-| `drone-target.html`, `star-catalog.html`, `aspire-cures.html` | Main project detail pages |
-| `ortega-exposure.html`, `blackjack-game.html`, `portfolio-website.html` | Mini-project detail pages |
+| `aspire-cures.html`, `drone-target.html`, `star-catalog.html` | Main project detail pages |
+| `asteroid-catalog.html`, `general-research.html`, `spacecost.html`, `portfolio-website.html`, `ortega-exposure.html`, `blackjack-game.html` | Mini-project detail pages. The first three are write-ups of the economicspace sub-repos; their figures are a pinned snapshot, named on each page (release tag, package version or research round), and are refreshed by hand |
 | `blackjack.py` | Canonical Python source for the blackjack mini-project; downloadable from the page and inlined for SEO in `blackjack-game.html` (keep them in sync) |
 | `blackjack.js` | Vanilla-JS port of `blackjack.py` that powers the in-browser game on `blackjack-game.html` |
 | `ortega-exposure.py` | Canonical Python source for the Ortega exposure-time calculator; downloadable and inlined for SEO in `ortega-exposure.html` (keep in sync) |
@@ -51,6 +51,10 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 
 A few non-obvious patterns scattered across the codebase, documented here so they survive future edits:
 
+### Project order
+
+Both homepage grids list projects newest first, and each detail page's "Next project" card follows that order, looping from the oldest back to the newest. Main projects run AspireCURES, drone, star; mini projects run asteroid catalog, General Research, spacecost, portfolio, Ortega, blackjack. A new project goes at the top of its grid, and its page's next link points at the project that used to be first. The previous oldest page's link, which loops back to the top, then points at the new one.
+
 ### Per-card accent colors
 
 Project and mini-project cards each carry one accent class. The class sets `--accent-rgb`, which `style.css` then consumes via `rgba(var(--accent-rgb), ...)` for icon glows, hover halos, and media-band gradients. Available classes:
@@ -63,6 +67,9 @@ Project and mini-project cards each carry one accent class. The class sets `--ac
 | `.mini-project-card--amber` / `.project-page--amber` | Ortega exposure | `246,173,85` |
 | `.mini-project-card--red` / `.project-page--red` | Blackjack | `252,129,129` |
 | `.mini-project-card--purple` / `.project-page--purple` | Portfolio website | `183,148,244` |
+| `.mini-project-card--indigo` / `.project-page--indigo` | Asteroid catalog | `129,140,248` |
+| `.mini-project-card--gold` / `.project-page--gold` | spacecost | `246,213,92` |
+| `.mini-project-card--lime` / `.project-page--lime` | General Research library | `163,230,53` |
 
 `project-card--*` / `mini-project-card--*` is for the homepage card; `project-page--*` is for the detail page's `<body>` and propagates the same accent through the in-page nav and TL;DR card. The two families live in different files: the card modifiers in `css/_base.css`, the page modifiers in `css/_project-pages.css`. When adding a new project, define a new modifier class (or reuse one) and apply both variants.
 
