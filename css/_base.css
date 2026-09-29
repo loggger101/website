@@ -58,6 +58,15 @@
 .mini-project-card--purple {
   --accent-rgb: 183, 148, 244;
 }
+.mini-project-card--indigo {
+  --accent-rgb: 129, 140, 248;
+}
+.mini-project-card--gold {
+  --accent-rgb: 246, 213, 92;
+}
+.mini-project-card--lime {
+  --accent-rgb: 163, 230, 53;
+}
 
 /* Hidden honeypot field on the contact form (visually offscreen,
    skipped by AT, never reachable via Tab). Formspree drops any

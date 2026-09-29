@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>spacecost Project | Logan M Edwards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" sizes="32x32" type="image/png" href="favicon-32.png" />
+    <link rel="icon" sizes="16x16" type="image/png" href="favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="canonical" href="https://www.loganmedwardsastrophy.com/spacecost.html" />
+    <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
+    <meta name="theme-color" content="#0b0c10" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Cited reference tables for space-mission cost and mass estimation: launch prices, propellants with derived tankage, delta-v legs, operating costs, storage and destination environments, as a Python package."
+    />
+    <meta property="og:title" content="spacecost Project | Logan M Edwards" />
+    <meta
+      property="og:description"
+      content="Cited reference tables for space-mission cost and mass estimation, plus the derivations a trade study needs."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Logan M Edwards" />
+    <meta property="og:url" content="https://www.loganmedwardsastrophy.com/spacecost.html" />
+    <meta property="og:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Star-field card: Logan M Edwards, Astronomy &amp; Astrophysics • Planetary Science."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="spacecost Project | Logan M Edwards" />
+    <meta
+      name="twitter:description"
+      content="Cited reference tables for space-mission cost and mass estimation, plus the derivations a trade study needs."
+    />
+    <meta name="twitter:image" content="https://www.loganmedwardsastrophy.com/og.jpg" />
+    <meta name="author" content="Logan M Edwards" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://gc.zgo.at; style-src 'self'; img-src 'self' data: https://loganmedwardsastrophy.goatcounter.com; font-src 'self'; connect-src 'self' https://formspree.io https://loganmedwardsastrophy.goatcounter.com; form-action https://formspree.io; base-uri 'self'"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "spacecost",
+        "description": "Cited reference tables for space-mission cost and mass estimation: launch vehicles, propellants with derived tankage, delta-v segments, operational costs, storage systems and destination environments.",
+        "author": { "@type": "Person", "name": "Logan Edwards", "url": "https://www.loganmedwardsastrophy.com/" },
+        "url": "https://www.loganmedwardsastrophy.com/spacecost.html",
+        "codeRepository": "https://github.com/loggger101/spacecost",
+        "programmingLanguage": "Python",
+        "image": "https://www.loganmedwardsastrophy.com/og.jpg",
+        "keywords": ["space economics", "launch cost", "delta-v", "propellants", "rocket equation", "Python"]
+      }
+    </script>
+    <script
+      async
+      crossorigin="anonymous"
+      data-goatcounter="https://loganmedwardsastrophy.goatcounter.com/count"
+      integrity="sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi"
+      src="https://gc.zgo.at/count.js"
+    ></script>
+    <script defer src="site.js"></script>
+  </head>
+  <body data-mark-visited="spacecost" class="project-page project-page--gold">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Primary">
+      <div class="container site-nav__inner">
+        <a class="site-nav__brand" href="index.html#top">Logan M Edwards</a>
+        <ul class="site-nav__menu" role="list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#resume">Resume</a></li>
+          <li><a href="index.html#coursework">Coursework</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <header class="site-header" id="top">
+      <div class="container header-content">
+        <h1 class="site-title">spacecost</h1>
+        <p class="site-tagline">Mini project page • Logan M Edwards</p>
+        <p class="header-back"><a class="btn btn-sm btn-ghost" href="index.html">← Back</a></p>
+      </div>
+    </header>
+    <main class="container" id="main">
+      <nav class="section-nav" aria-label="Sections on this page">
+        <a href="#summary">Summary</a>
+        <a href="#overview">Overview</a>
+        <a href="#tables">Tables</a>
+        <a href="#highlights">Highlights</a>
+        <a href="#links">Links</a>
+      </nav>
+      <aside class="tl-dr" id="summary" aria-label="Project summary at a glance">
+        <p class="tl-dr__label">At a glance</p>
+        <ul class="metrics-grid metrics-grid--compact" role="list">
+          <li class="metric">
+            <span class="metric__value">6</span>
+            <span class="metric__label">Reference tables</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">238</span>
+            <span class="metric__label">Rows, each cited</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">76</span>
+            <span class="metric__label">Launch vehicles priced</span>
+          </li>
+          <li class="metric">
+            <span class="metric__value">23</span>
+            <span class="metric__label">Destinations, 0.39–5.2 AU</span>
+          </li>
+        </ul>
+        <p class="tl-dr__line">
+          Cited reference tables for costing a space mission (launch prices, propellants, delta-v legs, operating costs,
+          storage and destination environments) plus the derivations that turn them into the numbers a trade study
+          actually needs.
+        </p>
+      </aside>
+      <section class="section" id="overview">
+        <h2>Overview</h2>
+        <p class="section-intro">
+          <code>spacecost</code> is the transportation stage of <code>economicspace</code>, my asteroid-mining
+          profitability pipeline, split out as its own Python package because a launch price is useful to anyone costing
+          a mission. Every row carries an inline citation and the year its figure refers to, so a stale price is visible
+          rather than hidden. On top of the tables, the package derives what they imply: tank mass from propellant
+          volume, blended bipropellant performance, and the cost of delivering a kilogram to the Moon or Mars stage by
+          stage. It installs straight from GitHub and has a small command-line interface for ranking launchers and
+          propellants.
+        </p>
+      </section>
+      <section class="section" id="tables">
+        <h2>Tables</h2>
+        <p class="section-intro">
+          Concept and retired rows are kept and marked, so a study can say what it excluded rather than silently not
+          having it.
+        </p>
+        <div class="results-tableWrap" data-region-label="spacecost reference tables, scrollable table">
+          <table class="results-table">
+            <caption>
+              Reference tables
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Table</th>
+                <th scope="col">Rows</th>
+                <th scope="col">Holds</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Launch vehicles</td>
+                <td>76</td>
+                <td>$/kg to LEO, GTO and escape with a low/high band, payload, status, and who can buy it</td>
+              </tr>
+              <tr>
+                <td>Propellants</td>
+                <td>41</td>
+                <td>Vacuum Isp, density, price, storage class, derived tankage, thruster device</td>
+              </tr>
+              <tr>
+                <td>Delta-v segments</td>
+                <td>33</td>
+                <td>m/s and trip time per trajectory leg, 100 to 10,500 m/s</td>
+              </tr>
+              <tr>
+                <td>Operational costs</td>
+                <td>45</td>
+                <td>Per-year and per-kilogram mission costs with low/high bands</td>
+              </tr>
+              <tr>
+                <td>Storage systems</td>
+                <td>20</td>
+                <td>How a kilogram is held, across cargo, depot, propellant and energy</td>
+              </tr>
+              <tr>
+                <td>Environments</td>
+                <td>23</td>
+                <td>Solar flux, dark period, gravity and light time at each destination</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section" id="highlights">
+        <h2>Key highlights</h2>
+        <p class="section-intro">What it does that a spreadsheet of prices does not.</p>
+        <ul class="contact-list" role="list">
+          <li>
+            <strong>Prices are the centre of a stated range.</strong> Where a source gives a range, the headline is its
+            geometric centre, because launch prices are uncertain by factors. The Space Shuttle's $450M–$2.1B per flight
+            centres at $972M, where a plain average would say $1.28B. Unflown vehicles' targets only ever count as the
+            optimistic end.
+          </li>
+          <li>
+            <strong>Flying is not the same as for sale.</strong> 28 of the 48 operational launchers fly only for
+            somebody else, because they are sold out, government-only or export-restricted, and the rankings can filter
+            to the ones a buyer can actually book.
+          </li>
+          <li>
+            <strong>Tank mass is derived, not asserted.</strong> A tank scales with the volume it encloses, so it is
+            sized from each propellant's density and storage class and anchored on real flight hardware. Hydrolox comes
+            out at 9.7% of propellant mass, matching Centaur's measured ~9.7%.
+          </li>
+          <li>
+            <strong>Deliveries are staged leg by leg.</strong> Chaining real stages to the lunar surface needs 4.99 kg
+            in LEO per kilogram landed; collapsing the same trip into one delta-v figure would say 10.96. Stages that
+            get thrown away are paid for, not just launched.
+          </li>
+          <li>
+            <strong>The rocket equation is not taken literally.</strong> Solar sails have infinite Isp, which made every
+            delta-v cost $0.00 and swept them to the top of every ranking, so they are excluded by default. Electric
+            stages carry a 1.5× spiral penalty, and the adjusted delta-v is reported rather than hidden.
+          </li>
+          <li>
+            <strong>The output is a contract.</strong> The six tables build byte-identical on every platform, because
+            their derivations use only operations IEEE 754 requires to be correctly rounded. Continuous integration
+            checks that on every push.
+          </li>
+        </ul>
+      </section>
+      <section class="section" id="links">
+        <h2>Links</h2>
+        <p class="section-intro">
+          The package, its tests and its changelog are public. Figures on this page are from spacecost 0.5.0 (data
+          contract 1.17.0).
+        </p>
+        <p>
+          <a class="btn btn-sm" href="https://github.com/loggger101/spacecost" rel="noopener" target="_blank"
+            >View repository on GitHub</a
+          >
+          <a
+            class="btn btn-sm btn-ghost"
+            href="https://github.com/loggger101/spacecost/releases"
+            rel="noopener"
+            target="_blank"
+            >Browse releases</a
+          >
+        </p>
+      </section>
+      <nav class="next-project" aria-label="Next project">
+        <a class="next-project__card" href="portfolio-website.html">
+          <span class="next-project__label">Next project</span>
+          <span class="next-project__title">Portfolio Website →</span>
+        </a>
+      </nav>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <nav aria-label="Site navigation" class="footer-nav">
+          <a href="index.html#about">About</a>
+          <a href="index.html#projects">Projects</a>
+          <a href="index.html#resume">Resume</a>
+          <a href="index.html#coursework">Coursework</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="#top">Top</a>
+        </nav>
+        <p class="footer-copy">© Logan M Edwards</p>
+      </div>
+    </footer>
+  </body>
+</html>
