@@ -338,10 +338,25 @@
 /* Mini projects */
 .mini-projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* Three per row at full width, so six minis make two even rows; two per
+     row below 720px and one below 480px, where a third of the width is
+     too narrow for a card title and its tags. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.9rem;
   margin-top: 0.5rem;
   list-style: none;
+}
+
+@media (max-width: 720px) {
+  .mini-projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .mini-projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .mini-project-card {
