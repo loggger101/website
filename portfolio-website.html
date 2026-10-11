@@ -4,7 +4,14 @@
     <meta charset="utf-8" />
     <title>Portfolio Website Project | Logan M Edwards</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/_base.css" />
+    <link rel="stylesheet" href="css/_motion.css" />
+    <link rel="stylesheet" href="css/_layout.css" />
+    <link rel="stylesheet" href="css/_nav.css" />
+    <link rel="stylesheet" href="css/_homepage-cards.css" />
+    <link rel="stylesheet" href="css/_minis.css" />
+    <link rel="stylesheet" href="css/_project-pages.css" />
+    <link rel="stylesheet" href="css/_print.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" sizes="32x32" type="image/png" href="favicon-32.png" />
     <link rel="icon" sizes="16x16" type="image/png" href="favicon-16.png" />
@@ -138,8 +145,8 @@
             <code>prefers-reduced-motion</code> guards on every animation.
           </li>
           <li>
-            Responsive layouts built on CSS grid and flexbox. The stylesheet is split into seven modules that
-            <code>style.css</code> pulls together with plain <code>@import</code>, no bundler involved.
+            Responsive layouts built on CSS grid and flexbox. The stylesheet is split into eight modules, each linked
+            straight from the page head so the browser fetches them in parallel, no bundler involved.
           </li>
           <li>
             An animated space backdrop assembled entirely in CSS: three parallax star layers drawn as SVGs, plus aurora

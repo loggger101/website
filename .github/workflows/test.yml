@@ -1,7 +1,8 @@
 name: JS port tests
 
 # Runs the smoke tests in tests/ against the vanilla-JS ports of the
-# Python originals (blackjack.js, ortega-exposure.js). Uses Node's built-in
+# Python originals (blackjack.js, ortega-exposure.js), plus the check that
+# every page links the full css/ stylesheet in order. Uses Node's built-in
 # test runner — no package.json, no npm install, no dev dependencies.
 #
 # The inline-sync job additionally guards the "keep the two in sync" comments:
@@ -17,8 +18,8 @@ on:
       - "ortega-exposure.js"
       - "blackjack.py"
       - "ortega-exposure.py"
-      - "blackjack-game.html"
-      - "ortega-exposure.html"
+      - "*.html"
+      - "css/**"
       - "tests/**"
       - ".github/workflows/test.yml"
   push:
@@ -28,8 +29,8 @@ on:
       - "ortega-exposure.js"
       - "blackjack.py"
       - "ortega-exposure.py"
-      - "blackjack-game.html"
-      - "ortega-exposure.html"
+      - "*.html"
+      - "css/**"
       - "tests/**"
       - ".github/workflows/test.yml"
 
