@@ -1,0 +1,3 @@
+# Claude Code per-machine settings: permission allowlists with local paths.
+# Shared project config (.claude/launch.json) stays tracked.
+.claude/settings.local.json
