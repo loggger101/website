@@ -25,7 +25,7 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `ortega-exposure.js` | Vanilla-JS port of `ortega-exposure.py` that powers the in-browser calculator on `ortega-exposure.html` |
 | `Logan_Edwards_Resume_ATS.pdf` | Public résumé served directly from the homepage's Resume & CV section (replaces the prior Google Drive link) |
 | `Logan_Edwards_CV.pdf` | Public CV, served from the same section. Deliberately undated in the filename so the URL stays stable across updates: replace the file in place and the displayed date follows from git |
-| `style.css` | Thin entry point: `@import`s the eight modules under `css/`. Order matters at both ends: `_base.css` first so its custom properties are in scope, `_print.css` last so its resets win specificity ties |
+| `css/_*.css` | The stylesheet, in eight modules. Every page links all eight directly from its `<head>`, in a fixed order: `_base.css` first so its custom properties are in scope, `_print.css` last so its resets win specificity ties. There is deliberately no `style.css` entry point that `@import`s them: the browser cannot discover an `@import` until the file holding it has arrived, so that cost a whole extra round trip before first paint. `tests/css-links.test.js` keeps the eleven copies of the list identical; a new module goes into its `ORDER` and into every page |
 | `css/_base.css` | Reset, `:root` CSS vars + per-card accent palette, honeypot, html/body base backdrop |
 | `css/_motion.css` | The four fixed sky layers (galaxy, far stars, mid + near stars, dither overlay), their z-order, their drift keyframes, and the scroll-linked parallax layered on top of the drift. The z-index range 4-7 is load-bearing: `body` has an opaque `background-color` and is a positioned sibling, so a layer below 4 paints behind it and is never seen, while content sits at 10. The drift animates `transform` and the scroll parallax animates `translate`, deliberately: two animations on the same property do not blend, the later one just wins. The drift also runs `alternate`: a `normal` infinite animation snaps from its end value back to the start each cycle, which showed as the whole star field jumping 60px every 44 seconds. Translating by exactly one tile period would hide the wrap but needs 1500px of overscan, so the layers drift back the way they came instead, with `ease-in-out` bringing velocity to zero at the turn. Engines without `animation-timeline` (Firefox) take a `@supports not` branch driven by `--sky-scroll`, which site.js publishes; both sides feature-detect on the same query, so exactly one is ever live. Forced-colours mode drops all four layers |
 | `css/_layout.css` | Container, site header, footer, sections, buttons |
@@ -35,7 +35,7 @@ Personal portfolio site for Logan M Edwards, astronomy & astrophysics undergradu
 | `css/_project-pages.css` | Metric grid, results table, sticky section nav, TL;DR, next-project card, figures |
 | `css/_print.css` | Print rules. The site is light-on-dark and browsers do not print background colours, so without this every page printed `#f5f5f5` text onto white paper. Inverts to ink-on-paper rather than forcing the dark theme through with `print-color-adjust`. Note the `.site-title` reset: its glyphs are painted by a clipped gradient behind `-webkit-text-fill-color: transparent`, so resetting `color` alone still prints nothing |
 | `site.js` | Small UX helpers (external-link handling, Formspree submit, Kaggle-stats render, project icon visited-state, section-nav scroll-spy, keyboard access for overflowing scroll boxes, and the background sky-parallax fallback for engines without CSS scroll-driven animations) |
-| `assets/` | Parallax SVGs (stars-far/mid/near, noise), the baked `galaxy.webp` the sky actually loads plus the `galaxy.svg` it is rendered from and per-project media under `assets/projects/{drone,star}/` (confusion matrices, training curves, demo videos + the poster frame the drone demo shows before playback). The inline drone demo ships as both WebM/VP9 and MP4; the `<source>` order hands most browsers the smaller WebM and leaves MP4 as the fallback |
+| `assets/` | Parallax SVGs (stars-far/mid/near, noise), the baked `galaxy.webp` the sky actually loads plus the `galaxy.svg` it is rendered from and per-project media under `assets/projects/{drone,star}/` (confusion matrices and training curves as lossless WebP, a third the size of the PNGs they were converted from with identical pixels; demo videos + the poster frame the drone demo shows before playback). The inline drone demo ships as both WebM/VP9 and MP4; the `<source>` order hands most browsers the smaller WebM and leaves MP4 as the fallback |
 | `data/kaggle_stats.json` | Auto-updated dataset stats |
 | `sitemap.xml`, `robots.txt` | SEO basics |
 | `404.html` | Themed fallback page served by GitHub Pages for unknown URLs |
@@ -57,7 +57,7 @@ Both homepage grids list projects newest first, and each detail page's "Next pro
 
 ### Per-card accent colors
 
-Project and mini-project cards each carry one accent class. The class sets `--accent-rgb`, which `style.css` then consumes via `rgba(var(--accent-rgb), ...)` for icon glows, hover halos, and media-band gradients. Available classes:
+Project and mini-project cards each carry one accent class. The class sets `--accent-rgb`, which the stylesheets then consume via `rgba(var(--accent-rgb), ...)` for icon glows, hover halos, and media-band gradients. Available classes:
 
 | Class | Used by | Color |
 |---|---|---|
@@ -142,7 +142,7 @@ Then open <http://localhost:8000>.
 
 ## Tests
 
-`tests/` smoke-tests the vanilla-JS ports (`blackjack.js`, `ortega-exposure.js`) with Node's built-in runner — no npm install, no dev dependencies:
+`tests/` smoke-tests the vanilla-JS ports (`blackjack.js`, `ortega-exposure.js`) and checks that every page links the full `css/` stylesheet in order, with Node's built-in runner — no npm install, no dev dependencies:
 
 ```sh
 node --test tests/*.test.js

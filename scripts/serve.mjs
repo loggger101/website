@@ -13,7 +13,7 @@
  * gives false confidence:
  *
  *   - Unknown paths serve 404.html with a real 404 status. That page links
- *     its CSS with root-absolute paths (/style.css) precisely because Pages
+ *     its CSS with root-absolute paths (/css/_base.css etc.) precisely because Pages
  *     serves it for arbitrarily deep URLs, and a server that 404s with a bare
  *     "not found" never exercises it.
  *   - Directory requests resolve to index.html.
