@@ -12,8 +12,6 @@
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.92);
-  font-size: var(--fs-2xl);
-  line-height: 1;
 
   transition:
     transform 160ms ease,
@@ -21,6 +19,26 @@
     border-color 160ms ease,
     color 160ms ease;
   position: relative;
+}
+
+/* The symbols are inline SVG line icons, not Unicode glyphs. Glyphs came
+   from whatever font each OS had (so their weight and size never matched,
+   and ♠ / ★ could turn into colour emoji on some phones). Every icon is
+   drawn on the same 24-unit grid and takes its stroke from here, so the set
+   stays consistent: add a new one in the same style, outline only, with
+   class="fill" just for small solid details. */
+.project-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.project-icon .fill {
+  fill: currentColor;
+  stroke: none;
 }
 
 .project-icon-link.is-unvisited {
@@ -100,6 +118,7 @@
 .project-card__media:focus-visible .project-icon-link,
 .mini-project-card__media:focus-visible .project-icon-link {
   transform: translateY(-1px);
+  color: rgb(var(--accent-rgb));
   border-color: rgba(var(--accent-rgb), 0.55);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.1),

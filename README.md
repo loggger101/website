@@ -87,7 +87,7 @@ Every detail page's `<body>` also carries the plain `project-page` class alongsi
 | `--fs-md` | `1rem` | Buttons, section intros, card headings, tagline |
 | `--fs-lg` | `1.1rem` | Sub-headings, `.contact-formTitle`, `.next-project__title` |
 | `--fs-xl` | `1.4rem` | `.section h2`, compact metric values |
-| `--fs-2xl` | `1.6rem` | `.metric__value`, the project icon glyph |
+| `--fs-2xl` | `1.6rem` | `.metric__value` |
 | `--fs-3xl` | `2rem` | `.etc-result__value` |
 
 The steps are tight at the bottom (about 1.09x apart) because nearly all UI text lives between `0.78rem` and `1rem` and needs fine gradations there; the display end is sparse because only a couple of things use it.
@@ -129,6 +129,8 @@ Each project icon on the homepage twinkles until the user has visited that proje
 2. **Direct subpage visit**: each subpage declares `<body data-mark-visited="<slug>">`; `site.js` `markSubpageVisited()` reads that attribute on load and writes the same key.
 
 When adding a new project page, set `data-mark-visited="<slug>"` on `<body>` and `data-project="<slug>"` on the homepage icon link: same slug. The icon will pick up `.is-visited` styling automatically on the next homepage visit.
+
+The symbol inside that link is an inline SVG line icon (`<svg class="project-icon" viewBox="0 0 24 24">`), not a Unicode character: glyphs came from whatever font each OS had, so their sizes and weights never matched and some turned into colour emoji on phones. Draw a new one on the same 24-unit grid as outlines only, with `class="fill"` reserved for small solid details; stroke width, caps and colour all come from `.project-icon` in `css/_homepage-cards.css`, and hover tints it with the card's accent.
 
 ## Local development
 
