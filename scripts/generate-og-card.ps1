@@ -38,10 +38,7 @@ $variants = @{
     Out        = 'og.jpg'
     AccentRgb  = @(99, 179, 237)
     GlowRgb    = @(120, 80, 255)   # purple bottom-right glow
-    Glyph      = [char]0x2737      # eight-pointed star ✷
-    GlyphSize  = 220
-    GlyphX     = 90
-    GlyphY     = 200
+    LightStar  = @(215, 345)       # centre of the painted star (see Add-LightStar); replaces the glyph
     Title      = 'Logan M Edwards'
     Subtitle   = 'Astronomy & Astrophysics  {0}  Planetary Science'  # {0} -> bullet
   }
@@ -78,6 +75,71 @@ $variants = @{
     Title      = 'AspireCURES'
     Subtitle   = '~15k lines  {0}  8 programs  {0}  Cloudflare Pages'
   }
+}
+
+# The homepage card's star, painted as light to match the GitHub profile banner
+# (loggger101/Loggger101, tools/banner.py): a blue corona, four long and four
+# short diffraction spikes that fade to clear at the tips, and a white-hot core.
+# GDI+ has no blur, so the spikes' bloom is a few wider, fainter copies.
+function New-Blend {
+  param([double[]] $Positions, [System.Drawing.Color[]] $Colors)
+  $blend = New-Object System.Drawing.Drawing2D.ColorBlend -ArgumentList $Colors.Length
+  $blend.Positions = [single[]]$Positions
+  $blend.Colors = $Colors
+  return ,$blend
+}
+
+function Add-Spike {
+  param($G, [single] $Cx, [single] $Cy, [single] $Length, [single] $Width, [single] $Angle, [double] $Alpha)
+  $a = { param($k) [int][math]::Round($k * $Alpha * 255) }
+  $edge = [System.Drawing.Color]::FromArgb(0, 91, 163, 220)
+  $mid = [System.Drawing.Color]::FromArgb((& $a 0.45), 143, 194, 238)
+  $centre = [System.Drawing.Color]::FromArgb((& $a 1.0), 255, 255, 255)
+  $rect = New-Object System.Drawing.RectangleF -ArgumentList ($Cx - $Length - 1), ($Cy - $Width - 1), (2 * $Length + 2), (2 * $Width + 2)
+  $brush = New-Object System.Drawing.Drawing2D.LinearGradientBrush -ArgumentList $rect, $edge, $edge, ([single]0.0)
+  $brush.InterpolationColors = New-Blend @(0, 0.3, 0.5, 0.7, 1) @($edge, $mid, $centre, $mid, $edge)
+  $pts = [System.Drawing.PointF[]]@(
+    (New-Object System.Drawing.PointF -ArgumentList ($Cx - $Length), $Cy),
+    (New-Object System.Drawing.PointF -ArgumentList $Cx, ($Cy - $Width)),
+    (New-Object System.Drawing.PointF -ArgumentList ($Cx + $Length), $Cy),
+    (New-Object System.Drawing.PointF -ArgumentList $Cx, ($Cy + $Width))
+  )
+  $G.TranslateTransform($Cx, $Cy); $G.RotateTransform($Angle); $G.TranslateTransform(-$Cx, -$Cy)
+  $G.FillPolygon($brush, $pts)
+  $G.ResetTransform()
+  $brush.Dispose()
+}
+
+function Add-RadialGlow {
+  # Positions run from the rim (0) to the centre (1), as PathGradientBrush expects.
+  param($G, [single] $Cx, [single] $Cy, [single] $R, [double[]] $Positions, [System.Drawing.Color[]] $Colors)
+  $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+  $path.AddEllipse($Cx - $R, $Cy - $R, 2 * $R, 2 * $R)
+  $brush = New-Object System.Drawing.Drawing2D.PathGradientBrush -ArgumentList $path
+  $brush.CenterPoint = New-Object System.Drawing.PointF -ArgumentList $Cx, $Cy
+  $brush.InterpolationColors = New-Blend $Positions $Colors
+  $G.FillPath($brush, $path)
+  $brush.Dispose(); $path.Dispose()
+}
+
+function Add-LightStar {
+  param($G, [single] $Cx, [single] $Cy)
+  $c = { param($a, $r, $gr, $b) [System.Drawing.Color]::FromArgb([int]($a * 255), $r, $gr, $b) }
+  Add-RadialGlow $G $Cx $Cy 215 @(0, 0.55, 0.8, 0.93, 1) @(
+    (& $c 0 91 163 220), (& $c 0.2 91 163 220), (& $c 0.5 156 202 242), (& $c 0.75 230 242 255), (& $c 0.9 255 255 255))
+  foreach ($angle in 0, 90) {
+    foreach ($bloom in @(@(14, 0.07), @(9, 0.12), @(5.5, 0.2))) { Add-Spike $G $Cx $Cy 175 $bloom[0] $angle $bloom[1] }
+    Add-Spike $G $Cx $Cy 175 4.5 $angle 1.0
+  }
+  foreach ($angle in 45, 135) {
+    Add-Spike $G $Cx $Cy 125 6 $angle 0.15
+    Add-Spike $G $Cx $Cy 125 3 $angle 0.8
+  }
+  Add-RadialGlow $G $Cx $Cy 38 @(0, 0.3, 0.55, 1) @(
+    (& $c 0 169 211 247), (& $c 0.85 220 239 255), (& $c 1 255 255 255), (& $c 1 255 255 255))
+  $white = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::White)
+  $G.FillEllipse($white, $Cx - 9, $Cy - 9, 18, 18)
+  $white.Dispose()
 }
 
 function New-OgCard {
@@ -136,14 +198,19 @@ function New-OgCard {
   $starBrush.Dispose()
   $starBrushDim.Dispose()
 
-  # 5. Big accent glyph on the left, tinted by the variant.
-  $accent = $Cfg.AccentRgb
-  $starFam = New-Object System.Drawing.FontFamily -ArgumentList 'Segoe UI Symbol'
-  $starFont = New-Object System.Drawing.Font -ArgumentList $starFam, ([single]$Cfg.GlyphSize), ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
-  $accentBrush = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::FromArgb(220, $accent[0], $accent[1], $accent[2]))
-  $g.DrawString([string]$Cfg.Glyph, $starFont, $accentBrush, [single]$Cfg.GlyphX, [single]$Cfg.GlyphY)
-  $starFont.Dispose()
-  $accentBrush.Dispose()
+  # 5. Big accent on the left: the painted star on the homepage card, a glyph
+  #    tinted by the variant on the others.
+  if ($Cfg.LightStar) {
+    Add-LightStar $g $Cfg.LightStar[0] $Cfg.LightStar[1]
+  } else {
+    $accent = $Cfg.AccentRgb
+    $starFam = New-Object System.Drawing.FontFamily -ArgumentList 'Segoe UI Symbol'
+    $starFont = New-Object System.Drawing.Font -ArgumentList $starFam, ([single]$Cfg.GlyphSize), ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
+    $accentBrush = New-Object System.Drawing.SolidBrush -ArgumentList ([System.Drawing.Color]::FromArgb(220, $accent[0], $accent[1], $accent[2]))
+    $g.DrawString([string]$Cfg.Glyph, $starFont, $accentBrush, [single]$Cfg.GlyphX, [single]$Cfg.GlyphY)
+    $starFont.Dispose()
+    $accentBrush.Dispose()
+  }
 
   # 6. Title.
   $titleFam = New-Object System.Drawing.FontFamily -ArgumentList 'Segoe UI'
