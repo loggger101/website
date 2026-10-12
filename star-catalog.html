@@ -149,8 +149,8 @@
         <p class="section-intro">
           A catalog-driven deep-learning pipeline that classifies stars from RGB image cutouts. The model predicts the
           Morgan–Keenan spectral letter and the subclass digit (0–9 within the predicted letter) from photometric
-          imagery alone. O is the rarest class by a wide margin and does not appear in the trained model's label set, so
-          the letter head reported here resolves six classes: B, A, F, G, K, M.
+          imagery alone. O stars are rare enough that none were in this run's training data, so the letter head reported
+          here resolves six classes: B, A, F, G, K, M.
         </p>
         <p>
           Inputs are constructed by querying VizieR catalogs for coordinates, magnitudes, colors, and spectral hints,
@@ -182,9 +182,8 @@
         <h2>Dataset</h2>
         <p class="section-intro">
           The raw class distribution is steeply imbalanced: K and F stars dominate; O and M are rare. The builder
-          applies a "curved" target distribution to soften this skew without throwing away the long tail. Even after
-          balancing, O remains two orders of magnitude smaller than K, and it does not appear in the label set the
-          reported model was trained against — the letter metrics below are six-class.
+          applies a "curved" target distribution to soften this skew without throwing away the long tail. The run behind
+          the reported model had no O stars, so the letter metrics below are six-class.
         </p>
         <div class="results-tableWrap" data-region-label="Letter class counts, scrollable table">
           <table class="results-table">
@@ -229,11 +228,6 @@
                 <td>285</td>
                 <td>1,572</td>
               </tr>
-              <tr>
-                <td>O</td>
-                <td>78</td>
-                <td>283</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -265,9 +259,10 @@
           </table>
         </div>
         <p class="subsection-intro">
-          Splits total 96,039 rows, slightly below the post-balancing total of 96,322 because the per-split quality
-          gates reject a handful of frames that survived initial balancing (corrupted decodes, missing files, or
-          borderline centring).
+          Splits total 96,039 rows, the same as the balanced set. Balancing draws the minority letters with replacement
+          before the split, so copies of one image can sit in both train and test: 27.4% of the test images have an
+          identical copy in training (M 97.9%, B 66.8%, G 58.7%, A 53.3%; F and K, only downsampled, none). The
+          unseen-star check under Results measures how far the headline holds.
         </p>
         <h3 class="subsection-title">Quality gates</h3>
         <ul class="contact-list" role="list">
@@ -279,10 +274,10 @@
       </section>
       <section class="section" id="model">
         <h2>Model architecture</h2>
-        <p class="section-intro">A compact, regularized three-block ConvNet with three jointly-trained heads.</p>
+        <p class="section-intro">A compact, regularized four-block ConvNet with three jointly-trained heads.</p>
         <p>
-          <em>Conv → BatchNorm → ReLU</em> blocks feed global average pooling and dense layers. Three softmax heads sit
-          on top:
+          Four <em>Conv → BatchNorm → ReLU</em> blocks (32 → 64 → 128 → 256 channels) feed global average pooling and a
+          shared dense layer. Three softmax heads sit on top:
         </p>
         <ul class="contact-list" role="list">
           <li><strong>Letter head</strong>: softmax over the present spectral letters.</li>
@@ -291,19 +286,19 @@
             letter-specific subclass boundaries from a single classifier.
           </li>
           <li>
-            <strong>Stage head</strong>: auxiliary softmax over evolutionary stage, trained whenever stage labels are
-            available; not reported in the headline metrics below.
+            <strong>Stage head</strong>: auxiliary softmax over evolutionary stage. It never trained in this run: the
+            image bundle carries no stage labels, so its loss weight stayed at zero. It is not reported below.
           </li>
         </ul>
       </section>
       <section class="section" id="training">
         <h2>Training</h2>
         <p>
-          Two-stage. Stage 1 optimizes the letter head alone to establish a stable backbone. Stage 2 unfreezes the full
-          multi-task model, balancing letter and combined-head losses; the stage head joins if any stage labels are
-          present. Class balance is handled by curved resampling plus class-balanced sample weights. The 70 / 15 / 15
-          split is stratified on letter; <code>tf.data</code> caching and prefetching keep the input pipeline ahead of
-          the GPU. Plateau-triggered LR reductions and early stopping with best-weight restoration prevent overfitting.
+          Two-stage. Stage 1 trains the whole network on the letter loss alone to establish a stable backbone. Stage 2
+          adds the combined-head loss at equal weight and a lower learning rate; nothing is frozen in either stage.
+          Class balance is handled by curved resampling plus class-balanced sample weights. The 70 / 15 / 15 split is
+          stratified on letter. Plateau-triggered LR reductions and early stopping with best-weight restoration guard
+          against overfitting.
         </p>
         <figure class="project-figure">
           <img
@@ -316,8 +311,9 @@
             decoding="async"
           />
           <figcaption>
-            Letter-head loss and accuracy across training. The two-stage schedule is visible: Stage 1 establishes the
-            backbone on the letter task alone, before Stage 2 unfreezes the full multi-task model.
+            Letter-head loss and accuracy across training. The two-stage schedule is visible: Stage 1 trains on the
+            letter task alone for 57 epochs; when Stage 2 adds the combined loss, validation accuracy dips sharply
+            before recovering to its earlier level.
           </figcaption>
         </figure>
       </section>
@@ -325,9 +321,14 @@
         <h2>Results</h2>
         <p class="section-intro">
           The letter head is the headline number: it tracks the macroscopic temperature sequence robustly. Subclass
-          resolution is harder because RGB cutouts encode color differences only coarsely. Subclass accuracy is reported
-          two ways: conditional on the letter being correct (isolates the subclass head's own contribution) and overall
-          (penalizes letter errors as well).
+          resolution is harder because RGB cutouts encode color differences only coarsely.
+        </p>
+        <p>
+          Because 27.4% of the test set has a copy in training, the model was also scored on 17,672 stars from a
+          separate bundle that it never saw. On the 6,944 A, B, F and G stars among them, as bright as the training
+          data, it gets 82.3% top-1, so for that population the headline roughly holds. That bundle's K and M stars are
+          more than ten magnitudes fainter than the training stars, and the model mostly calls them G: it has not
+          learned faint stars.
         </p>
         <ul class="metrics-grid" role="list">
           <li class="metric">
@@ -346,14 +347,14 @@
             <span class="metric__hint">Precision 0.847 / Recall 0.848</span>
           </li>
           <li class="metric">
-            <span class="metric__value">34.4%</span>
-            <span class="metric__label">Subclass | correct letter</span>
-            <span class="metric__hint">Top-2 subclass: 54.1%</span>
+            <span class="metric__value">82.3%</span>
+            <span class="metric__label">Letter top-1, unseen stars</span>
+            <span class="metric__hint">6,944 bright A/B/F/G stars from a separate bundle</span>
           </li>
           <li class="metric">
             <span class="metric__value">30.6%</span>
             <span class="metric__label">Subclass overall</span>
-            <span class="metric__hint">10-way digit prediction</span>
+            <span class="metric__hint">10-way digit prediction; top-2: 51.5%</span>
           </li>
           <li class="metric">
             <span class="metric__value">30.2%</span>
@@ -378,7 +379,7 @@
             decoding="async"
           />
           <figcaption>
-            Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and K/M, neighbouring letters in the
+            Held-out test set, 14,406 samples. Confusion concentrates on A/F, F/G, and G/K, neighbouring letters in the
             H–R diagram, which is consistent with the model learning a smooth temperature sequence.
           </figcaption>
         </figure>
@@ -391,7 +392,7 @@
         </p>
         <ul class="contact-list" role="list">
           <li>
-            <strong>Letter confusion</strong> is dominated by A/F, F/G, and K/M pairs, neighboring colors in the H–R
+            <strong>Letter confusion</strong> is dominated by A/F, F/G, and G/K pairs, neighboring colors in the H–R
             diagram.
           </li>
           <li>
@@ -423,9 +424,9 @@
       <section class="section" id="utilization">
         <h2>Inference program</h2>
         <p>
-          The inference script loads the trained model and the class map, reads new star images, applies the same
-          preprocessing as training, and writes per-object predictions for letter and subclass with confidence scores.
-          Batch evaluation produces a CSV that can be merged back onto catalog rows for downstream analysis.
+          The inference script loads the trained model, reads a star image or a folder of them, applies the same
+          preprocessing as training, and prints a letter + subclass prediction for each (e.g. <code>G2</code>), with the
+          catalogue answer alongside when a bundle's metadata is supplied.
         </p>
       </section>
       <section class="section" id="limitations">
@@ -440,8 +441,9 @@
             but borderline frames still leak through.
           </li>
           <li>
-            <strong>Rare classes</strong>: O and M, even after balancing, are limited by raw availability. Targeted
-            sampling or modest augmentation would help further.
+            <strong>Rare classes</strong>: O is absent from this run and M is limited by raw availability even after
+            balancing. Targeted sampling or modest augmentation would help, provided the resampling happens after the
+            split.
           </li>
           <li>
             <strong>Next directions</strong>: calibrated photometry, extinction estimates, NIR bands, and attention
