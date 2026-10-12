@@ -156,7 +156,7 @@
           <li>
             <strong>Dataset builder</strong>: pulls images from multiple KaggleHub sources, reorganizes them into a
             single <code>images/</code> directory and a unified <code>metadata.csv</code>, hash-dedupes, and aliases
-            dataset-specific terms (e.g. <em>pedestrian</em> / <em>walker</em>) onto canonical labels.
+            dataset-specific terms (e.g. <em>birds</em> / <em>avian</em> → <code>bird</code>) onto canonical labels.
           </li>
           <li>
             <strong>Multi-output CNN classifier</strong>: a regularized ConvNet with two heads: one over the 11
@@ -174,37 +174,35 @@
         <h2>Dataset</h2>
         <p class="section-intro">
           Source datasets use inconsistent directory layouts, label columns, and category names. The builder normalizes
-          all of this into one corpus suitable for stratified training.
+          all of this into one corpus suitable for training.
         </p>
         <p>
-          Each fine label (e.g. <code>person_pedestrian</code>, <code>civilian_vehicle</code>, <code>tank_av</code>) is
-          mapped onto one of three coarse buckets. Labels are derived per source via folder names, CSV columns, or
-          filename regex, then aliased onto a canonical taxonomy. The 70 / 15 / 15 train/val/test split is stratified on
-          both fine and coarse labels, with class-balanced sampling and per-label caps to prevent background and other
-          dominant categories from swamping training. Quality checks verify on-disk presence, skip corrupted files, and
-          ensure every split contains a minimum number of valid examples. Hash-based de-duplication catches the same
-          image appearing across multiple sources.
+          Each fine label (e.g. <code>soldier</code>, <code>civilian_vehicle</code>, <code>tank_av</code>) is mapped
+          onto one of three coarse buckets. Labels are derived per source via folder names, CSV columns, or filename
+          regex, then aliased onto a canonical taxonomy. A per-class cap keeps dominant categories from swamping
+          training, and each image is assigned at random to a 70 / 15 / 15 train/val/test split. Unreadable files are
+          skipped, and hashing each re-encoded image catches the same picture appearing across multiple sources.
         </p>
       </section>
       <section class="section" id="model">
         <h2>Model architecture</h2>
         <p class="section-intro">A compact multi-output ConvNet shared between two classification heads.</p>
         <p>
-          The backbone is a stack of <em>Conv → BatchNorm → ReLU → MaxPool</em> blocks with growing channel depth (32 →
-          64 → 128) and shrinking spatial resolution. Global average pooling collapses the final feature map into a
-          fixed-length vector that feeds both heads:
+          The backbone is three <em>Conv → ReLU → MaxPool</em> blocks with growing channel depth (32 → 64 → 128) and
+          shrinking spatial resolution. The final feature map is flattened into a 256-unit dense layer with dropout,
+          which feeds both heads:
         </p>
         <ul class="contact-list" role="list">
-          <li><strong>Fine head</strong>: dense layers ending in an 11-way softmax over the canonical fine classes.</li>
+          <li><strong>Fine head</strong>: an 11-way softmax over the canonical fine classes.</li>
           <li>
-            <strong>Coarse head</strong>: branches off the same backbone features, ending in a three-way softmax over
-            the validity categories.
+            <strong>Coarse head</strong>: a three-way softmax over the validity categories, read from the same shared
+            features.
           </li>
         </ul>
         <p>
-          Both heads are optimized jointly with categorical cross-entropy and configurable per-head weights. Dropout and
-          L2 weight regularization mitigate overfitting; Adam / AdamW with a plateau-triggered LR schedule, and optional
-          mixed-precision training, round out the optimizer setup.
+          Both heads train jointly with sparse categorical cross-entropy, weighted equally. L2 regularization on every
+          kernel and 50% dropout mitigate overfitting; AdamW with a plateau-triggered LR schedule rounds out the
+          optimizer setup, and the checkpoint with the lowest validation loss is kept.
         </p>
       </section>
       <section class="section" id="training">
@@ -212,15 +210,12 @@
         <p>
           Implemented in TensorFlow with <code>tf.data</code> pipelines built directly from <code>metadata.csv</code>.
           Each row loads its image via <code>out_relpath</code>, decodes to RGB, resizes to a fixed input resolution,
-          and normalizes pixel values. Augmentations (horizontal flip, mild rotation, brightness/contrast jitter) are
-          applied conservatively so small targets and label semantics survive.
+          and scales pixel values to [0, 1]. No augmentation is applied.
         </p>
         <p>
-          Sample weights down-weight over-represented classes (notably <code>invalid_background</code>) and up-weight
-          under-represented valid categories. An optional flag controls whether invalid examples contribute to the
-          fine-head loss: when disabled, invalids train only the coarse head, freeing the fine head to focus on examples
-          with meaningful fine labels. Two recipes were used: end-to-end joint training from scratch, and a two-stage
-          warm-up where the coarse head trains alone before the fine head joins.
+          Every sample carries equal weight. An optional flag controls whether invalid examples contribute to the
+          fine-head loss: when it is set, invalids train only the coarse head, freeing the fine head to focus on
+          examples with meaningful fine labels. Both heads train together from the first epoch.
         </p>
         <figure class="project-figure">
           <img
@@ -233,8 +228,10 @@
             decoding="async"
           />
           <figcaption>
-            Training and validation curves at 128×128 input resolution. Loss and accuracy converge cleanly with no major
-            overfitting, with the LR scheduler kicking in on plateau.
+            Training and validation curves at 128×128 input resolution over 50 epochs. Validation accuracy levels off
+            around epoch 20 while validation loss climbs, most on the fine head, so the network overfits late in
+            training; the kept checkpoint is the one with the lowest validation loss. In the loss panel the dashed lines
+            are validation loss, though the legend repeats the training labels.
           </figcaption>
         </figure>
       </section>
@@ -268,9 +265,9 @@
         </ul>
         <h3 class="subsection-title">Fine confusion matrix</h3>
         <p class="subsection-intro">
-          Test set confusion matrix for the 11-class fine head. Strong diagonal dominance: most off-diagonal mass
-          clusters on visually similar pairs (soldier / civilian, random_animal / bird, rock_debris /
-          invalid_background).
+          Test set confusion matrix for the 11-class fine head. Strong diagonal dominance, with errors spread across
+          many pairs rather than clustered: the largest, civilian / random_animal, is 310 of 3,534 misclassifications,
+          and flying_target is the most common wrong prediction (952).
         </p>
         <figure class="project-figure">
           <img
@@ -291,7 +288,8 @@
         <h3 class="subsection-title">Per-class precision</h3>
         <p class="subsection-intro">
           The fine head is strongest on visually distinct categories (vehicles, landscape) and weakest where classes
-          share appearance (soldier / civilian, random animal / bird, rock debris / background).
+          share appearance (rock debris, soldier, civilian). Recall is lowest on soldiers: 436 of 789 are found, with
+          148 of the misses going to flying_target and 131 to civilian.
         </p>
         <div class="results-tableWrap" data-region-label="Fine head: test precision per class, scrollable table">
           <table class="results-table">
@@ -393,8 +391,9 @@
             confident fine-class prediction.
           </li>
           <li>
-            <strong>Visually similar classes</strong>: soldier vs. civilian, bird vs. random_animal, and
-            invalid_nontarget vs. invalid_background account for most off-diagonal confusion-matrix mass.
+            <strong>Visually similar classes</strong>: soldier vs. civilian and bird vs. random_animal are visible
+            confusions, but no single pair dominates. In the coarse head, invalid_background vs. valid (883 of 2,377
+            errors) edges out invalid_nontarget vs. invalid_background (844).
           </li>
         </ul>
         <h3 class="subsection-title">Input resolution trade-off</h3>
@@ -414,7 +413,7 @@
           operational question is "valid target?", and the three-way decision is fast and easy to render:
         </p>
         <ul class="contact-list" role="list">
-          <li><strong>valid</strong>: green overlay, optionally annotated with the fine-class label.</li>
+          <li><strong>valid</strong>: green overlay, labelled with a track ID and the coarse-head confidence.</li>
           <li><strong>invalid_nontarget</strong>: red overlay, signalling a real object that is not the target.</li>
           <li><strong>invalid_background</strong>: suppressed entirely.</li>
         </ul>
@@ -431,16 +430,18 @@
             playsinline
             width="640"
             height="360"
-            aria-label="Live drone target detection demo: YOLO segmentation with CNN coarse-head overlays (green for valid targets, red for invalid_nontarget) on aerial footage."
+            aria-label="Live drone target detection demo: YOLO segmentation with CNN coarse-head overlays on aerial footage, green for valid targets."
           >
             <source src="assets/projects/drone/overlay_demo.webm" type="video/webm" />
             <source src="assets/projects/drone/overlay_demo.mp4" type="video/mp4" />
             Your browser does not support embedded video. Use the link below to view the demo.
           </video>
           <figcaption>
-            Live overlay demo: YOLO segmentation drives per-frame crops; the coarse head colors each detection valid
-            (green) or invalid_nontarget (red), and ignores invalid_background. Lower-resolution CNN input crops (32×32
-            in this run) keep the loop close to real time without sacrificing detection of small distant targets.
+            Live overlay demo: YOLO segmentation drives per-frame crops and the coarse head marks valid targets in
+            green. These clips predate a label-order fix in the source code: their red overlays, labelled
+            invalid_nontarget, are crops the model put in invalid_background, which the corrected script hides.
+            Lower-resolution CNN input crops (32×32 in this run) keep the loop close to real time without sacrificing
+            detection of small distant targets.
             <span class="project-figure__fallback"
               >Prefer the longer demo?
               <a href="assets/projects/drone/overlay_demo_long.mp4" download>Download the extended cut</a> (≈7
