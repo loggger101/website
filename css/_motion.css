@@ -166,6 +166,58 @@ body > * {
 }
 
 /* =========================================================
+   FIRST-PAINT REVEAL
+   =========================================================
+   The sky is held back for the first frame and faded in after it, so the
+   text paints without waiting for the sky.
+
+   Rasterising four fixed, blended, overscanned layers is the single biggest
+   cost in the first frame. Measured in Chrome on a desktop GPU, the homepage's
+   first contentful paint moved from ~1050ms to ~600ms with the sky held
+   back -- the same as with the sky deleted outright. Every page pays it, and
+   it scales with device pixel ratio.
+
+   Two details are load-bearing:
+
+   - The hold is on visibility, not opacity. A layer at opacity 0 is still
+     rasterised (the compositor needs it ready to fade), so a pure opacity
+     fade measured no faster than no reveal at all. Chrome skips painting a
+     visibility: hidden box altogether.
+   - The hold can be a single frame. A CSS animation's clock starts at the
+     frame it first renders in, so even a 16ms hold covers the first paint;
+     it measured the same as 400ms. The custom properties keep the timing in
+     one place for the animation lists below, which have to restate it.
+
+   This applies under reduced motion too: it is a short fade of the
+   background, not movement. */
+:root {
+  --sky-hold: 50ms;
+  --sky-fade: 450ms;
+}
+
+@keyframes skyHold {
+  from,
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes skyFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+html::before,
+html::after,
+body::before,
+body::after {
+  animation:
+    skyHold var(--sky-hold) linear,
+    skyFadeIn var(--sky-fade) ease-out var(--sky-hold) backwards;
+}
+
+/* =========================================================
    PARALLAX ANIMATIONS
    ========================================================= */
 /* alternate is load-bearing, not a style choice.
@@ -187,14 +239,25 @@ body > * {
    zero at each end, so the reversal is not visible either -- at 60px over
    44s, the fastest layer moves 1.4px per second. */
 @media (prefers-reduced-motion: no-preference) {
+  /* The reveal leads each list: a shorthand replaces the whole list, so
+     leaving it out here would drop the reveal wherever the drift runs. */
   html::before {
-    animation: driftGalaxy 190s ease-in-out infinite alternate;
+    animation:
+      skyHold var(--sky-hold) linear,
+      skyFadeIn var(--sky-fade) ease-out var(--sky-hold) backwards,
+      driftGalaxy 190s ease-in-out infinite alternate;
   }
   html::after {
-    animation: driftFar 110s ease-in-out infinite alternate;
+    animation:
+      skyHold var(--sky-hold) linear,
+      skyFadeIn var(--sky-fade) ease-out var(--sky-hold) backwards,
+      driftFar 110s ease-in-out infinite alternate;
   }
   body::after {
-    animation: driftNear 44s ease-in-out infinite alternate;
+    animation:
+      skyHold var(--sky-hold) linear,
+      skyFadeIn var(--sky-fade) ease-out var(--sky-hold) backwards,
+      driftNear 44s ease-in-out infinite alternate;
   }
 }
 
@@ -254,30 +317,39 @@ body > * {
        ease-in-out + alternate that stops it snapping back (see above) while
        the scroll parallax stays linear and one-way. Restating the drift in
        full is unavoidable: `animation-timeline` has to be set alongside the
-       list it applies to, and the shorthand would reset these. */
+       list it applies to, and the shorthand would reset these. The reveal
+       (see FIRST-PAINT REVEAL) leads each list for the same reason, and the
+       delay and fill-mode are spelled out because a shorter list inherited
+       from the shorthand above would cycle onto the wrong animations. */
     html::before {
-      animation-name: driftGalaxy, parallaxGalaxy;
-      animation-duration: 190s, auto;
-      animation-timing-function: ease-in-out, linear;
-      animation-iteration-count: infinite, 1;
-      animation-direction: alternate, normal;
-      animation-timeline: auto, scroll(root block);
+      animation-name: skyHold, skyFadeIn, driftGalaxy, parallaxGalaxy;
+      animation-duration: var(--sky-hold), var(--sky-fade), 190s, auto;
+      animation-timing-function: linear, ease-out, ease-in-out, linear;
+      animation-delay: 0s, var(--sky-hold), 0s, 0s;
+      animation-fill-mode: none, backwards, none, none;
+      animation-iteration-count: 1, 1, infinite, 1;
+      animation-direction: normal, normal, alternate, normal;
+      animation-timeline: auto, auto, auto, scroll(root block);
     }
     html::after {
-      animation-name: driftFar, parallaxFar;
-      animation-duration: 110s, auto;
-      animation-timing-function: ease-in-out, linear;
-      animation-iteration-count: infinite, 1;
-      animation-direction: alternate, normal;
-      animation-timeline: auto, scroll(root block);
+      animation-name: skyHold, skyFadeIn, driftFar, parallaxFar;
+      animation-duration: var(--sky-hold), var(--sky-fade), 110s, auto;
+      animation-timing-function: linear, ease-out, ease-in-out, linear;
+      animation-delay: 0s, var(--sky-hold), 0s, 0s;
+      animation-fill-mode: none, backwards, none, none;
+      animation-iteration-count: 1, 1, infinite, 1;
+      animation-direction: normal, normal, alternate, normal;
+      animation-timeline: auto, auto, auto, scroll(root block);
     }
     body::after {
-      animation-name: driftNear, parallaxNear;
-      animation-duration: 44s, auto;
-      animation-timing-function: ease-in-out, linear;
-      animation-iteration-count: infinite, 1;
-      animation-direction: alternate, normal;
-      animation-timeline: auto, scroll(root block);
+      animation-name: skyHold, skyFadeIn, driftNear, parallaxNear;
+      animation-duration: var(--sky-hold), var(--sky-fade), 44s, auto;
+      animation-timing-function: linear, ease-out, ease-in-out, linear;
+      animation-delay: 0s, var(--sky-hold), 0s, 0s;
+      animation-fill-mode: none, backwards, none, none;
+      animation-iteration-count: 1, 1, infinite, 1;
+      animation-direction: normal, normal, alternate, normal;
+      animation-timeline: auto, auto, auto, scroll(root block);
     }
   }
 }
